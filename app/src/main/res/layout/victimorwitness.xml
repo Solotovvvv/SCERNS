@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/btnVictim"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:backgroundTint="#618264"
+        android:gravity="center"
+        android:text="VICTIM"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_vertical" />
+
+    <TextView
+        android:id="@+id/textViewOr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OR"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_vertical" />
+
+    <Button
+        android:id="@+id/btnWitness"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:backgroundTint="#618264"
+        android:gravity="center"
+        android:text="WITNESS"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_vertical" />
+
+</LinearLayout>
