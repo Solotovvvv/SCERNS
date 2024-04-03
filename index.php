@@ -100,7 +100,7 @@ if (isset($_SESSION['username'])) {
     }
 ?>
 <script src="./assets/js/bootstrap.bundle.js"></script>
-<script src="./assets/js/script.js"></script>
+
 
 <script>
 

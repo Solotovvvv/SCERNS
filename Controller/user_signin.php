@@ -41,6 +41,7 @@ if (isset($_POST['username'], $_POST['password'])) {
 
             // Set session variables based on user's role
             $_SESSION['role'] = $user['UserRole'];
+            $_SESSION['type'] = $user_details['Type'];
             $_SESSION['fullname'] = $user_details['Fullname'];
             $_SESSION['images'] = $user_details['Images'];
             $_SESSION['phone'] = $user_details['Phone'];
@@ -59,7 +60,7 @@ if (isset($_POST['username'], $_POST['password'])) {
             }
         } else {
             // Handle invalid credentials
-            header("Location: ../../../index.php");
+            header("Location: ../../../Client3/index.php");
             exit();
         }
     } catch (PDOException $e) {

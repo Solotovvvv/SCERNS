@@ -13,7 +13,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Account | Registrar</title>
+    <title>Admin Account</title>
     <link rel="icon" href="../../img/images/orig-logo.png" />
     <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/fontawesome-free/css/all.min.css" />
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
@@ -45,7 +45,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
             <section class="content">
                 <div class="container">
                     <div class="table-responsive card p-3">
-                        <button class="btn btn-primary mb-3 registrar-btn" data-toggle="modal" data-target="#addAdmin">ADD
+                        <button class="btn btn-primary mb-3 " data-toggle="modal" data-target="#addAdmin" style="width: 20%";>ADD
                         </button>
 
                         <div class="table-responsive card p-3">
@@ -213,7 +213,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                 var password = $('#passwordR').val();
 
                 $.ajax({
-                    url: '../../Controller/Respondent_Admin/Admin_Account.php',
+                    url: '../../Controller/Admin/Admin_Account.php',
                     method: 'POST',
                     data: {
                         fullname: fullname,
@@ -253,7 +253,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
 
               function view_admin(id) {
                 $('#hiddendata_Admin').val(id);
-                $.post("../../Controller/Respondent_Admin/Admin_Account.php", {
+                $.post("../../Controller/Admin/Admin_Account.php", {
                   id: id
                 }, function (data,
                   status) {
@@ -274,7 +274,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                 var fullname=   $('#edit_fullname').val();
                 var id = $('#hiddendata_Admin').val();
 
-                $.post("../../Controller/Respondent_Admin/Update_admin.php", {
+                $.post("../../Controller/Admin/Update_admin.php", {
                     password: password,
                     username: username,
                     fullname:fullname,
@@ -310,7 +310,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                   if (result.isConfirmed) {
                     // User confirmed deletion
                     $.ajax({
-                      url: '../../Controller/Respondent_Admin/Admin_Account.php',
+                      url: '../../Controller/Admin/Admin_Account.php',
                       type: 'post',
                       data: {
                         remove: id
