@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,27 +11,21 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:padding="16dp"
-        app:cardCornerRadius="8dp"
         app:cardBackgroundColor="#e0dada"
-        tools:ignore="MissingConstraints">
+        app:cardCornerRadius="8dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="15dp"
+        tools:layout_editor_absoluteY="60dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp">
-
-            <ImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/scerns_logo" />
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
@@ -43,6 +36,20 @@
                 android:textStyle="bold" />
 
             <!-- Registration Fields -->
+            <ImageView
+                android:id="@+id/imageViewProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="125dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/placeholder_image"
+                android:clickable="true"
+                android:onClick="selectImageFromGallery"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Image" />
+
             <EditText
                 android:id="@+id/editTextFullname"
                 android:layout_width="match_parent"
@@ -51,14 +58,14 @@
                 android:background="@drawable/round_bg"
                 android:hint="Fullname" />
 
-            <EditText
-                android:id="@+id/editTextEmail"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/round_bg"
-                android:hint="Email"
-                android:inputType="textEmailAddress" />
+            <!--            <EditText-->
+            <!--                android:id="@+id/editTextEmail"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="50dp"-->
+            <!--                android:layout_marginTop="8dp"-->
+            <!--                android:background="@drawable/round_bg"-->
+            <!--                android:hint="Email"-->
+            <!--                android:inputType="textEmailAddress" />-->
 
             <EditText
                 android:id="@+id/editTextContactNumber"
@@ -100,7 +107,8 @@
                 android:id="@+id/registerButton"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:backgroundTint="#618264"
                 android:text="Register"
                 android:textColor="#FFFFFF"
@@ -123,9 +131,9 @@
                     android:id="@+id/textViewLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:text="Login"
-                    android:textColor="#618264"
-                    android:clickable="true"/>
+                    android:textColor="#618264" />
 
             </LinearLayout>
 

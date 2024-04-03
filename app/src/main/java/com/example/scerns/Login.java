@@ -28,8 +28,6 @@ public class Login extends AppCompatActivity {
         textViewCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Add your onClick functionality here
-                // For example, if you want to open a new activity when clicked:
                 Intent intent = new Intent(Login.this, Register.class);
                 startActivity(intent);
             }
