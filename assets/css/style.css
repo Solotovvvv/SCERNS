@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+*{
+  font-family: 'Inter', sans-serif;
+  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+body{
+  background-color: #FFF;
+}
+
+/* Input's w/ Passwords */
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 20px;
+  cursor: pointer;
+}
+
+/* Home */
+.home-cont{
+  height: 200px;
+  background-color: #8DA48F;
+  border-bottom-right-radius: 15%;
+  border-bottom-left-radius: 15%;
+ }
+
+ /* Home */
+.other-cont{
+  height: 120px;
+  background-color: #8DA48F;
+  border-bottom-right-radius: 15%;
+  border-bottom-left-radius: 15%;
+ }
+
+/* Victim & Witnesss */
+.fa-search {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+  cursor: pointer;
+}
+
+/* General styling for the list */
+#suggestions {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 5px; /* Add some margin to separate the list from the input */
+}
+
+/* Styling for list items */
+#suggestions li {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect */
+#suggestions li:hover {
+  background-color: #f2f2f2;
+}
+
+/* Responsive styling for tablet and phone screen sizes */
+@media only screen and (max-width: 768px) {
+  #suggestions li {
+    padding: 8px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  #suggestions li {
+    padding: 6px;
+  }
+}
+

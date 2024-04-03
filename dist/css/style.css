@@ -1,0 +1,102 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+* {
+  font-family: "Poppins", sans-serif;
+}
+.bg-color1 {
+  background: #092635;
+}
+.bg-color2 {
+  background: #1b4242;
+  color: white;
+}
+.welcome-card,
+.goodbye-card,
+.login-cont {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.welcome-card,
+.goodbye-card {
+  padding: 2rem;
+}
+.login-card {
+  padding: 2.5rem;
+  padding-top: 8.5rem;
+  height: 35rem;
+}
+.brand-link {
+  padding-left: 1rem;
+}
+.nav.nav-pills.nav-sidebar.flex-column .nav-item .nav-link.active {
+  background: #5c8374;
+}
+.bg-color3,
+.icon-color i {
+  color: #9ec8b9;
+}
+#qrpic img {
+  width: 80%;
+}
+.welcome-card,
+.goodbye-card {
+  background: #f4f6f9;
+}
+.employee-name,
+.arrival-time {
+  font-size: 2.5rem;
+  font-weight: 300;
+}
+.welcome,
+.goodbye {
+  font-size: 5rem;
+}
+.col-left p {
+  font-size: 5rem;
+  font-weight: 700;
+}
+.col-left {
+  padding-top: 2rem;
+}
+.login-card p {
+  margin-bottom: 3rem;
+}
+.username,
+.password {
+  font-size: 1.2rem;
+  margin-bottom: 1.2rem;
+  padding: 0.8rem;
+}
+.login-btn {
+  font-size: 1.2rem;
+  margin-top: 1.2rem;
+  padding: 0.8rem;
+  width: 8rem;
+}
+.dropdown img {
+  border-radius: 5rem;
+}
+
+@media (max-width: 797px) {
+  .welcome,
+  .goodbye {
+    font-size: 3rem;
+  }
+  .employee-name,
+  .arrival-time {
+    font-size: 1.5rem;
+  }
+  .welcome-card,
+  .goodbye-card {
+    width: 25rem;
+    padding: 0.5rem;
+  }
+  .col-left p {
+    font-size: 3rem;
+    font-weight: 700;
+  }
+  .navbar-brand span {
+    display: none;
+  }
+}
