@@ -9,7 +9,7 @@ if (isset($_SESSION['username'])) {
         header("Location: user.php");
         exit();
     } elseif ($_SESSION['role'] == 1) {
-      header("Location: ../../Views/Respondent_Admin/IncidentReport.php");
+      header("Location: ../../Client3/Views/Respondent_Admin/IncidentReport.php");
         exit();
     } elseif ($_SESSION['role'] == 2) {
       header("Location: ../../../Client3/Views/Admin/history.php");
