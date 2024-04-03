@@ -13,7 +13,6 @@
         <span class="brand-text font-weight-light">SCERNS</span>
     </a>
 
-
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -37,7 +36,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="emergency_type.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'Admin_Account.php' ? 'active' : ''; ?>">
+                    <a href="history.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'Admin_Account.php' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-history mr-3"></i>
                         <p>History</p>
                     </a>
@@ -51,7 +50,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="respondent_hotlines.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'Admin_Respondent.php' ? 'active' : ''; ?>">
+                    <a href="profile.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'Admin_Respondent.php' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-user mr-3"></i>
                         <p>Profile</p>
                     </a>

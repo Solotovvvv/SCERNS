@@ -59,7 +59,7 @@ if (isset($_POST['username'], $_POST['password'])) {
             }
         } else {
             // Handle invalid credentials
-            header("Location: ../../../index1.php");
+            header("Location: ../../../index.php");
             exit();
         }
     } catch (PDOException $e) {
@@ -87,4 +87,3 @@ if (isset($_POST['remember'])) {
     $_SESSION['fnbkn'] = '';
     $_SESSION['qbtuyqug'] = '';
 }
-?>
