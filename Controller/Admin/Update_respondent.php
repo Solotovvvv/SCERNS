@@ -9,6 +9,7 @@ if (isset($_POST['id_r'])) {
     $password = sha1($_POST['password']);
     $username = $_POST['username'];
     $fullname = $_POST['fullname'];
+    $department = $_POST['department'];
     $email = $_POST['email'];
 
     $update_login_query = "UPDATE `login` SET `Username` = :username, `Password` = :password WHERE `Id` = :id";
@@ -18,10 +19,11 @@ if (isset($_POST['id_r'])) {
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
 
-    $update_user_query = "UPDATE `user_details` SET `Fullname` = :fullname, `Email` = :email WHERE `User_id` = :id";
+    $update_user_query = "UPDATE `user_details` SET `Fullname` = :fullname, `Email` = :email, `Type` = :department WHERE `User_id` = :id";
     $stmt = $pdo->prepare($update_user_query);
     $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+    $stmt->bindParam(':department', $department, PDO::PARAM_STR);
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
 

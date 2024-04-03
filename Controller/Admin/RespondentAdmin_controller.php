@@ -7,6 +7,7 @@ if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
     $email = $_POST['email'];
     $username = $_POST['username'];
     $password = sha1($_POST['password']); // Hash the password
+    $department = $_POST['department'];
 
 
    
@@ -32,11 +33,12 @@ if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
         if ($insert_login_result) {
            
             $user_id = $pdo->lastInsertId(); // Get the last inserted user_id
-            $insert_user_query = "INSERT INTO `user_details` (`Fullname`, `Email`, `User_id`)
-                                  VALUES (:fullname, :email, :user_id)";
+            $insert_user_query = "INSERT INTO `user_details` (`Fullname`, `Email`, `User_id`,`Type`)
+                                  VALUES (:fullname, :email, :user_id, :department)";
             $stmt = $pdo->prepare($insert_user_query);
             $stmt->bindParam(':fullname', $username, PDO::PARAM_STR); 
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':department', $department, PDO::PARAM_STR);
             $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
             $insert_user_result = $stmt->execute();
 

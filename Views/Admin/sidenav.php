@@ -38,7 +38,7 @@
                     <ul class="nav nav-treeview">
                    
                     <li class="nav-item">
-                            <a href="Admin_Account.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'UserAccount.php' ? 'active' : ''; ?>">
+                            <a href="UserAccount.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'UserAccount.php' ? 'active' : ''; ?>">
                                 <p>User Accounts</p>
                             </a>
                         </li>

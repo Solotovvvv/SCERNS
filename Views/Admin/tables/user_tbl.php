@@ -8,12 +8,11 @@ include '../../../includes/config.php';
 
 $pdo = Database::connection();
 
-$role= 2;
 
 $sql = "SELECT ud.*, lg.* 
 FROM user_details ud
 INNER JOIN login lg ON ud.User_id = lg.Id
-WHERE lg.UserRole = $role";
+WHERE lg.UserRole = 'Pending'";
 $stmt = $pdo->prepare($sql);
 
 $data = [];
@@ -23,10 +22,9 @@ if ($stmt->execute()) {
 
         $subarray = [
             '<td>' . $row['Username'] . '</td>',
-            '<td>' . $row['Type'] . '</td>',
             '<td>
-            <button class="btn btn-primary" onclick="view_respondent_admin(' . $row['Id'] . ')"><i class="nav-icon fas fa-edit"></i></button>
-            <button class="btn btn-danger" onclick="delete_respondent_admin(' . $row['Id'] . ')"><i class="nav-icon fas fa-trash"></i></button>
+            <button class="btn btn-primary" onclick="view_user(' . $row['Id'] . ')"><i class="nav-icon fas fa-edit"></i></button>
+            <button class="btn btn-danger" onclick="delete_user(' . $row['Id'] . ')"><i class="nav-icon fas fa-trash"></i></button>
             </td>',
         ];
         $data[] = $subarray;
