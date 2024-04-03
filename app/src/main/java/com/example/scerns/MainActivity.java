@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
     private Toolbar toolbar;
+
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +62,88 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showVictimOrWitnessDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.victimorwitness, null);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.victimorwitness, null);
+
+        Button btnVictim = dialogView.findViewById(R.id.btnVictim);
+        Button btnWitness = dialogView.findViewById(R.id.btnWitness);
+
+        btnVictim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Victim button click
+                showToast("Victim selected");
+                dialog.dismiss();
+                showOptionsDialog();
+            }
+        });
+
+        btnWitness.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Witness button click
+                showToast("Witness selected");
+                dialog.dismiss();
+                showOptionsDialog();
+            }
+        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
-
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.show();
     }
+
+    private void showOptionsDialog() {
+        // Inflate the dialog_options.xml layout
+        View dialogOptionsView = LayoutInflater.from(this).inflate(R.layout.dialog_options, null);
+
+        // Find the buttons within the inflated layout
+        Button btnPolice = dialogOptionsView.findViewById(R.id.btnPolice);
+        Button btnMedic = dialogOptionsView.findViewById(R.id.btnMedic);
+        Button btnFire = dialogOptionsView.findViewById(R.id.btnFire);
+        Button btnNaturalDisaster = dialogOptionsView.findViewById(R.id.btnNaturalDisaster);
+        Button btnBack = dialogOptionsView.findViewById(R.id.btnBack);
+
+        btnPolice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Police selected");
+            }
+        });
+
+        btnMedic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Medic selected");
+            }
+        });
+
+        btnFire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Fire selected");
+            }
+        });
+
+        btnNaturalDisaster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Natural Disaster selected");
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogOptionsView);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Back Button Selected");
+                dialog.dismiss(); // Dismiss the dialog
+            }
+        });
+    }
+
 }

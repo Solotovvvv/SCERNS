@@ -36,20 +36,6 @@
                 android:textStyle="bold" />
 
             <!-- Registration Fields -->
-            <ImageView
-                android:id="@+id/imageViewProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="125dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/placeholder_image"
-                android:clickable="true"
-                android:onClick="selectImageFromGallery"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Image" />
-
             <EditText
                 android:id="@+id/editTextFullname"
                 android:layout_width="match_parent"
@@ -58,14 +44,38 @@
                 android:background="@drawable/round_bg"
                 android:hint="Fullname" />
 
-            <!--            <EditText-->
-            <!--                android:id="@+id/editTextEmail"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="50dp"-->
-            <!--                android:layout_marginTop="8dp"-->
-            <!--                android:background="@drawable/round_bg"-->
-            <!--                android:hint="Email"-->
-            <!--                android:inputType="textEmailAddress" />-->
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <Button
+                    android:id="@+id/buttonSelectImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/add_photo_icon"
+                    android:onClick="selectImageFromGallery"
+                    android:layout_centerHorizontal="true"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewAddImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/buttonSelectImage"
+                    android:text="Add Image"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/round_bg"
+                android:hint="Email"
+                android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/editTextContactNumber"
@@ -76,7 +86,6 @@
                 android:hint="Contact Number"
                 android:inputType="phone" />
 
-            <!-- Username and Password Fields -->
             <EditText
                 android:id="@+id/editTextUsername"
                 android:layout_width="match_parent"
