@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         btnVictim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle Victim button click
                 showToast("Victim selected");
                 dialog.dismiss();
                 showOptionsDialog();
@@ -80,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
         btnWitness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle Witness button click
                 showToast("Witness selected");
                 dialog.dismiss();
                 showOptionsDialog();
@@ -94,10 +92,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showOptionsDialog() {
-        // Inflate the dialog_options.xml layout
         View dialogOptionsView = LayoutInflater.from(this).inflate(R.layout.dialog_options, null);
 
-        // Find the buttons within the inflated layout
         Button btnPolice = dialogOptionsView.findViewById(R.id.btnPolice);
         Button btnMedic = dialogOptionsView.findViewById(R.id.btnMedic);
         Button btnFire = dialogOptionsView.findViewById(R.id.btnFire);
@@ -141,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showToast("Back Button Selected");
-                dialog.dismiss(); // Dismiss the dialog
+                dialog.dismiss();
             }
         });
     }

@@ -102,13 +102,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/btnMap"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textColor="@android:color/black"
-            android:backgroundTint="#618264"
-            android:drawableLeft="@drawable/map_icon"/>
+<!--        <Button-->
+<!--            android:id="@+id/btnMap"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:backgroundTint="#618264"-->
+<!--            android:drawableLeft="@drawable/map_icon"/>-->
 
         <Button
             android:id="@+id/btnHome"

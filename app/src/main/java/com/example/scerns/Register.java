@@ -1,16 +1,16 @@
 package com.example.scerns;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,15 +22,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
-    private EditText editTextFullname, editTextEmail, editTextContactNumber, editTextUsername, editTextPassword;
-    private Button registerButton, buttonSelectImage;
-    private static final int PICK_IMAGE = 1;
-    private static final String API_URL = "http://yourdomain.com/api/user_registration.php";
+    private EditText editTextFullname, editTextEmail, editTextContactNumber, editTextUsername, editTextPassword, editTextAddress, editTextConfirmPassword;
+    private Button registerButton;
+
+    private static final String API_URL = "https://nutrilense.ucc-bscs.com/SCERNS/register.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +43,16 @@ public class Register extends AppCompatActivity {
         editTextFullname = findViewById(R.id.editTextFullname);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextContactNumber = findViewById(R.id.editTextContactNumber);
+        editTextAddress = findViewById(R.id.editTextAddress);
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
         registerButton = findViewById(R.id.registerButton);
-        buttonSelectImage = findViewById(R.id.buttonSelectImage);
+        editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
 
-        buttonSelectImage.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, PICK_IMAGE);
+                validateRegistration();
             }
         });
 
@@ -63,92 +66,79 @@ public class Register extends AppCompatActivity {
         });
     }
 
-    public void selectImageFromGallery(View view) {
-        // Open image gallery to select an image
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE);
+
+    private void validateRegistration() {
+        if (areFieldsEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String password = editTextPassword.getText().toString();
+        String confirmPassword = editTextConfirmPassword.getText().toString();
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        sendRegistrationData();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri selectedImageUri = data.getData();
-
-            String fileName = getFileName(selectedImageUri);
-
-            TextView textViewAddImage = findViewById(R.id.textViewAddImage);
-            textViewAddImage.setText(fileName);
-
-            Button buttonSelectImage = findViewById(R.id.buttonSelectImage);
-            buttonSelectImage.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-
-            // Send registration data along with the selected image to the PHP API
-            sendRegistrationData(fileName);
-        }
+    private boolean areFieldsEmpty() {
+        return editTextFullname.getText().toString().isEmpty() ||
+                editTextEmail.getText().toString().isEmpty() ||
+                editTextAddress.getText().toString().isEmpty() ||
+                editTextContactNumber.getText().toString().isEmpty() ||
+                editTextUsername.getText().toString().isEmpty() ||
+                editTextPassword.getText().toString().isEmpty() ||
+                editTextConfirmPassword.getText().toString().isEmpty();
     }
 
-    @SuppressLint("Range")
-    private String getFileName(Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
-    }
-
-    private void sendRegistrationData(final String imageName) {
-        // Instantiate the RequestQueue.
+    private void sendRegistrationData() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, API_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Handle successful response
-                        // You may parse the response JSON here and take appropriate action
+                        Log.d("Response", response);
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String status = jsonResponse.getString("status");
+                            String message = jsonResponse.getString("message");
+
+                            if (status.equals("success")) {
+                                Toast.makeText(Register.this, message, Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(Register.this, Login.class);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(Register.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(Register.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // Handle error response
-                // You may show an error message or retry the request
+                Toast.makeText(Register.this, "Error occurred. Please try again later.", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override
             protected Map<String, String> getParams() {
-                // Create a HashMap to store registration data
                 Map<String, String> params = new HashMap<>();
                 params.put("fullname", editTextFullname.getText().toString());
                 params.put("email", editTextEmail.getText().toString());
+                params.put("address", editTextAddress.getText().toString());
                 params.put("contact_number", editTextContactNumber.getText().toString());
                 params.put("username", editTextUsername.getText().toString());
                 params.put("password", editTextPassword.getText().toString());
-                params.put("image_name", imageName);
-                // Add other parameters as needed
+
                 return params;
             }
         };
 
-        // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 
