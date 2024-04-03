@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 03, 2024 at 09:55 AM
+-- Generation Time: Apr 03, 2024 at 10:48 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -39,7 +39,8 @@ CREATE TABLE `login` (
 --
 
 INSERT INTO `login` (`Id`, `Username`, `Password`, `UserRole`) VALUES
-(6, 'admin', '356a192b7913b04c54574d18c28d46e6395428ab', '2');
+(23, 'Respondent', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '2'),
+(25, 'Admin', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '1');
 
 -- --------------------------------------------------------
 
@@ -95,7 +96,8 @@ CREATE TABLE `user_details` (
 --
 
 INSERT INTO `user_details` (`Id`, `User_id`, `Fullname`, `Images`, `Phone`, `Email`, `Address`, `Requirement`) VALUES
-(6, 6, '1', '', '', '1', '', '');
+(23, 23, 'Respondent', '', '', 'Respondent', '', ''),
+(25, 25, 'Admin', '', '', 'admin@gmail.com', '', '');
 
 --
 -- Indexes for dumped tables
@@ -133,7 +135,7 @@ ALTER TABLE `user_details`
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `reports`
@@ -151,7 +153,7 @@ ALTER TABLE `respondent`
 -- AUTO_INCREMENT for table `user_details`
 --
 ALTER TABLE `user_details`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

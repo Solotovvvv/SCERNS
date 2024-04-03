@@ -5,14 +5,12 @@ include 'includes/config.php';
 // Check if the user is already logged in
 if (isset($_SESSION['username'])) {
     // Redirect the user to the appropriate page based on their role
-    if ($_SESSION['role'] == 0) {
-        header("Location: user.php");
-        exit();
-    } elseif ($_SESSION['role'] == 1) {
-      header("Location: ../../Client3/Views/Respondent_Admin/IncidentReport.php");
+   
+    if ($_SESSION['role'] == 1) {
+      header("Location: ../../../Client3/Views/Admin/history.php");
         exit();
     } elseif ($_SESSION['role'] == 2) {
-      header("Location: ../../../Client3/Views/Admin/history.php");
+      header("Location: ../../Client3/Views/Respondent_Admin/IncidentReport.php");
         exit();
     }
 }
