@@ -23,7 +23,7 @@ if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
         $insert_login_query = "INSERT INTO `login` (`Username`, `Password`, `UserRole`)
                                VALUES (:username, :password, :role)";
         $stmt = $pdo->prepare($insert_login_query);
-        $role = 2; // Assuming this is the default role for new admins
+        $role = 1; // Assuming this is the default role for new admins
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->bindParam(':password', $password, PDO::PARAM_STR);
         $stmt->bindParam(':role', $role, PDO::PARAM_INT);
@@ -66,6 +66,8 @@ if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
 
     echo json_encode($data);
 }
+
+
 
 else if(isset($_POST['remove'])) {
     $id = $_POST['remove'];

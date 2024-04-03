@@ -50,14 +50,11 @@ if (isset($_POST['username'], $_POST['password'])) {
 
             // Redirect based on user's role
             switch ($user['UserRole']) {
-                case 0:
-                    header("Location: user.php");
-                    exit();
                 case 1:
                     header("Location: ../../../Client3/Views/Admin/history.php");
                     exit();
                 case 2:
-                    header("Location: ../../../Client3/Views/Admin/history.php");
+                    header("Location: ../../../Client3/Views/Respondent_Admin/IncidentReport.php");
                     exit();
             }
         } else {

@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['role']) || ($_SESSION['role'] != 2)) {
+if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
     header('Location: ../../../../Client3/index.php');
     exit;
 }
@@ -271,14 +271,15 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 2)) {
                 var username=  $('#edit_username').val();
                 var password=  $('#edit_password').val();
                 var email=  $('#edit_email').val();
-                var fullanme=   $('#edit_fullname').val();
+                var fullname=   $('#edit_fullname').val();
                   var id = $('#hiddendata_respondent_Admin').val();
 
-                $.post("../../Controller/Respondent_Admin/RespondentAdmin_controller.php", {
+                $.post("../../Controller/Respondent_Admin/Update_respondent.php", {
                     password: password,
                     username: username,
+                    fullname:fullname,
                     email: email,
-                    id: id
+                    id_r: id
                 }, function (data, status) {
                   var jsons = JSON.parse(data);
                   status = jsons.status;
