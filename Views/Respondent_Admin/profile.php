@@ -25,6 +25,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Name: <?php echo strtoupper($_SESSION['fullname']) ?></h5>
                                     <p class="card-text">Contacts: <?php echo strtoupper($_SESSION['email']) ?></p>
+                                    <p class="card-text">Department: <?php echo strtoupper($_SESSION['type']) ?></p>
                                     <button href="#" class="btn btn-primary">Upload Image</button> <!-- Changed from button to anchor -->
                                 </div>
                             </div>

@@ -35,6 +35,7 @@
                                         <th>Name</th>
                                         <th>Hotline Number</th>
                                         <th>Category</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -45,7 +46,7 @@
             </section>
         </div>
     </div>
-    <!-- Hotline Modal -->
+    <!-- Add Hotline Modal -->
     <div class="modal fade" id="hotlineModal" tabindex="-1" aria-labelledby="hotlineModalLabel" data-backdrop="static" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -72,10 +73,7 @@
                         <div class="form-group">
                             <label class="col-form-label">Emergency Type:</label>
                             <select class="form-control" id="emergencyID">
-                                <option>Fire</option>
-                                <option>Medic</option>
-                                <option>Police</option>
-                                <option>Natural Disaster</option>
+                                <option value="<?php echo strtoupper($_SESSION['type']) ?>"><?php echo strtoupper($_SESSION['type']) ?></option>
                             </select>
                         </div>
                 </div>
@@ -92,30 +90,20 @@
 
     <script>
         $(document).ready(function() {
+
             $('#hotlines').DataTable({
-                "ajax": {
-                    // "url": "https://api.example.com/data",
-                    "dataSrc": ""
+                'serverside': true,
+                'processing': true,
+                'paging': true,
+                "columnDefs": [{
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, ],
+                'ajax': {
+                    'url': '../../Controller/Hotlines/gethotline.php',
+                    'type': 'get',
+
                 },
-                "columns": [{
-                        "data": null,
-                        "render": function(data, type, row, meta) {
-                            return meta.row + 1;
-                        }
-                    },
-                    {
-                        "data": "dispatch_id"
-                    },
-                    {
-                        "data": "name"
-                    },
-                    {
-                        "data": "hotline_num"
-                    },
-                    {
-                        "data": "category"
-                    },
-                ]
             });
 
             $('#hotlineForm').submit(function(e) {
@@ -125,6 +113,9 @@
                 var code = $("#dispatchID").val();
                 var name = $("#orgnameID").val();
                 var emergency = $("#emergencyID").val();
+                emergency = emergency.toLowerCase().replace(/(?:^|\s)\S/g, function(a) {
+                    return a.toUpperCase();
+                });
 
                 const payload = {
                     number: number,
