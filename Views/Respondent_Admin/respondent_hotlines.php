@@ -85,6 +85,45 @@
             </div>
         </div>
     </div>
+    <!-- View/Edit Hotline Modal -->
+    <div class="modal fade" id="viewhotlineModal" tabindex="-1" aria-labelledby="hotlineModalLabel" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Hotline</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="hotlineForm">
+                        <div class="form-group">
+                            <label class="col-form-label">Dispatcher Code:</label>
+                            <input type="text" class="form-control" id="editdispatchID" placeholder="ABC123">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">Organization Name:</label>
+                            <input type="text" class="form-control" id="editorgnameID" placeholder="XYZ Volunteers Inc."></input>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">Hotline Number:</label>
+                            <input type="number" class="form-control" id="editnumberID" placeholder="12-345-678 or 09123456789"></input>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">Emergency Type:</label>
+                            <input type="text" class="form-control" id="editemergencyID" disabled>
+                            </input>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="updateHotline()" id="submitButton">Save Changes</button>
+                    <input type="text" hidden id="hotlineid">
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <?php include 'footers/footer.php' ?>
 
@@ -137,6 +176,7 @@
                             text: 'Hotline added successfully!',
                             willClose: function() {
                                 $('#hotlineModal').modal('hide'); // Close modal
+                                var update = $('#hotlines').DataTable().ajax.reload();
                             }
                         });
                     },
@@ -153,6 +193,51 @@
 
 
         });
+
+        function view_hotline(id) {
+            var rpid = $('#hotlineid').val();
+            var number = $("#editnumberID").val();
+            var code = $("#editdispatchID").val();
+            var name = $("#editorgnameID").val();
+            $.post('../../Controller/Hotlines/viewhotline.php', {
+                id: id
+            }, function(data,
+                status) {
+                var fetchedData = JSON.parse(data);
+                $('#hotlineid').val(fetchedData.Id);
+                $('#editnumberID').val(fetchedData.HotlineNumber);
+                $("#editdispatchID").val(fetchedData.Dispatcher_Code);
+                $("#editorgnameID").val(fetchedData.Name);
+                $('#editemergencyID').val(fetchedData.Category);
+
+            });
+            $('#viewhotlineModal').modal("show");
+        }
+
+        function updateHotline() {
+            var number = $("#editnumberID").val();
+            var code = $("#editdispatchID").val();
+            var name = $("#editorgnameID").val();
+            var rpid = $("#hotlineid").val();
+
+            $.post("../../Controller/Hotlines/edithotline.php", {
+                name: name,
+                code: code,
+                number: number,
+                id: rpid
+            }, function(data, status) {
+                var jsons = JSON.parse(data);
+                status = jsons.status;
+                Swal.fire({
+                    title: 'Record Updated!',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                var update = $('#hotlines').DataTable().ajax.reload();
+                $('#viewhotlineModal').modal("hide");
+            });
+        }
     </script>
 
 </body>
