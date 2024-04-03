@@ -238,6 +238,39 @@
                 $('#viewhotlineModal').modal("hide");
             });
         }
+
+        function delete_hotline(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to delete this hotline record.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User confirmed deletion
+                    $.ajax({
+                        url: "../../Controller/Hotlines/deletehotline.php",
+                        type: 'post',
+                        data: {
+                            id: id
+                        },
+                        success: function(data, status) {
+                            var json = JSON.parse(data);
+                            status = json.status;
+                            Swal.fire({
+                                title: 'Record Deleted!',
+                                text: 'The hotline record has been successfully deleted.',
+                                icon: 'success',
+                            });
+                            $('#hotlines').DataTable().ajax.reload();
+                        }
+                    });
+                }
+            });
+        }
     </script>
 
 </body>
