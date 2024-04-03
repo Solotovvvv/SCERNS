@@ -195,179 +195,179 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
   </div>
 
 
-  < <script src="https://adminlte.io/themes/v3/plugins/jquery/jquery.min.js">
-    </script>
-    <script src="https://adminlte.io/themes/v3/plugins/jquery-ui/jquery-ui.min.js"></script>
-    <script>
-      $.widget.bridge("uibutton", $.ui.button);
-    </script>
-    <script src="https://adminlte.io/themes/v3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="https://adminlte.io/themes/v3/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <script src="https://adminlte.io/themes/v3/dist/js/adminlte.js?v=3.2.0"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="https://adminlte.io/themes/v3/plugins/jquery/jquery.min.js">
+  </script>
+  <script src="https://adminlte.io/themes/v3/plugins/jquery-ui/jquery-ui.min.js"></script>
+  <script>
+    $.widget.bridge("uibutton", $.ui.button);
+  </script>
+  <script src="https://adminlte.io/themes/v3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="https://adminlte.io/themes/v3/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+  <script src="https://adminlte.io/themes/v3/dist/js/adminlte.js?v=3.2.0"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-    <script>
-      $(document).ready(function() {
+  <script>
+    $(document).ready(function() {
 
-        $('#respondent_admin_tbls').DataTable({
-          'serverside': true,
-          'processing': true,
-          'paging': true,
-          "columnDefs": [{
-            "className": "dt-center",
-            "targets": "_all"
-          }, ],
-          'ajax': {
-            'url': 'tables/respondent_admin_tbl.php',
-            'type': 'post',
+      $('#respondent_admin_tbls').DataTable({
+        'serverside': true,
+        'processing': true,
+        'paging': true,
+        "columnDefs": [{
+          "className": "dt-center",
+          "targets": "_all"
+        }, ],
+        'ajax': {
+          'url': 'tables/respondent_admin_tbl.php',
+          'type': 'post',
 
-          },
-        });
-
+        },
       });
 
+    });
 
 
 
-      function addRespondentAdmin() {
 
-        var fullname = $('#fullnameR').val();
-        var email = $('#email').val();
-        var username = $('#registrar').val();
-        var password = $('#passwordR').val();
-        var department = $('#Department').val();
+    function addRespondentAdmin() {
 
-        $.ajax({
-          url: '../../Controller/Admin/RespondentAdmin_controller.php',
-          method: 'POST',
-          data: {
-            fullname: fullname,
-            email: email,
-            username: username,
-            password: password,
-            department:department
-          },
-          success: function(response) {
-            var data = JSON.parse(response);
-            if (data.status == 'data_exist') {
-              Swal.fire({
-                title: 'Record Already Exist!',
-                icon: 'warning',
-                showConfirmButton: false,
-                timer: 1000
-              });
-            } else if (data.status == 'success') {
-              $('#fullnameR').val('');
-                $('#email').val('');
-                $('#registrar').val('');
-                $('#passwordR').val('');
-                $('#Department').val(''); 
-              var c = $('#respondent_admin_tbls').DataTable().ajax.reload();
-              Swal.fire({
-                title: 'Record Added!',
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              });
-            } else {
-              alert('Failed to add data.');
-            }
+      var fullname = $('#fullnameR').val();
+      var email = $('#email').val();
+      var username = $('#registrar').val();
+      var password = $('#passwordR').val();
+      var department = $('#Department').val();
 
-            $('#addRegistrarModal').modal("hide");
-          },
-          error: function(xhr, status, error) {
-            alert('Error: ' + error);
-          }
-        });
-      }
-
-
-      function view_respondent_admin(id) {
-        $('#hiddendata_respondent_Admin').val(id);
-        $.post("../../Controller/Admin/RespondentAdmin_controller.php", {
-          id: id
-        }, function(data,
-          status) {
-          var userids = JSON.parse(data);
-          $('#edit_username').val(userids.Username);
-          $('#edit_password').val(userids.Password);
-          $('#edit_email').val(userids.Email);
-          $('#edit_fullname').val(userids.Fullname);
-          $('#edit_department').val(userids.Type);
-          // $('#edit_password').val(userids.password);
-        });
-        $('#editRegistrarModal').modal("show");
-      }
-
-      function update() {
-        var username = $('#edit_username').val();
-        var password = $('#edit_password').val();
-        var email = $('#edit_email').val();
-        var fullname = $('#edit_fullname').val();
-        var department = $('#edit_department').val();
-        var id = $('#hiddendata_respondent_Admin').val();
-
-        $.post("../../Controller/Admin/Update_respondent.php", {
-          password: password,
-          username: username,
+      $.ajax({
+        url: '../../Controller/Admin/RespondentAdmin_controller.php',
+        method: 'POST',
+        data: {
           fullname: fullname,
           email: email,
-          department:department,
-          id_r: id
-        }, function(data, status) {
-          var jsons = JSON.parse(data);
-          status = jsons.status;
-          if (status == 'success') {
+          username: username,
+          password: password,
+          department: department
+        },
+        success: function(response) {
+          var data = JSON.parse(response);
+          if (data.status == 'data_exist') {
             Swal.fire({
-              title: 'Record Updated!',
+              title: 'Record Already Exist!',
+              icon: 'warning',
+              showConfirmButton: false,
+              timer: 1000
+            });
+          } else if (data.status == 'success') {
+            $('#fullnameR').val('');
+            $('#email').val('');
+            $('#registrar').val('');
+            $('#passwordR').val('');
+            $('#Department').val('');
+            var c = $('#respondent_admin_tbls').DataTable().ajax.reload();
+            Swal.fire({
+              title: 'Record Added!',
               icon: 'success',
               showConfirmButton: false,
               timer: 1000
             });
-            var update = $('#respondent_admin_tbls').DataTable().ajax.reload();
+          } else {
+            alert('Failed to add data.');
           }
-          $('#editRegistrarModal').modal("hide");
-        });
 
-      }
+          $('#addRegistrarModal').modal("hide");
+        },
+        error: function(xhr, status, error) {
+          alert('Error: ' + error);
+        }
+      });
+    }
 
-      function delete_respondent_admin(id) {
-        Swal.fire({
-          title: 'Are you sure?',
-          text: 'You are about to delete this registrar record.',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // User confirmed deletion
-            $.ajax({
-              url: '../../Controller/Admin/RespondentAdmin_controller.php',
-              type: 'post',
-              data: {
-                remove: id
-              },
-              success: function(data, status) {
-                var json = JSON.parse(data);
-                status = json.status;
-                if (status == 'success') {
-                  Swal.fire({
-                    title: 'Record Deleted!',
-                    text: 'The admin record has been successfully deleted.',
-                    icon: 'success',
-                  });
-                  $('#respondent_admin_tbls').DataTable().ajax.reload();
-                }
+
+    function view_respondent_admin(id) {
+      $('#hiddendata_respondent_Admin').val(id);
+      $.post("../../Controller/Admin/RespondentAdmin_controller.php", {
+        id: id
+      }, function(data,
+        status) {
+        var userids = JSON.parse(data);
+        $('#edit_username').val(userids.Username);
+        $('#edit_password').val(userids.Password);
+        $('#edit_email').val(userids.Email);
+        $('#edit_fullname').val(userids.Fullname);
+        $('#edit_department').val(userids.Type);
+        // $('#edit_password').val(userids.password);
+      });
+      $('#editRegistrarModal').modal("show");
+    }
+
+    function update() {
+      var username = $('#edit_username').val();
+      var password = $('#edit_password').val();
+      var email = $('#edit_email').val();
+      var fullname = $('#edit_fullname').val();
+      var department = $('#edit_department').val();
+      var id = $('#hiddendata_respondent_Admin').val();
+
+      $.post("../../Controller/Admin/Update_respondent.php", {
+        password: password,
+        username: username,
+        fullname: fullname,
+        email: email,
+        department: department,
+        id_r: id
+      }, function(data, status) {
+        var jsons = JSON.parse(data);
+        status = jsons.status;
+        if (status == 'success') {
+          Swal.fire({
+            title: 'Record Updated!',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          });
+          var update = $('#respondent_admin_tbls').DataTable().ajax.reload();
+        }
+        $('#editRegistrarModal').modal("hide");
+      });
+
+    }
+
+    function delete_respondent_admin(id) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to delete this registrar record.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // User confirmed deletion
+          $.ajax({
+            url: '../../Controller/Admin/RespondentAdmin_controller.php',
+            type: 'post',
+            data: {
+              remove: id
+            },
+            success: function(data, status) {
+              var json = JSON.parse(data);
+              status = json.status;
+              if (status == 'success') {
+                Swal.fire({
+                  title: 'Record Deleted!',
+                  text: 'The admin record has been successfully deleted.',
+                  icon: 'success',
+                });
+                $('#respondent_admin_tbls').DataTable().ajax.reload();
               }
-            });
-          }
-        });
-      }
-    </script>
+            }
+          });
+        }
+      });
+    }
+  </script>
 </body>
 
 </html>

@@ -38,14 +38,14 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
     <div class="content-wrapper">
       <div class="content-header">
         <div class="container">
-          <h1 class="m-0">Admin Respondent</h1>
+          <h1 class="m-0">Contact Respondent</h1>
         </div>
       </div>
 
       <section class="content">
         <div class="container">
           <div class="table-responsive card p-3">
-            <button class="btn btn-primary mb-3 admin-btn" data-toggle="modal" data-target="#addRegistrarModal" style="width: 20%" ;>ADD
+            <button class="btn btn-primary mb-3 admin-btn" data-toggle="modal" data-target="#addRespondent" style="width: 20%" ;>ADD
             </button>
 
             <div class="table-responsive card p-3">
@@ -68,11 +68,11 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
   </div>
 
   <!-- add registrar modal -->
-  <div class="modal fade" id="addRegistrarModal" tabindex="-1" role="dialog" aria-labelledby="addRegistrarModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addRespondent" tabindex="-1" role="dialog" aria-labelledby="addRegistrarModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addRegistrarModalLabel">Add Registrar</h5>
+          <h5 class="modal-title" id="addRegistrarModalLabel">Add Contact Respondent</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -80,13 +80,13 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
         <div class="modal-body">
           <div class="row mb-3">
             <div class="col-sm-6">
-              <p class="m-0 font-weight-bold">Fullname <span class="text-danger">*</span></p>
-              <input type="email" class="form-control" placeholder="Enter Full Name" id="fullnameR">
+              <p class="m-0 font-weight-bold">Hotline <span class="text-danger">*</span></p>
+              <input type="email" class="form-control" placeholder="Enter Full Name" id="hotline">
             </div>
 
             <div class="col-sm-6">
-              <p class="m-0 font-weight-bold">Email <span class="text-danger">*</span></p>
-              <input type="email" class="form-control" placeholder="Enter Email" id="email">
+              <p class="m-0 font-weight-bold">Dispatcher Code <span class="text-danger">*</span></p>
+              <input type="email" class="form-control" placeholder="Enter Email" id="DispatcherCode">
             </div>
           </div>
 
@@ -94,17 +94,11 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
 
           <div class="row mb-3">
             <div class="col-sm-12">
-              <p class="m-0 font-weight-bold">Username <span class="text-danger">*</span></p>
-              <input type="text" class="form-control" placeholder="Enter username" id="registrar">
+              <p class="m-0 font-weight-bold">name<span class="text-danger">*</span></p>
+              <input type="text" class="form-control" placeholder="Enter username" id="name">
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-sm-12">
-              <p class="m-0 font-weight-bold">Password <span class="text-danger">*</span></p>
-              <input type="password" class="form-control" placeholder="Enter password" id="passwordR">
-            </div>
-          </div>
 
           <div class="row mt-3">
             <div class="col-sm-12">
@@ -128,8 +122,8 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
     </div>
   </div>
 
-  <!-- //edit registrar modal -->
-  <div class="modal fade" id="editRegistrarModal" tabindex="-1" role="dialog" aria-labelledby="editRegistrarModalLabel" aria-hidden="true">
+
+  <div class="modal fade" id="edit_contacts" tabindex="-1" role="dialog" aria-labelledby="editRegistrarModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -139,37 +133,33 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
           </button>
         </div>
         <div class="modal-body">
-          <div class="row mb-3">
+        <div class="row mb-3">
             <div class="col-sm-6">
-              <p class="m-0 font-weight-bold">Fullname <span class="text-danger">*</span></p>
-              <input type="email" class="form-control" placeholder="Enter Full Name" id="edit_fullname">
+              <p class="m-0 font-weight-bold">Hotline <span class="text-danger">*</span></p>
+              <input type="email" class="form-control" placeholder="Enter Full Name" id="Edit_hotline">
             </div>
 
             <div class="col-sm-6">
-              <p class="m-0 font-weight-bold">Email <span class="text-danger">*</span></p>
-              <input type="email" class="form-control" placeholder="Enter Email" id="edit_email">
+              <p class="m-0 font-weight-bold">Dispatcher Code <span class="text-danger">*</span></p>
+              <input type="email" class="form-control" placeholder="Enter Email" id="Edit_DispatcherCode">
             </div>
           </div>
+
+         
 
           <div class="row mb-3">
             <div class="col-sm-12">
-              <p class="m-0 font-weight-bold">Username <span class="text-danger">*</span></p>
-              <input type="text" class="form-control" placeholder="Enter username" id="edit_username">
+              <p class="m-0 font-weight-bold">name<span class="text-danger">*</span></p>
+              <input type="text" class="form-control" placeholder="Enter username" id="Edit_name">
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-sm-12">
-              <p class="m-0 font-weight-bold">Password <span class="text-danger">*</span></p>
-              <input type="password" class="form-control" placeholder="Enter password" id="edit_password">
-            </div>
-          </div>
 
           <div class="row mt-3">
             <div class="col-sm-12">
               <p class="m-0 font-weight-bold">Department <span class="text-danger">*</span></p>
-              <select class="form-control" id="edit_department">
-                <option value="" disabled selected>Select Department</option>
+              <select class="form-control" id="Edit_Department">
+                <option value="" disabled selected>Select Type of Deparment</option>
                 <option value="Fire">Fire</option>
                 <option value="Medic">Medic</option>
                 <option value="Crime">Crime</option>
@@ -179,8 +169,8 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" onclick="update()">SAVE CHANGES</button>
-          <input type="text" id="hiddendata_respondent_Admin">
+          <button type="button" class="btn btn-primary" onclick="updateContacts()">SAVE CHANGES</button>
+          <input type="text" id="hiddendata_respondent_contact">
         </div>
       </div>
     </div>
@@ -225,20 +215,18 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
 
       function addRespondentAdmin() {
 
-        var fullname = $('#fullnameR').val();
-        var email = $('#email').val();
-        var username = $('#registrar').val();
-        var password = $('#passwordR').val();
+        var name = $('#name').val();
+        var hotline = $('#hotline').val();
+        var DispatcherCode = $('#DispatcherCode').val();
         var department = $('#Department').val();
 
         $.ajax({
-          url: '../../Controller/Admin/RespondentAdmin_controller.php',
+          url: '../../Controller/Admin/contact_respondent_controller.php',
           method: 'POST',
           data: {
-            fullname: fullname,
-            email: email,
-            username: username,
-            password: password,
+            name: name,
+            hotline: hotline,
+            DispatcherCode: DispatcherCode,
             department:department
           },
           success: function(response) {
@@ -251,12 +239,11 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                 timer: 1000
               });
             } else if (data.status == 'success') {
-              $('#fullnameR').val('');
-                $('#email').val('');
-                $('#registrar').val('');
-                $('#passwordR').val('');
+              $('#name').val('');
+                $('#hotline').val('');
+                $('#DispatcherCode').val('');
                 $('#Department').val(''); 
-              var c = $('#respondent_admin_tbls').DataTable().ajax.reload();
+              var c = $('#Contacts_table').DataTable().ajax.reload();
               Swal.fire({
                 title: 'Record Added!',
                 icon: 'success',
@@ -267,7 +254,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
               alert('Failed to add data.');
             }
 
-            $('#addRegistrarModal').modal("hide");
+            $('#addRespondent').modal("hide");
           },
           error: function(xhr, status, error) {
             alert('Error: ' + error);
@@ -276,38 +263,35 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
       }
 
 
-      function view_respondent_admin(id) {
-        $('#hiddendata_respondent_Admin').val(id);
-        $.post("../../Controller/Admin/RespondentAdmin_controller.php", {
+      function view_contacts(id) {
+        $('#hiddendata_respondent_contact').val(id);
+        $.post("../../Controller/Admin/contact_respondent_controller.php", {
           id: id
         }, function(data,
           status) {
           var userids = JSON.parse(data);
-          $('#edit_username').val(userids.Username);
-          $('#edit_password').val(userids.Password);
-          $('#edit_email').val(userids.Email);
-          $('#edit_fullname').val(userids.Fullname);
-          $('#edit_department').val(userids.Type);
+          $('#Edit_hotline').val(userids.HotlineNumber);
+          $('#Edit_name').val(userids.Name);
+          $('#Edit_DispatcherCode').val(userids.Dispatcher_Code);
+          $('#Edit_Department').val(userids.Category);
           // $('#edit_password').val(userids.password);
         });
-        $('#editRegistrarModal').modal("show");
+        $('#edit_contacts').modal("show");
       }
 
-      function update() {
-        var username = $('#edit_username').val();
-        var password = $('#edit_password').val();
-        var email = $('#edit_email').val();
-        var fullname = $('#edit_fullname').val();
-        var department = $('#edit_department').val();
-        var id = $('#hiddendata_respondent_Admin').val();
+      function updateContacts() {
+        var hotline = $('#Edit_hotline').val();
+        var name = $('#Edit_name').val();
+        var dpcode = $('#Edit_DispatcherCode').val();
+        var department = $('#Edit_Department').val();
+        var id = $('#hiddendata_respondent_contact').val();
 
-        $.post("../../Controller/Admin/Update_respondent.php", {
-          password: password,
-          username: username,
-          fullname: fullname,
-          email: email,
+        $.post("../../Controller/Admin/Update_contacts_respondents.php", {
+          name: name,
+          hotline: hotline,
+          dpcode: dpcode,
           department:department,
-          id_r: id
+          id_c: id
         }, function(data, status) {
           var jsons = JSON.parse(data);
           status = jsons.status;
@@ -318,14 +302,14 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
               showConfirmButton: false,
               timer: 1000
             });
-            var update = $('#respondent_admin_tbls').DataTable().ajax.reload();
+            var update = $('#Contacts_table').DataTable().ajax.reload();
           }
-          $('#editRegistrarModal').modal("hide");
+          $('#edit_contacts').modal("hide");
         });
 
       }
 
-      function delete_respondent_admin(id) {
+      function delete_contacts(id) {
         Swal.fire({
           title: 'Are you sure?',
           text: 'You are about to delete this registrar record.',
@@ -338,10 +322,10 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
           if (result.isConfirmed) {
             // User confirmed deletion
             $.ajax({
-              url: '../../Controller/Admin/RespondentAdmin_controller.php',
+              url: '../../Controller/Admin/contact_respondent_controller.php',
               type: 'post',
               data: {
-                remove: id
+                removes: id
               },
               success: function(data, status) {
                 var json = JSON.parse(data);
@@ -352,7 +336,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                     text: 'The admin record has been successfully deleted.',
                     icon: 'success',
                   });
-                  $('#respondent_admin_tbls').DataTable().ajax.reload();
+                  $('#Contacts_table').DataTable().ajax.reload();
                 }
               }
             });

@@ -18,7 +18,7 @@ if ($stmt->execute()) {
             '<td>' . $row['Category'] . '</td>',
             '<td>
             <button class="btn btn-primary" onclick="view_contacts(' . $row['Id'] . ')"><i class="nav-icon fas fa-edit"></i></button>
-            <button class="btn btn-danger" onclick="delete_admin(' . $row['Id'] . ')"><i class="nav-icon fas fa-trash"></i></button>
+            <button class="btn btn-danger" onclick="delete_contacts(' . $row['Id'] . ')"><i class="nav-icon fas fa-trash"></i></button>
             </td>',
         ];
         $data[] = $subarray;
