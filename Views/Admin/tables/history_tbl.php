@@ -4,7 +4,6 @@ include '../../../includes/config.php';
 
 $pdo = Database::connection();
 
-// Set default values for start and end dates
 $startDate = isset($_GET['startDate']) ? $_GET['startDate'] : null;
 $endDate = isset($_GET['endDate']) ? $_GET['endDate'] : null;
 
@@ -22,7 +21,7 @@ $sql = "SELECT
             WHERE r.Status = 'Arrived' ";
 
 
-// Add WHERE clause for date filtering if start and end dates are provided
+
 if ($startDate && $endDate) {
     $sql .= " AND  r.Date BETWEEN :startDate AND :endDate";
 } elseif ($startDate) {
@@ -47,16 +46,18 @@ if ($endDate) {
 if ($stmt->execute()) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         // Format date
-        $formattedDate = date('F j, Y', strtotime($row['Date']));
-      
+        // $formattedDate = date('F j, Y', strtotime($row['Date']));
+        $formattedDateTime = date('F j, Y H:i:s', strtotime($row['Date']));
+
+
         $subarray = [
             '<td>' . $row['Id'] . '</td>',
             '<td>' . $row['Fullname'] . '</td>',
-            '<td>' . $row['Dispatcher_Code'] .'</td>',
-            '<td>' . $row['TypeOfEmergency'] .'</td>',
-            '<td>' . $row['Level'] .'</td>',
-            '<td>' . $formattedDate . '</td>',
-            '<td>' . $row['Status'] .'</td>',
+            '<td>' . $row['Dispatcher_Code'] . '</td>',
+            '<td>' . $row['TypeOfEmergency'] . '</td>',
+            '<td>' . $row['Level'] . '</td>',
+            '<td>' . $formattedDateTime . '</td>',
+            '<td>' . $row['Status'] . '</td>',
         ];
         $data[] = $subarray;
     }
@@ -67,4 +68,3 @@ $output = [
 ];
 
 echo json_encode($output);
-?>

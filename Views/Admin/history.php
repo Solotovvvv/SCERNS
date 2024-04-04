@@ -1,11 +1,10 @@
 <?php
 session_start();
 if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
-  header('Location: ../../../../Client3/index.php');
-  exit;
+    header('Location: ../../../../Client3/index.php');
+    exit;
 }
 ?>
-
 
 
 <!DOCTYPE html>
@@ -17,16 +16,16 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
     <title>History</title>
     <link rel="icon" href="../../img/images/orig-logo.png" />
     <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/fontawesome-free/css/all.min.css" />
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
-  <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
-  <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/icheck-bootstrap/icheck-bootstrap.min.css" />
-  <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/jqvmap/jqvmap.min.css" />
-  <link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css?v=3.2.0" />
-  <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/overlayScrollbars/css/OverlayScrollbars.min.css" />
-  <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/daterangepicker/daterangepicker.css" />
-  <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/summernote/summernote-bs4.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" />
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+    <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
+    <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/icheck-bootstrap/icheck-bootstrap.min.css" />
+    <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/jqvmap/jqvmap.min.css" />
+    <link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css?v=3.2.0" />
+    <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/overlayScrollbars/css/OverlayScrollbars.min.css" />
+    <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/summernote/summernote-bs4.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css" />
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" />
@@ -35,7 +34,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-    <?php include 'sidenav.php'; ?>
+        <?php include 'sidenav.php'; ?>
 
         <div class="content-wrapper">
             <div class="content-header">
@@ -47,20 +46,20 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
             <section class="content">
                 <div class="container-fluid">
                     <div class="card p-3">
-                      
+
                         <div class="input-group mb-3">
                             <table>
                                 <tr>
-                                 
+
                                     <td><input type="text" id="datepicker-start" class="form-control" placeholder="Select Start Date"></td>
                                     <td><input type="text" id="datepicker-end" class="form-control" placeholder="Select End Date"></td>
                                     <td><button id="filterBtn" class="btn bg-color2">FILTER</button></td>
-                             
+
                                     <td style="text-align: right; padding-left: 750px;"><button class="btn bg-color2 print-btn">PRINT REPORT</button></td>
-                                     
-               
+
+
                                 </tr>
-                               
+
                             </table>
                         </div>
 
@@ -93,14 +92,14 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
     </script>
     <script src="https://adminlte.io/themes/v3/plugins/jquery-ui/jquery-ui.min.js"></script>
     <script>
-      $.widget.bridge("uibutton", $.ui.button);
+        $.widget.bridge("uibutton", $.ui.button);
     </script>
-  <script src="https://adminlte.io/themes/v3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="https://adminlte.io/themes/v3/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-  <script src="https://adminlte.io/themes/v3/dist/js/adminlte.js?v=3.2.0"></script>
-  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://adminlte.io/themes/v3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://adminlte.io/themes/v3/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <script src="https://adminlte.io/themes/v3/dist/js/adminlte.js?v=3.2.0"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
