@@ -41,6 +41,7 @@ if (isset($_POST['username'], $_POST['password'])) {
 
             // Set session variables based on user's role
             $_SESSION['role'] = $user['UserRole'];
+            $_SESSION['user_id'] = $user_details['User_id'];
             $_SESSION['type'] = $user_details['Type'];
             $_SESSION['fullname'] = $user_details['Fullname'];
             $_SESSION['images'] = $user_details['Images'];
