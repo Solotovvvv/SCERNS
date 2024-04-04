@@ -49,6 +49,7 @@ if (isset($_POST['username'], $_POST['password'])) {
             $_SESSION['phone'] = $user_details['Phone'];
             $_SESSION['address'] = $user_details['Address'];
             $_SESSION['email'] = $user_details['Email'];
+            $_SESSION['otp'] = $user_details['OTP'];
             $_SESSION['username'] = $user['Username'];
 
             // Redirect based on user's role
