@@ -48,10 +48,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Retrieve the user ID from the intent extras
         userId = getIntent().getIntExtra("userId", -1);
         if (userId != -1) {
-            // Display user ID using a Toast
             Toast.makeText(MainActivity.this, "User ID: " + userId, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(MainActivity.this, "User ID not found", Toast.LENGTH_SHORT).show();
@@ -99,8 +97,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showToast("Victim selected");
-                selectedTypeTextView.setText("VICTIM"); // Update hidden TextView with "VICTIM"
-                saveSelectionToServer();
+                selectedTypeTextView.setText("Victim");
+                dialog.dismiss();
+//                sendDataToServer(userId, "Victim", "");
+                showOptionsDialog("Victim"); // Pass the selected type to showOptionsDialog
             }
         });
 
@@ -108,8 +108,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showToast("Witness selected");
-                selectedTypeTextView.setText("WITNESS"); // Update hidden TextView with "WITNESS"
-                saveSelectionToServer();
+                selectedTypeTextView.setText("Witness");
+                dialog.dismiss();
+//                sendDataToServer(userId, "Witness", "");
+                showOptionsDialog("Witness"); // Pass the selected type to showOptionsDialog
             }
         });
 
@@ -119,73 +121,34 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void saveSelectionToServer() {
-        // Get the type text from the hidden TextView
-        String typeText = selectedTypeTextView.getText().toString();
+        // Inside your MainActivity class
+        private void sendDataToServer(int userId, String role, String typeOfEmergency) {
+            // Prepare the URL for sending data to the server
+            String url = "https://nutrilense.ucc-bscs.com/SCERNS/reports.php?userId=" + userId + "&role=" + role + "&typeOfEmergency=" + typeOfEmergency;
 
-        // Set dispatcherId directly based on the type text
-        int dispatcherId;
-        if (typeText.equals("WITNESS")) {
-            dispatcherId = 1; // Set dispatcherId to 1 for Witness
-        } else {
-            dispatcherId = 2; // Set dispatcherId to 2 for Victim
+            // Make an HTTP request using Volley
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Handle response from server
+                            Log.d("ServerResponse", "Response: " + response);
+                            showToast("Server Response: " + response);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // Handle error
+                    showToast("Error sending data to server");
+                }
+            });
+
+            // Add the request to the RequestQueue
+            Volley.newRequestQueue(this).add(stringRequest);
         }
 
-        // Make HTTP request to PHP script with the dispatcher Id and selection
-        String url = "https://nutrilense.ucc-bscs.com/SCERNS/reports.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Log the response for debugging
-                        Log.d("Response", response);
 
-                        // Handle response from server
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            String message = jsonResponse.getString("message");
-                            showToast(message);
-                            if (success) {
-                                // If insertion is successful, you can perform additional actions here
-                                showToast(message);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showToast("Error parsing response");
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle error
-                        showToast("Error saving selection: " + error.getMessage());
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                // Parameters to send to PHP script
-                Map<String, String> params = new HashMap<>();
-                params.put("dispatcherId", String.valueOf(dispatcherId)); // Send dispatcher Id
-//                params.put("type_of_emergency", typeText); // Send type of emergency (VICTIM or WITNESS)
-//                // Add other parameters here if needed (landmark, level, date, status, remarks)
-//                params.put("landmark", "YourLandmarkValueHere");
-//                params.put("level", "YourLevelValueHere");
-//                params.put("date", "YourDateValueHere");
-//                params.put("status", "YourStatusValueHere");
-//                params.put("remarks", "YourRemarksValueHere");
-                return params;
-            }
-        };
-
-        // Add the request to the RequestQueue.
-        Volley.newRequestQueue(this).add(stringRequest);
-    }
-
-
-
-    private void showOptionsDialog() {
+    private void showOptionsDialog(final String role) {
         View dialogOptionsView = LayoutInflater.from(this).inflate(R.layout.dialog_options, null);
 
         Button btnPolice = dialogOptionsView.findViewById(R.id.btnPolice);
@@ -194,22 +157,40 @@ public class MainActivity extends AppCompatActivity {
         Button btnNaturalDisaster = dialogOptionsView.findViewById(R.id.btnNaturalDisaster);
         Button btnBack = dialogOptionsView.findViewById(R.id.btnBack);
 
+        TextView selectedDialogOptions = dialogOptionsView.findViewById(R.id.selectedDialogOptions);
+
         btnPolice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showToast("Police selected");
+                selectedDialogOptions.setText("Police");
+
                 Intent intent = new Intent(MainActivity.this, PoliceDetails.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("role", role); // Assuming you have the role value stored somewhere
+                intent.putExtra("emergencyType", "Police");
                 startActivity(intent);
+
+                // Dismiss the dialog
+                dialog.dismiss();
             }
         });
 
         btnMedic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 showToast("Medic selected");
+                selectedDialogOptions.setText("Medic");
+
+                // Pass the selected role and emergency type to the next activity
                 Intent intent = new Intent(MainActivity.this, MedicDetails.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("role", role); // Assuming you have the role value stored somewhere
+                intent.putExtra("emergencyType", "Medic");
                 startActivity(intent);
+
+                // Dismiss the dialog
+                dialog.dismiss();
             }
         });
 
@@ -217,8 +198,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showToast("Fire selected");
+                selectedDialogOptions.setText("Fire");
+
+                // Pass the selected role and emergency type to the next activity
                 Intent intent = new Intent(MainActivity.this, FireDetails.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("role", role); // Assuming you have the role value stored somewhere
+                intent.putExtra("emergencyType", "Fire");
                 startActivity(intent);
+
+                // Dismiss the dialog
+                dialog.dismiss();
             }
         });
 
@@ -226,8 +216,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showToast("Natural Disaster selected");
+                selectedDialogOptions.setText("Natural Disaster");
+
+                // Pass the selected role and emergency type to the next activity
                 Intent intent = new Intent(MainActivity.this, NaturalDisasterDetails.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("role", role); // Assuming you have the role value stored somewhere
+                intent.putExtra("emergencyType", "Natural Disaster");
                 startActivity(intent);
+
+                // Dismiss the dialog
+                dialog.dismiss();
+
+                // Dismiss the dialog
+                dialog.dismiss();
             }
         });
 
@@ -244,5 +246,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 }

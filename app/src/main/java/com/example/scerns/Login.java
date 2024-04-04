@@ -79,6 +79,7 @@ public class Login extends AppCompatActivity {
                                         Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(Login.this, MainActivity.class);
                                         intent.putExtra("userId", userId);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                         startActivity(intent);
                                         finish();
                                     } else if (userRole.equals("pending")) {
