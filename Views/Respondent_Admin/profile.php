@@ -21,7 +21,7 @@
                     <div class="row justify-content-center"> <!-- Center the card horizontally -->
                         <div class="col-md-6"> <!-- Adjust width of the column as needed -->
                             <div class="card">
-                                <img src="..." class="card-img-top" alt="No Image Available">
+                                <img src="<?= $_SESSION['image'] ?>" alt="Profile Image" style="max-width: 250px; max-height: 250px; display: block; margin-left: auto; margin-right: auto;">
                                 <div class="card-body">
                                     <h5 class="card-title">Name: <?php echo strtoupper($_SESSION['fullname']) ?></h5>
                                     <p class="card-text">Contacts: <?php echo strtoupper($_SESSION['email']) ?></p>
