@@ -10,6 +10,7 @@ include '../../includes/config.php';
 // }
 if (isset($_SESSION['email'])) {
   $email = $_SESSION['email'];
+  $id = $_SESSION['user_id'];
 }
 
 ?>
@@ -26,7 +27,7 @@ if (isset($_SESSION['email'])) {
 
 <body style="background-color: #618264;">
 
-  <form action="../ForgotPassword/reset_password.php" id="formnewpass" method="post">
+  <form action="" id="formnewpass" method="post">
     <section class="vh-100">
       <div class="container p-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -55,7 +56,7 @@ if (isset($_SESSION['email'])) {
 
               <div class="d-flex justify-content-around mt-5">
                 <a class="text-decoration-none text-dark">You remembered your account?</a>
-                <a class="text-decoration-none text-primary" href="./index.php">Login</a>
+                <a class="text-decoration-none text-primary" href="../../index.php">Login</a>
               </div>
 
             </div>
@@ -64,59 +65,67 @@ if (isset($_SESSION['email'])) {
       </div>
     </section>
   </form>
+  <?php include 'footers/footer.php'; ?>
 
   <!-- Confirmation Script -->
   <script>
-    const newPasswordInput = document.getElementById("NewPassword");
-    const confirmPasswordInput = document.getElementById("ConfirmPassword");
-    const passwordMatchLabel = document.getElementById("passwordMatch");
-    const form = document.getElementById("formnewpass");
+    $(document).ready(function() {
+      // Function to toggle password visibility
+      $('.toggle-password').click(function() {
+        var $input = $(this).prev('input');
+        var type = $input.attr('type') === 'password' ? 'text' : 'password';
+        $input.attr('type', type);
+        $(this).find('i').toggleClass('fa-eye fa-eye-slash');
+      });
 
-    function validatePassword() {
-      const newPassword = newPasswordInput.value;
-      const confirmPassword = confirmPasswordInput.value;
+      $('#formnewpass').submit(function(event) {
+        passwordMatch.textContent = ''; // Clear password match label
+        event.preventDefault(); // Prevent form submission
 
-      if (newPassword !== confirmPassword) {
-        passwordMatchLabel.textContent = "Passwords do not match";
-      } else {
-        passwordMatchLabel.textContent = "";
-      }
-    }
+        var pass = $('#NewPassword').val();
+        var Confirmpass = $('#ConfirmPassword').val();
+        var userid = '<?= $id ?>';
+        var resetpasslink = '../../Controller/ForgotPassword/reset_password.php';
 
-    function togglePasswordVisibility(passwordInput, togglePassword) {
-      const type = passwordInput.type === "password" ? "text" : "password";
-      passwordInput.type = type;
-      togglePassword.innerHTML = type === "text" ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
-    }
+        if (pass !== Confirmpass) {
+          passwordMatch.textContent = "Passwords do not match.";
+          return;
+        } else if (!pass || !Confirmpass) {
+          passwordMatch.textContent = "Passwords are empty.";
+          return;
+        }
 
-    function handleFormSubmission(event) {
-      validatePassword();
-
-      if (newPasswordInput.value !== confirmPasswordInput.value) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-    }
-
-    newPasswordInput.addEventListener("input", validatePassword);
-    confirmPasswordInput.addEventListener("input", validatePassword);
-    form.addEventListener("submit", handleFormSubmission);
-
-    const togglePassword1 = document.getElementById("togglePassword1");
-    const togglePassword2 = document.getElementById("togglePassword2");
-
-    togglePassword1.addEventListener("click", () => {
-      togglePasswordVisibility(newPasswordInput, togglePassword1);
-    });
-
-    togglePassword2.addEventListener("click", () => {
-      togglePasswordVisibility(confirmPasswordInput, togglePassword2);
+        $.ajax({
+          url: resetpasslink,
+          method: 'POST',
+          data: {
+            user_id: userid,
+            password: pass,
+            confirmpass: Confirmpass,
+          },
+          success: function(response) {
+            Swal.fire({
+              text: "Changing Password Success!",
+              title: 'Success',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000,
+              willClose: function() {
+                window.location.href = "../../index.php"
+              }
+            });
+          },
+          error: function(xhr, status, error) {
+            Swal.fire({
+              text: "An error occurred while processing your request. Please try again later.",
+              title: 'Error',
+              icon: 'error'
+            });
+          }
+        });
+      });
     });
   </script>
-
-
-
-  <?php include 'footers/footer.php'; ?>
 
   <script>
     if (window.performance) {

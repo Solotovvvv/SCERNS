@@ -29,7 +29,7 @@ if (isset($_SESSION['email'])) {
 
 <body style="background-color: #618264;">
 
-  <form method="post" action="../ForgotPassword/newpass.php">
+  <form method="post" id="otpForm" action="../ForgotPassword/newpass.php">
     <section class="vh-100">
       <div class="container p-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -46,7 +46,7 @@ if (isset($_SESSION['email'])) {
                 <label for="number" class="form-label">Input OTP Here</label>
               </div>
 
-              <button type="submit" onclick="checkCode()" class="btn btn-primary btn-lg rounded-pill w-50 mt-2">Confirm</button>
+              <button type="submit" class="btn btn-primary btn-lg rounded-pill w-50 mt-2">Confirm</button>
 
               <div class="d-flex justify-content-around mt-5">
                 <a class="text-decoration-none text-dark">You remembered your account?</a>
@@ -59,31 +59,34 @@ if (isset($_SESSION['email'])) {
       </div>
     </section>
   </form>
-  <script>
-    function checkCode() {
-      var codeInput = document.getElementById('code').value;
-      var wrongMessage = document.getElementById('wrongMessage');
-      var correctMessage = document.getElementById('correctMessage');
-
-      if (codeInput === '<?php echo $otp; ?>') {
-        wrongMessage.style.display = 'none';
-        correctMessage.style.display = 'block';
-        document.getElementById('code').setCustomValidity('');
-
-      } else {
-        wrongMessage.style.display = 'block';
-        correctMessage.style.display = 'none';
-        document.getElementById('code').setCustomValidity('Invalid code');
-      }
-    }
-  </script>
   <?php include 'footers/footer.php'; ?>
   <script>
-    if (window.performance) {
-      if (performance.navigation.type == 1) {
-        // Reloaded the page using the browser's reload button
-        window.location.href = "otp.php";
-      }
+    $(document).ready(function() {
+      $('#otpForm').submit(function(event) {
+        event.preventDefault();
+
+        var codeInput = $('#number').val();
+        var otp = '<?php echo $otp; ?>';
+
+        if (codeInput === otp) {
+          $(this).unbind('submit').submit();
+        } else {
+          Swal.fire({
+            text: "Wrong OTP. Please try again.",
+            icon: "warning",
+            title: "Oops..."
+          });
+        }
+      });
+    });
+  </script>
+
+  <?php include 'footers/footer.php'; ?>
+
+  <script>
+    if (window.performance && performance.navigation.type == 1) {
+      // Reloaded the page using the browser's reload button
+      window.location.href = "otp.php";
     }
   </script>
 </body>
