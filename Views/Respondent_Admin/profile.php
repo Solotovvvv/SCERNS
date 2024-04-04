@@ -21,14 +21,16 @@
                     <div class="row justify-content-center"> <!-- Center the card horizontally -->
                         <div class="col-md-6"> <!-- Adjust width of the column as needed -->
                             <div class="card">
-                                <img src="<?= $_SESSION['image'] ?>" alt="Profile Image" style="max-width: 250px; max-height: 250px; display: block; margin-left: auto; margin-right: auto;">
+                                <div class="card-title">
+                                    <img src="<?= $_SESSION['image'] ?>" class="mt-4" alt="Profile Image" style="max-width: 250px; max-height: 250px; display: block; margin-left: auto; margin-right: auto;">
+                                </div>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageModal">
+                                    <i class="fas fa-edit"></i>
+                                </button>
                                 <div class="card-body">
                                     <h5 class="card-title">Name: <?php echo strtoupper($_SESSION['fullname']) ?></h5>
                                     <p class="card-text">Contacts: <?php echo strtoupper($_SESSION['email']) ?></p>
                                     <p class="card-text">Department: <?php echo strtoupper($_SESSION['type']) ?></p>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageModal">
-                                        Upload Image
-                                    </button>
                                 </div>
                             </div>
                         </div>

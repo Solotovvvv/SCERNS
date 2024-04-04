@@ -17,7 +17,6 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="info">
-                    <img src="<?= $_SESSION['image'] ?>" alt="" style="max-width: 150; max-height: 150; display: block; margin-left: auto; margin-right: auto;">
                     <a href="#" class="text-center">Respondent</a>
                     <a href="#" class="d-block">
                         <?php echo strtoupper($_SESSION['fullname']) ?>
