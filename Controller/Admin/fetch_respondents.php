@@ -14,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response = $respondents;
     } elseif (isset($_POST['dispatcherCodeId'])) {
         $dispatcherCodeId = $_POST['dispatcherCodeId'];
-        $stmt = $pdo->prepare("SELECT `Name` FROM `respondent` WHERE `Id` = :dispatcherCodeId");
-        $stmt->bindParam(':dispatcherCodeId', $dispatcherCodeId, PDO::PARAM_INT);
+        $stmt = $pdo->prepare("SELECT `Name` FROM `respondent` WHERE `Dispatcher_Code` = :dispatcherCodeId");
+        $stmt->bindParam(':dispatcherCodeId', $dispatcherCodeId, PDO::PARAM_STR);
         $stmt->execute();
         $name = $stmt->fetchColumn();
         $response = $name;

@@ -177,7 +177,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary" onclick="updateReport()">Save changes</button>
                         <input type="text" id="hiddendata_report">
                     </div>
                 </div>
@@ -288,9 +288,9 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                     console.log("Latitude and longitude not available");
                 }
             });
-            $('#reportModal').on('hidden.bs.modal', function () {
-        resetComboBoxes();
-    });
+            $('#reportModal').on('hidden.bs.modal', function() {
+                resetComboBoxes();
+            });
 
 
             $('#departmentCombo').on('change', function() {
@@ -314,7 +314,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                             }));
                             $.each(data, function(index, respondent) {
                                 dispatcherCodeCombo.append($('<option>', {
-                                    value: respondent.Id,
+                                    value: respondent.Dispatcher_Code,
                                     text: respondent.Dispatcher_Code
                                 }));
                             });
@@ -340,6 +340,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
 
             $('#dispatcherCodeCombo').on('change', function() {
                 var dispatcherCodeId = $(this).val();
+                console.log(dispatcherCodeId)
                 if (dispatcherCodeId) {
                     $.ajax({
                         url: '../../Controller/Admin/fetch_respondents.php',
@@ -407,7 +408,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                 if (userids.Dispatcher_Id !== null) {
                     loadRespondents(function() {
                         // Set values of dropdowns after loading respondents
-                        $('#departmentCombo').val(userids.TypeOfEmergency);
+                        $('#departmentCombo').val(userids.Category);
                         $('#dispatcherCodeCombo').val(userids.Dispatcher_Code);
                         $('#teamCombo').val(userids.Name);
                         $('#statusCombo').val(userids.Status);
@@ -477,10 +478,36 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
         }
 
         function resetComboBoxes() {
-            $('#departmentCombo').val(null);
-            $('#dispatcherCodeCombo').val(null);
-            $('#teamCombo').val(null);
-            $('#statusCombo').val(null);
+            $('#departmentCombo').val('');
+            $('#dispatcherCodeCombo').val('');
+            $('#teamCombo').val('');
+            $('#statusCombo').val('');
+        }
+
+        function updateReport() {
+            var dispatcher = $('#dispatcherCodeCombo').val();
+            var status = $('#statusCombo').val();
+            var id = $('#hiddendata_report').val();
+
+            console.log(dispatcher);
+            $.post("../../Controller/Admin/Update_Status.php", {
+                id: id,
+                dispatcher: dispatcher,
+                status: status
+            }, function(data, status) {
+                var jsons = JSON.parse(data);
+                status = jsons.status;
+                if (status == 'success') {
+                    Swal.fire({
+                        title: 'Record Updated!',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                    var update = $('#reports_Dt').DataTable().ajax.reload();
+                }
+                $('#reportModal').modal("hide");
+            });
         }
     </script>
 </body>
