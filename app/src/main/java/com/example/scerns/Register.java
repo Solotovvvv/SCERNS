@@ -2,9 +2,12 @@ package com.example.scerns;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,13 +28,18 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
     private EditText editTextFullname, editTextEmail, editTextContactNumber, editTextUsername, editTextPassword, editTextAddress, editTextConfirmPassword;
-    private Button registerButton;
+    private Button registerButton, buttonSelectImage;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri selectedImageUri;
 
     private static final String API_URL = "https://nutrilense.ucc-bscs.com/SCERNS/register.php";
 
@@ -41,6 +49,7 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.register);
 
         editTextFullname = findViewById(R.id.editTextFullname);
+        buttonSelectImage = findViewById(R.id.buttonSelectImage);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextContactNumber = findViewById(R.id.editTextContactNumber);
         editTextAddress = findViewById(R.id.editTextAddress);
@@ -48,6 +57,13 @@ public class Register extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         registerButton = findViewById(R.id.registerButton);
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
+
+        buttonSelectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImagePicker();
+            }
+        });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +82,50 @@ public class Register extends AppCompatActivity {
         });
     }
 
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    private String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (displayNameIndex != -1) { // Check if column index is valid
+                        result = cursor.getString(displayNameIndex);
+                    }
+                }
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.getLastPathSegment(); // Fallback: get last path segment
+        }
+        return result;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            // Get the URI of the selected image
+            selectedImageUri = data.getData();
+
+            // Display the filename
+            String fileName = getFileName(selectedImageUri);
+            TextView textViewSelectedFileName = findViewById(R.id.textViewSelectedFileName);
+            textViewSelectedFileName.setText(fileName);
+            textViewSelectedFileName.setVisibility(View.VISIBLE); // Make it visible
+            Toast.makeText(this, "Image selected", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void validateRegistration() {
         if (areFieldsEmpty()) {
@@ -80,9 +140,13 @@ public class Register extends AppCompatActivity {
             return;
         }
 
+        if (selectedImageUri == null) {
+            Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         sendRegistrationData();
     }
-
 
     private boolean areFieldsEmpty() {
         return editTextFullname.getText().toString().isEmpty() ||
@@ -135,11 +199,33 @@ public class Register extends AppCompatActivity {
                 params.put("username", editTextUsername.getText().toString());
                 params.put("password", editTextPassword.getText().toString());
 
+                // Add the selected image data
+                if (selectedImageUri != null) {
+                    try {
+                        // Get the image data from the URI
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                        byte[] imageBytes = byteArrayOutputStream.toByteArray();
+                        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+                        // Add the encoded image to the parameters
+                        params.put("image_data", encodedImage);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        Toast.makeText(Register.this, "File not found", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(Register.this, "Error reading image", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
                 return params;
             }
         };
 
         queue.add(stringRequest);
     }
+
 
 }

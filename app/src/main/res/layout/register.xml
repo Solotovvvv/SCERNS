@@ -35,7 +35,6 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <!-- Registration Fields -->
             <EditText
                 android:id="@+id/editTextFullname"
                 android:layout_width="match_parent"
@@ -43,6 +42,22 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/round_bg"
                 android:hint="Fullname" />
+
+            <Button
+                android:id="@+id/buttonSelectImage"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Insert Valid Id"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/textViewSelectedFileName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/editTextEmail"
@@ -131,6 +146,7 @@
             </LinearLayout>
 
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
