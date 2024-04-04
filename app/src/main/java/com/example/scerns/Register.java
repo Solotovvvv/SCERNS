@@ -106,7 +106,7 @@ public class Register extends AppCompatActivity {
             }
         }
         if (result == null) {
-            result = uri.getLastPathSegment(); // Fallback: get last path segment
+            result = uri.getLastPathSegment();
         }
         return result;
     }
@@ -115,10 +115,8 @@ public class Register extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            // Get the URI of the selected image
             selectedImageUri = data.getData();
 
-            // Display the filename
             String fileName = getFileName(selectedImageUri);
             TextView textViewSelectedFileName = findViewById(R.id.textViewSelectedFileName);
             textViewSelectedFileName.setText(fileName);

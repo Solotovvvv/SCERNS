@@ -71,12 +71,16 @@ public class Login extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             boolean success = jsonObject.getBoolean("success");
                             if (success) {
-                                if (jsonObject.has("user_role")) {
+                                if (jsonObject.has("user_role") && jsonObject.has("user_id")) {
                                     String userRole = jsonObject.getString("user_role");
+                                    int userId = jsonObject.getInt("user_id");
                                     if (userRole.equals("0")) {
-                                        startActivity(new Intent(Login.this, MainActivity.class));
+                                        String message = jsonObject.getString("message");
+                                        Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(Login.this, MainActivity.class);
+                                        intent.putExtra("userId", userId);
+                                        startActivity(intent);
                                         finish();
-                                        return;
                                     } else if (userRole.equals("pending")) {
                                         String message = jsonObject.getString("message");
                                         Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
@@ -84,7 +88,7 @@ public class Login extends AppCompatActivity {
                                         Toast.makeText(Login.this, "Invalid user role", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
-                                    Toast.makeText(Login.this, "User role not found in response", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Login.this, "User role or ID not found in response", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 String message = jsonObject.getString("message");
