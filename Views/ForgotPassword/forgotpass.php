@@ -21,7 +21,7 @@ include '../../includes/config.php';
 
 <body style="background-color: #618264;">
 
-  <form action="./email_check.php" method="post">
+  <form action="../../Controller/ForgotPassword/email_check.php" method="post">
     <section class="vh-100">
       <div class="container p-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
