@@ -29,28 +29,28 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                 <li class="nav-item">
-                    <a href="IncidentReport.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'Admin_Account.php' ? 'active' : ''; ?>">
+                    <a href="IncidentReport.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'IncidentReport.php' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-chart-bar mr-3"></i>
                         <p>Incidents</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="history.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'Admin_Account.php' ? 'active' : ''; ?>">
+                    <a href="history.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'history.php' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-history mr-3"></i>
                         <p>History</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="respondent_hotlines.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'Admin_Respondent.php' ? 'active' : ''; ?>">
+                    <a href="respondent_hotlines.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'respondent_hotlines.php' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-phone-alt mr-3"></i>
                         <p>Contacts / Hotlines</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="profile.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'Admin_Respondent.php' ? 'active' : ''; ?>">
+                    <a href="profile.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-user mr-3"></i>
                         <p>Profile</p>
                     </a>

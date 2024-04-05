@@ -39,7 +39,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
         <div class="content-wrapper">
             <div class="content-header">
                 <div class="container-fluid">
-                    <h1 class="m-0">Attendance</h1>
+                    <h1 class="m-0">History</h1>
                 </div>
             </div>
 
