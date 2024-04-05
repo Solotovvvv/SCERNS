@@ -1,3 +1,4 @@
+
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -31,7 +32,7 @@
                 <li class="nav-item">
                     <a href="IncidentReport.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'IncidentReport.php' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-chart-bar mr-3"></i>
-                        <p>Incidents</p>
+                        <p>Incidents</p> <span class="position-absolute top-6 start-500 translate-middle badge rounded-pill bg-danger" id="report_notifs" style="margin-left: 5rem;">0</span>
                     </a>
                 </li>
 
@@ -67,3 +68,17 @@
 
     </div>
 </aside>
+
+
+<script>
+    var pusher = new Pusher('b26a50e9e9255fc95c8f', {
+        cluster: 'ap1',
+        encrypted: true
+    });
+
+    var channel = pusher.subscribe('Scerns');
+    channel.bind('new-report', function(data) {
+        console.log(data.counts)
+        document.getElementById('report_notifs').textContent = data.counts;
+    });
+</script>

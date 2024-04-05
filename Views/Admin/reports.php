@@ -204,6 +204,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
         let map;
         $(document).ready(function() {
@@ -380,7 +381,30 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                 resetTeamCombo(); // Reset team combo on change of either department or dispatcher code
             });
 
+            
+            // var pusher = new Pusher('b26a50e9e9255fc95c8f', {
+            //     cluster: 'ap1',
+            //     encrypted: true
+            // });
+
+            // var channel = pusher.subscribe('Scerns');
+            // channel.bind('new-report', function(data) {
+            //     $('#reports_Dt').DataTable().ajax.reload();
+            // });
+
+
         });
+
+        
+            var pusher = new Pusher('b26a50e9e9255fc95c8f', {
+                cluster: 'ap1',
+                encrypted: true
+            });
+
+            var channel = pusher.subscribe('Scerns');
+            channel.bind('new-report', function(data) {
+                $('#reports_Dt_respondent').DataTable().ajax.reload();
+            });
 
         function resetTeamCombo() {
             $('#teamCombo').empty().append($('<option>', {

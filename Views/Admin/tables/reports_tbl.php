@@ -1,33 +1,22 @@
 <?php
 session_start();
 include '../../../includes/config.php';
-
 $pdo = Database::connection();
 
+// Pusher configuration
+require_once '../../../vendor/autoload.php';
+
+include '../../../Controller/pusher.php';
+
 // Initialize DataTables request parameters
-$start = $_POST['start'] ?? 0; // Start index of records to fetch
-$length = $_POST['length'] ?? 10; // Number of records per page
-$searchValue = $_POST['search']['value'] ?? ''; // Search keyword
-$orderColumn = $_POST['order'][0]['column'] ?? 0; // Index of the column to order by
-$orderDirection = $_POST['order'][0]['dir'] ?? 'asc'; // Order direction
+$start = $_POST['start'] ?? 0;
+$length = $_POST['length'] ?? 10;
+$searchValue = $_POST['search']['value'] ?? '';
+$orderColumn = $_POST['order'][0]['column'] ?? 0;
+$orderDirection = $_POST['order'][0]['dir'] ?? 'asc';
 
 // Define the base SQL query
-$sql = "SELECT 
-            r.*, 
-            rd.Dispatcher_Code,
-            rd.Name,
-            rd.Category,
-            ud.Fullname,
-            ud.Phone,
-            ud.Email
-        FROM 
-            reports AS r
-        LEFT JOIN 
-            respondent AS rd ON r.Dispatcher_Id = rd.Id
-        INNER JOIN 
-            user_details AS ud ON r.User_id = ud.User_id
-        WHERE 
-            r.Status != 'Arrived'";
+$sql = "SELECT r.*, rd.Dispatcher_Code, rd.Name, rd.Category, ud.Fullname, ud.Phone, ud.Email FROM reports AS r LEFT JOIN respondent AS rd ON r.Dispatcher_Id = rd.Id INNER JOIN user_details AS ud ON r.User_id = ud.User_id WHERE r.Status != 'Arrived'";
 
 // Add search condition if search keyword is provided
 if (!empty($searchValue)) {
@@ -43,14 +32,11 @@ $sql .= " ORDER BY $orderColumnIndex $orderDirection";
 $sql .= " LIMIT $start, $length";
 
 $stmt = $pdo->prepare($sql);
-
 $data = [];
-
 if ($stmt->execute()) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         // Format date
         $formattedDateTime = date('F j, Y H:i:s', strtotime($row['Date']));
-
         $subarray = [
             $row['TypeOfEmergency'],
             $formattedDateTime,
@@ -58,7 +44,7 @@ if ($stmt->execute()) {
             $row['Level'],
             $row['Dispatcher_Code'],
             $row['Status'],
-            '<button class="btn btn-primary" onclick="view_reports(' . $row['Id'] . ')"><i class="nav-icon fas fa-edit"></i></button>',
+            '<button class="btn btn-primary" onclick="view_reports(' . $row['Id'] . ')"><i class="nav-icon fas fa-edit"></i></button>'
         ];
         $data[] = $subarray;
     }
@@ -69,10 +55,15 @@ $totalRecordsCount = $pdo->query("SELECT COUNT(*) FROM reports WHERE Status != '
 
 // Construct output in DataTables format
 $output = [
-    'draw' => $_POST['draw'] ?? 1, // Add draw parameter
-    'recordsTotal' => $totalRecordsCount, // Total records count
-    'recordsFiltered' => $totalRecordsCount, // Total records count after filtering (in this case, same as total records count because we're not applying filtering in PHP)
+    'draw' => $_POST['draw'] ?? 1,
+    'recordsTotal' => $totalRecordsCount,
+    'recordsFiltered' => $totalRecordsCount,
     'data' => $data,
 ];
 
+// Trigger Pusher event for new report
+$newReportsCount = $totalRecordsCount;
+$pusher->trigger('Scerns', 'new-report', ['count' => $newReportsCount]);
+
 echo json_encode($output);
+

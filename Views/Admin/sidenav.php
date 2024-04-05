@@ -1,3 +1,4 @@
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -38,6 +39,7 @@
 
                         <li class="nav-item">
                             <a href="UserAccount.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'UserAccount.php' ? 'active' : ''; ?>">
+                                <span class="position-absolute top-6 start-100 translate-middle badge rounded-pill bg-danger " id="user_notif" style="margin-left: -0.5rem;"></span>
                                 <p>User Accounts</p>
                             </a>
                         </li>
@@ -55,13 +57,15 @@
                         </li>
                     </ul>
                 </li>
-
                 <li class="nav-item">
                     <a href="reports.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-graduation-cap mr-3"></i>
-                        <p>Reports</p>
+                        <p>Reports</p> <span class="position-absolute top-6 start-500 translate-middle badge rounded-pill bg-danger" id="reports_notif" style="margin-left: 5rem;">1</span>
+
                     </a>
+
                 </li>
+
 
                 <li class="nav-item">
                     <a href="contacts.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'contacts.php' ? 'active' : ''; ?>">
@@ -87,3 +91,15 @@
 
     </div>
 </aside>
+
+<script>
+    var pusher = new Pusher('b26a50e9e9255fc95c8f', {
+        cluster: 'ap1',
+        encrypted: true
+    });
+
+    var channel = pusher.subscribe('Scerns');
+    channel.bind('new-report', function(data) {
+        document.getElementById('reports_notif').textContent = data.count;
+    });
+</script>
