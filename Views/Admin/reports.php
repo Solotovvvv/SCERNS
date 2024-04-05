@@ -75,7 +75,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
 
                     <div class="container">
                         <div class="mb-1 text-center">
-                            <h3>Type of Incident: <span>Medic</span></h3>
+                            <h3>Type of Incident: <span id="type">Medic</span></h3>
                         </div>
                         <div id="map" style="height: 200px; width: 100%;" class="mb-3"></div>
                         <hr>
@@ -396,6 +396,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                 id: id
             }, function(data, status) {
                 var userids = JSON.parse(data);
+                $('#type').text(userids.TypeOfEmergency);
                 $('#name').text(userids.Fullname);
                 $('#phone').text(userids.Phone);
                 $('#email').text(userids.Email);

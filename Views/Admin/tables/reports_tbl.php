@@ -65,7 +65,7 @@ if ($stmt->execute()) {
 }
 
 // Get total records count for pagination
-$totalRecordsCount = $pdo->query("SELECT COUNT(*) FROM reports WHERE Status = 'Pending'")->fetchColumn();
+$totalRecordsCount = $pdo->query("SELECT COUNT(*) FROM reports WHERE Status != 'Arrived'")->fetchColumn();
 
 // Construct output in DataTables format
 $output = [
