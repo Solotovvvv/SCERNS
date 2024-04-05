@@ -2,10 +2,19 @@
 session_start();
 include 'includes/config.php';
 
+// if (isset($_COOKIE['fQnaIJDS']) && isset($_COOKIE['KnbxyTHW'])) {
+if (isset($_COOKIE['fQnaIJDS']) && isset($_COOKIE['BJausdnK'])) {
+  $username = $_COOKIE['fQnaIJDS'];
+  // $password = $_COOKIE['KnbxyTHW'];
+  $password = '';
+  $checked = $_COOKIE['BJausdnK'];
+} else {
+  $username = $password = $checked = '';
+}
+
 // Check if the user is already logged in
 if (isset($_SESSION['username'])) {
   // Redirect the user to the appropriate page based on their role
-
   if ($_SESSION['role'] == 1) {
     header("Location: ../../../Client3/Views/Admin/history.php");
     exit();
@@ -52,22 +61,22 @@ if (isset($_SESSION['username'])) {
             <img src="./assets/img/orig-logo.png" class="img-fluid px-1 mb-3">
 
             <h1>SCERNS</h1>
-            <form action="controller/user_signin.php" method="post">
+            <form action="controller/user_signin.php" method="post" id="loginForm">
               <div class="form-floating mb-3 text-start">
-                <input type="text" class="form-control rounded-4" name="username" id="username" placeholder="Username" value="<?php echo (isset($_COOKIE['fnbkn']) ? $_COOKIE['fnbkn'] : ''); ?>" required>
+                <input type="text" class="form-control rounded-4" name="username" id="username" placeholder="Username" value="<?php echo $username; ?>" required>
                 <label for="username" class="form-label">Username</label>
               </div>
 
               <div class="form-floating mb-3 text-start" style="position: relative;">
-                <input type="password" class="form-control rounded-4" id="floatingPassword" name="password" placeholder="Password" value="<?php echo (isset($_COOKIE['qbtuyqug']) ? $_COOKIE['qbtuyqug'] : ''); ?>" required>
-                <label for="floatingPassword">Password</label>
+                <input type="password" class="form-control rounded-4" id="password" name="password" placeholder="Password" value="<?php echo $password; ?>" required>
+                <label for="password">Password</label>
                 <span class="toggle-password mt-1" id="togglePassword"><i class="fa-regular fa-eye"></i></span>
               </div>
 
 
               <div class="my-3 d-flex justify-content-between">
                 <label>
-                  <input type="checkbox" name="remember" id="remember" <?php if (isset($_COOKIE['fnbkn'])) echo "checked='checked'"; ?>> Remember me
+                  <input type="checkbox" name="remember" id="remember" <?= $checked ?>> Remember me
                 </label>
                 <a href="./Views/ForgotPassword/forgotpass.php" class="text-decoration-none text-secondary">Forgot password?</a>
               </div>
@@ -100,10 +109,10 @@ if (isset($_SESSION['username'])) {
   }
   ?>
   <script src="./assets/js/bootstrap.bundle.js"></script>
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
   <script>
-    const passwordInput = document.getElementById('floatingPassword');
+    const passwordInput = document.getElementById('password');
     const togglePassword = document.getElementById('togglePassword');
 
     togglePassword.addEventListener('click', () => {
