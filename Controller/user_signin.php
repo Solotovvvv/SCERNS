@@ -5,6 +5,7 @@ include '../includes/config.php';
 if (isset($_POST['username'], $_POST['password'])) {
     $username = $_POST['username'];
     $password = sha1($_POST['password']);
+    $cookiepass = $_POST['password'];
 
     try {
         // Establish PDO connection
@@ -35,6 +36,18 @@ if (isset($_POST['username'], $_POST['password'])) {
             $user_details_stmt = $pdo->prepare("SELECT * FROM user_details WHERE User_id = :user_id");
             $user_details_stmt->execute(array(':user_id' => $user['Id']));
             $user_details = $user_details_stmt->fetch(PDO::FETCH_ASSOC);
+
+            $cookie_time = 60 * 60 * 24 * 30;
+
+            if (isset($_REQUEST['remember'])) {
+                setcookie('fQnaIJDS', $username, time() + $cookie_time, "/");
+                // setcookie('KnbxyTHW', $cookiepass, time() + $cookie_time, "/");
+                setcookie('BJausdnK', 'checked', time() + $cookie_time, "/");
+            } else {
+                setcookie('fQnaIJDS', '', time() - 3600, "/");
+                setcookie('KnbxyTHW', '', time() - 3600, "/");
+                setcookie('BJausdnK', '', time() - 3600, "/");
+            }
 
             // Store user details in session
             $_SESSION['user_details'] = $user_details;
@@ -69,24 +82,4 @@ if (isset($_POST['username'], $_POST['password'])) {
         echo "Error: " . $e->getMessage(); // Output any potential errors
         die(); // Terminate script execution
     }
-}
-
-// Cookie handling code
-$cookie_time = 60 * 60 * 24 * 30; // 30 days
-
-if (isset($_POST['remember'])) {
-    $cookie_time_Onset = time() + $cookie_time; // Calculate the expiration time
-
-    setcookie("fnbkn", $_POST['username'], $cookie_time_Onset, '/'); // Set cookie with correct expiration time
-    setcookie("qbtuyqug", $_POST['password'], $cookie_time_Onset, '/'); // Set cookie with correct expiration time
-
-    $_SESSION['fnbkn'] = $_POST['username'];
-    $_SESSION['qbtuyqug'] = $_POST['password'];
-} else {
-    $cookie_time_fromOffset = time() - $cookie_time; // Calculate the expiration time
-    setcookie("fnbkn", '', $cookie_time_fromOffset, '/'); // Unset cookie with correct expiration time
-    setcookie("qbtuyqug", '', $cookie_time_fromOffset, '/'); // Unset cookie with correct expiration time
-
-    $_SESSION['fnbkn'] = '';
-    $_SESSION['qbtuyqug'] = '';
 }

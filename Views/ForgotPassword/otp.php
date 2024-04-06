@@ -41,7 +41,6 @@ if (isset($_SESSION['email'])) {
               <p class="text-muted">Input the otp code we sent in your email.</p>
 
               <div class="form-floating mb-2" id="">
-                <input type="show" name="correct_otp" value="<?php echo $otp; ?>">
                 <input type="number" id="number" class="form-control rounded-4" placeholder="OTP" name="otp" autocomplete="" required>
                 <label for="number" class="form-label">Input OTP Here</label>
               </div>

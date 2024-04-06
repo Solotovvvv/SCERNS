@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
-
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <?php include 'sidenav.php'; ?>
@@ -227,15 +226,15 @@
                     });
 
 
-                //     var pusher = new Pusher('b26a50e9e9255fc95c8f', {
-                //         cluster: 'ap1',
-                //         encrypted: true
-                //     });
+                    //     var pusher = new Pusher('b26a50e9e9255fc95c8f', {
+                    //         cluster: 'ap1',
+                    //         encrypted: true
+                    //     });
 
-                //     var channel = pusher.subscribe('Scerns');
-                //     channel.bind('new-report', function(data) {
-                //         $('#reports_Dt_respondent').DataTable().ajax.reload();
-                //     });
+                    //     var channel = pusher.subscribe('Scerns');
+                    //     channel.bind('new-report', function(data) {
+                    //         $('#reports_Dt_respondent').DataTable().ajax.reload();
+                    //     });
                 }
 
 
