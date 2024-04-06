@@ -6,12 +6,20 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -20,7 +28,10 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EmergencyInfo extends AppCompatActivity implements AddressSuggestionTask.AddressSuggestionListener{
@@ -95,7 +106,6 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
         // other url for hosting
         // https://capstone-it4b.com/SCERNS/user/user_reports.php
         String url = "https://nutrilense.ucc-bscs.com/SCERNS/reports.php";
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -132,17 +142,41 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
 
     @Override
     public void onAddressSuggestionReceived(JSONArray suggestions) {
-        // Handle the received suggestions here, update UI accordingly
         if (suggestions != null && suggestions.length() > 0) {
-            try {
-                // Extract suggestion from JSONArray and update UI accordingly
-                JSONObject suggestion = suggestions.getJSONObject(0);
-                String suggestedAddress = suggestion.getString("display_name");
-                editTextAddress.setText(suggestedAddress);
-                // Optionally, you can show the suggestions in a dropdown or list for user selection
-            } catch (JSONException e) {
-                e.printStackTrace();
+            List<String> suggestionList = new ArrayList<>();
+            for (int i = 0; i < suggestions.length(); i++) {
+                try {
+                    JSONObject suggestion = suggestions.getJSONObject(i);
+                    String suggestedAddress = suggestion.getString("display_name");
+                    suggestionList.add(suggestedAddress);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
+
+            // Populate ListView with suggestions
+            ListView suggestionListView = findViewById(R.id.suggestionListView);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, suggestionList);
+            suggestionListView.setAdapter(adapter);
+
+            // Show the suggestion layout
+            LinearLayout addressSuggestionLayout = findViewById(R.id.addressSuggestionLayout);
+            addressSuggestionLayout.setVisibility(View.VISIBLE);
+
+            // Handle click on suggestion item
+            suggestionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String selectedAddress = (String) parent.getItemAtPosition(position);
+                    EditText editTextAddress = findViewById(R.id.editTextAddress);
+                    editTextAddress.setText(selectedAddress);
+                    addressSuggestionLayout.setVisibility(View.GONE);
+                }
+            });
         }
     }
+
+
+
+
 }

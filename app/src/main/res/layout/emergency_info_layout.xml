@@ -15,6 +15,7 @@
         app:menu="@menu/sidebar_menu" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -40,6 +41,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/titleLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/curve_bg"
@@ -60,20 +62,53 @@
             android:id="@+id/editTextAddress"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/round_bg"
             android:hint="Address"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/mainLinearLayout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:inputType="text"
             android:imeOptions="actionSearch"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
+            android:inputType="text"
+            app:layout_constraintTop_toBottomOf="@id/titleLinearLayout" >
             <requestFocus />
         </EditText>
 
+        <ScrollView
+            android:id="@+id/addressSuggestionScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/editTextAddress"
+            app:layout_constraintBottom_toTopOf="@id/editTextLandmark">
+
+            <LinearLayout
+                android:id="@+id/addressSuggestionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#DDDDDD"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textSuggestionHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Address Suggestions"
+                    android:textStyle="bold"
+                    android:padding="10dp"/>
+
+                <ListView
+                    android:id="@+id/suggestionListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="250dp"
+                    android:scrollbars="vertical" />
+            </LinearLayout>
+        </ScrollView>
 
         <EditText
             android:id="@+id/editTextLandmark"
@@ -82,7 +117,7 @@
             android:background="@drawable/round_bg"
             android:hint="Landmark"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editTextAddress"
+            app:layout_constraintTop_toBottomOf="@id/addressSuggestionScrollView"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_marginStart="10dp"
