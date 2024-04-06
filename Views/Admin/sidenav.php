@@ -39,7 +39,7 @@
 
                         <li class="nav-item">
                             <a href="UserAccount.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'UserAccount.php' ? 'active' : ''; ?>">
-                                <span class="position-absolute top-6 start-100 translate-middle badge rounded-pill bg-danger " id="user_notif" style="margin-left: -0.5rem;"></span>
+                                <span class="position-absolute top-6 start-100 translate-middle badge rounded-pill bg-danger " id="" style="margin-left: -0.5rem;"></span>
                                 <p>User Accounts</p>
                             </a>
                         </li>
@@ -60,7 +60,7 @@
                 <li class="nav-item">
                     <a href="reports.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-graduation-cap mr-3"></i>
-                        <p>Reports</p> <span class="position-absolute top-6 start-500 translate-middle badge rounded-pill bg-danger" id="reports_notif" style="margin-left: 5rem;">1</span>
+                        <p>Reports</p> <span class="position-absolute top-6 start-500 translate-middle badge rounded-pill bg-danger" id="reports_notif_admin" style="margin-left: 5rem;">1</span>
 
                     </a>
 
@@ -92,6 +92,7 @@
     </div>
 </aside>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     var pusher = new Pusher('b26a50e9e9255fc95c8f', {
         cluster: 'ap1',
@@ -100,6 +101,32 @@
 
     var channel = pusher.subscribe('Scerns');
     channel.bind('new-report', function(data) {
-        document.getElementById('reports_notif').textContent = data.count;
+        // Call your AJAX function
+        sendReportData();
     });
-</script>
+
+    // Define your AJAX function
+    function sendReportData() {
+        $.ajax({
+            url: "../../Controller/Admin/get_notif_admin.php",
+            method: "GET",
+            success: function(response) {
+                // Update report_notifs element with received data
+                if (response === '0') {
+                    $('#reports_notif_admin').hide();
+                } else {
+                    $('#reports_notif_admin').text(response).show();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error occurred while fetching data:", error);
+            }
+        });
+    }
+
+
+
+    $(document).ready(function() {
+        sendReportData();
+    })
+    </script>

@@ -396,15 +396,15 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
         });
 
         
-            var pusher = new Pusher('b26a50e9e9255fc95c8f', {
-                cluster: 'ap1',
-                encrypted: true
-            });
+            // var pusher = new Pusher('b26a50e9e9255fc95c8f', {
+            //     cluster: 'ap1',
+            //     encrypted: true
+            // });
 
-            var channel = pusher.subscribe('Scerns');
-            channel.bind('new-report', function(data) {
-                $('#reports_Dt_respondent').DataTable().ajax.reload();
-            });
+            // var channel = pusher.subscribe('Scerns');
+            // channel.bind('new-report', function(data) {
+            //     $('#reports_Dt_respondent').DataTable().ajax.reload();
+            // });
 
         function resetTeamCombo() {
             $('#teamCombo').empty().append($('<option>', {

@@ -32,7 +32,7 @@
                 <li class="nav-item">
                     <a href="IncidentReport.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'IncidentReport.php' ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-chart-bar mr-3"></i>
-                        <p>Incidents</p> <span class="position-absolute top-6 start-500 translate-middle badge rounded-pill bg-danger" id="report_notifs" style="margin-left: 5rem;">0</span>
+                        <p>Incidents</p> <span class="position-absolute top-6 start-500 translate-middle badge rounded-pill bg-danger" id="report_notifs" style="margin-left: 5rem;"></span>
                     </a>
                 </li>
 
@@ -69,7 +69,7 @@
     </div>
 </aside>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     var pusher = new Pusher('b26a50e9e9255fc95c8f', {
         cluster: 'ap1',
@@ -78,7 +78,32 @@
 
     var channel = pusher.subscribe('Scerns');
     channel.bind('new-report', function(data) {
-        console.log(data.counts)
-        document.getElementById('report_notifs').textContent = data.counts;
+        // Call your AJAX function
+        sendReportData();
     });
+
+    // Define your AJAX function
+    function sendReportData() {
+        $.ajax({
+            url: "../../Controller/Admin/get_notif_respondent.php",
+            method: "GET",
+            success: function(response) {
+                // Update report_notifs element with received data
+                if (response === '0') {
+                    $('#report_notifs').hide();
+                } else {
+                    $('#report_notifs').text(response).show();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error occurred while fetching data:", error);
+            }
+        });
+    }
+
+
+
+    $(document).ready(function() {
+        sendReportData();
+    })
 </script>
