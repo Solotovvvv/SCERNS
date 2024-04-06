@@ -10,7 +10,7 @@ if (isset($_POST['code'], $_POST['number'], $_POST['emergency'], $_POST['name'])
     $emergency = $_POST['emergency'];
     $number = $_POST['number'];
 
-    $addHotline = "INSERT INTO `respondent`(`Dispatcher_Code`, `Name`, `HotlineNumber`, `Category`) VALUES (:code, :name, :number, :emergency)";
+    $addHotline = "INSERT INTO `scerns_respondents`(`Dispatcher_Code`, `Name`, `HotlineNumber`, `Category`) VALUES (:code, :name, :number, :emergency)";
     $stmt = $pdo->prepare($addHotline);
     $stmt->bindParam(':code', $code, PDO::PARAM_STR);
     $stmt->bindParam(':name', $name, PDO::PARAM_STR);

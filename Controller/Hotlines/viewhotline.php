@@ -6,7 +6,7 @@ $pdo = Database::connection();
 if (isset($_POST['id'])) {
     $id = $_POST['id'];
 
-    $stmt = $pdo->prepare('SELECT * FROM respondent WHERE id = :id');
+    $stmt = $pdo->prepare('SELECT * FROM scerns_respondents WHERE id = :id');
     $stmt->bindParam(':id', $id); // corrected parameter name
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);

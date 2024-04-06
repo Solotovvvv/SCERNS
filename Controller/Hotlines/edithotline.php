@@ -9,7 +9,7 @@ if (isset($_POST['id'])) {
     $name = $_POST['name'];
     $number = $_POST['number'];
 
-    $update = 'UPDATE `respondent` SET `Dispatcher_Code`=:code, `Name`=:name, `HotlineNumber`=:number WHERE `Id` = :id';
+    $update = 'UPDATE `scerns_respondents` SET `Dispatcher_Code`=:code, `Name`=:name, `HotlineNumber`=:number WHERE `Id` = :id';
 
     $stmt = $pdo->prepare($update);
     $stmt->bindParam(':id', $id);

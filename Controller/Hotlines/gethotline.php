@@ -14,7 +14,7 @@ if (isset($_SESSION['type'])) {
     // Convert 'type' to sentence case
     $sentenceCaseType = ucwords(strtolower($type));
 
-    $stmt = $pdo->prepare('SELECT * FROM respondent WHERE Category = :Category');
+    $stmt = $pdo->prepare('SELECT * FROM scerns_respondents WHERE Category = :Category');
     $stmt->bindParam(':Category', $sentenceCaseType);
     $stmt->execute();
 

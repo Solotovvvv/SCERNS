@@ -10,8 +10,8 @@ $pdo = Database::connection();
 
 
 $sql = "SELECT ud.*, lg.* 
-FROM user_details ud
-INNER JOIN login lg ON ud.User_id = lg.Id
+FROM scerns_user_details ud
+INNER JOIN scerns_login lg ON ud.User_id = lg.Id
 WHERE lg.UserRole = 'Pending'";
 $stmt = $pdo->prepare($sql);
 

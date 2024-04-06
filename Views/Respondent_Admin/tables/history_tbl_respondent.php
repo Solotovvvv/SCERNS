@@ -12,11 +12,11 @@ $sql = "SELECT
             rd.Dispatcher_Code,
             ud.Fullname
         FROM 
-            reports AS r
+        scerns_reports AS r
         INNER JOIN 
-            respondent AS rd ON r.Dispatcher_Id = rd.Id
+        scerns_respondent AS rd ON r.Dispatcher_Id = rd.Id
         INNER JOIN 
-            user_details AS ud ON r.User_id = ud.User_id
+        scerns_user_details AS ud ON r.User_id = ud.User_id
         WHERE 
             r.Status = 'Arrived' 
             AND r.TypeOfEmergency = :userType";
@@ -66,4 +66,3 @@ $output = [
 ];
 
 echo json_encode($output);
-?>

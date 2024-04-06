@@ -5,7 +5,7 @@ include '../../../includes/config.php';
 $pdo = Database::connection();
 
 
-$stmt = $pdo->prepare("SELECT * FROM respondent");
+$stmt = $pdo->prepare("SELECT * FROM scerns_respondents");
 
 $data = [];
 
@@ -30,4 +30,3 @@ $output = [
 ];
 
 echo json_encode($output);
-?>

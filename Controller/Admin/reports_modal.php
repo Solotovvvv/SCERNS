@@ -8,16 +8,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST['id'])) {
         // Get database connection
         $pdo = Database::connection();
-        
+
         // Prepare SQL query to retrieve report data
-        $select_query = "SELECT r.*, rd.Dispatcher_Code, rd.Name, rd.Category, ud.Fullname, ud.Phone, ud.Email FROM reports AS r LEFT JOIN respondent AS rd ON r.Dispatcher_Id = rd.Id INNER JOIN user_details AS ud ON r.User_id = ud.User_id WHERE r.Id = :id";
+        $select_query = "SELECT r.*, rd.Dispatcher_Code, rd.Name, rd.Category, ud.Fullname, ud.Phone, ud.Email FROM scerns_reports AS r LEFT JOIN scerns_respondents AS rd ON r.Dispatcher_Id = rd.Id INNER JOIN scerns_user_details AS ud ON r.User_id = ud.User_id WHERE r.Id = :id";
         $stmt = $pdo->prepare($select_query);
-        
+
         // Bind parameters and execute query
         $id = $_POST['id'];
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        
+
         // Fetch data
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $data['longitude'] = null;
                 $data['error'] = "Failed to fetch coordinates: HTTP request failed";
             }
-            
+
             // Send JSON response
             echo json_encode($data);
         } else {
@@ -66,4 +66,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Invalid request method
     echo json_encode(["error" => "Invalid request method"]);
 }
-?>

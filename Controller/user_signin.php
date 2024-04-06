@@ -12,7 +12,7 @@ if (isset($_POST['username'], $_POST['password'])) {
         $pdo = Database::connection();
 
         // Prepare and execute the query to fetch user from login table
-        $stmt = $pdo->prepare("SELECT * FROM login WHERE Username = :username AND Password = :password");
+        $stmt = $pdo->prepare("SELECT * FROM scerns_login WHERE Username = :username AND Password = :password");
         $stmt->execute(array(':username' => $username, ':password' => $password));
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -33,7 +33,7 @@ if (isset($_POST['username'], $_POST['password'])) {
             }
 
             // Fetch user details from user_details table using Id from login table
-            $user_details_stmt = $pdo->prepare("SELECT * FROM user_details WHERE User_id = :user_id");
+            $user_details_stmt = $pdo->prepare("SELECT * FROM scerns_user_details WHERE User_id = :user_id");
             $user_details_stmt->execute(array(':user_id' => $user['Id']));
             $user_details = $user_details_stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -67,15 +67,15 @@ if (isset($_POST['username'], $_POST['password'])) {
             // Redirect based on user's role
             switch ($user['UserRole']) {
                 case 1:
-                    header("Location: ../../../Client3/Views/Admin/history.php");
+                    header("Location: ../../../Scerns/Views/Admin/history.php");
                     exit();
                 case 2:
-                    header("Location: ../../../Client3/Views/Respondent_Admin/IncidentReport.php");
+                    header("Location: ../../../Scerns/Views/Respondent_Admin/IncidentReport.php");
                     exit();
             }
         } else {
             // Handle invalid credentials
-            header("Location: ../../../Client3/index.php");
+            header("Location: ../../../Scerns/index.php");
             exit();
         }
     } catch (PDOException $e) {

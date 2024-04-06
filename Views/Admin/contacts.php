@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
-  header('Location: ../../../../Client3/index.php');
+  header('Location: ../../../../Scerns/index.php');
   exit;
 }
 ?>
@@ -90,7 +90,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
             </div>
           </div>
 
-         
+
 
           <div class="row mb-3">
             <div class="col-sm-12">
@@ -133,7 +133,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
           </button>
         </div>
         <div class="modal-body">
-        <div class="row mb-3">
+          <div class="row mb-3">
             <div class="col-sm-6">
               <p class="m-0 font-weight-bold">Hotline <span class="text-danger">*</span></p>
               <input type="email" class="form-control" placeholder="Enter Full Name" id="Edit_hotline">
@@ -145,7 +145,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
             </div>
           </div>
 
-         
+
 
           <div class="row mb-3">
             <div class="col-sm-12">
@@ -227,7 +227,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
             name: name,
             hotline: hotline,
             DispatcherCode: DispatcherCode,
-            department:department
+            department: department
           },
           success: function(response) {
             var data = JSON.parse(response);
@@ -240,9 +240,9 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
               });
             } else if (data.status == 'success') {
               $('#name').val('');
-                $('#hotline').val('');
-                $('#DispatcherCode').val('');
-                $('#Department').val(''); 
+              $('#hotline').val('');
+              $('#DispatcherCode').val('');
+              $('#Department').val('');
               var c = $('#Contacts_table').DataTable().ajax.reload();
               Swal.fire({
                 title: 'Record Added!',
@@ -290,7 +290,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
           name: name,
           hotline: hotline,
           dpcode: dpcode,
-          department:department,
+          department: department,
           id_c: id
         }, function(data, status) {
           var jsons = JSON.parse(data);

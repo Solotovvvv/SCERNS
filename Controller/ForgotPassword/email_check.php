@@ -11,7 +11,7 @@ require '..\..\includes\phpmailer\vendor\autoload.php';
 $email = trim($_POST['email']);
 
 // Prepare and bind the query to avoid SQL injection
-$query = "SELECT * FROM scerns_v2.user_details WHERE Email = ?";
+$query = "SELECT * FROM scerns_user_details WHERE Email = ?";
 $stmt = mysqli_prepare($conn, $query);
 mysqli_stmt_bind_param($stmt, "s", $email);
 mysqli_stmt_execute($stmt);

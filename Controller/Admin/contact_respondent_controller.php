@@ -11,7 +11,7 @@ if (isset($_POST['hotline'], $_POST['name'], $_POST['DispatcherCode'], $_POST['d
     $department = $_POST['department'];
 
     // Check if the name and dispatcher code already exist
-    $check_query = "SELECT * FROM respondent WHERE Name = :name AND Dispatcher_Code = :dispatcherCode";
+    $check_query = "SELECT * FROM scerns_respondents WHERE Name = :name AND Dispatcher_Code = :dispatcherCode";
     $stmt = $pdo->prepare($check_query);
     $stmt->bindParam(':name', $name, PDO::PARAM_STR);
     $stmt->bindParam(':dispatcherCode', $dispatcherCode, PDO::PARAM_STR);
@@ -22,14 +22,14 @@ if (isset($_POST['hotline'], $_POST['name'], $_POST['DispatcherCode'], $_POST['d
         echo json_encode(['status' => 'data_exist']);
     } else {
         // Insert new data
-        $insert_query = "INSERT INTO respondent (HotlineNumber, Name, Dispatcher_Code, Category)
+        $insert_query = "INSERT INTO scerns_respondents (HotlineNumber, Name, Dispatcher_Code, Category)
                          VALUES (:hotline, :name, :dispatcherCode, :department)";
         $stmt = $pdo->prepare($insert_query);
         $stmt->bindParam(':hotline', $hotline, PDO::PARAM_STR);
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
         $stmt->bindParam(':dispatcherCode', $dispatcherCode, PDO::PARAM_STR);
         $stmt->bindParam(':department', $department, PDO::PARAM_STR);
-        
+
         if ($stmt->execute()) {
             // Success
             echo json_encode(['status' => 'success']);
@@ -38,27 +38,24 @@ if (isset($_POST['hotline'], $_POST['name'], $_POST['DispatcherCode'], $_POST['d
             echo json_encode(['status' => 'insert_failed']);
         }
     }
-}
-else if(isset($_POST['id'])) {
+} else if (isset($_POST['id'])) {
     $id = $_POST['id'];
 
-    
-    $select_query = "SELECT * FROM respondent WHERE Id = :id";
+
+    $select_query = "SELECT * FROM scerns_respondents WHERE Id = :id";
     $stmt = $pdo->prepare($select_query);
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
     echo json_encode($data);
-}
-
-else if(isset($_POST['removes'])) {
+} else if (isset($_POST['removes'])) {
     $id = $_POST['removes'];
 
     try {
-      
-      
-        $stmt = $pdo->prepare("DELETE FROM `respondent` WHERE Id = :id");
+
+
+        $stmt = $pdo->prepare("DELETE FROM `scerns_respondents` WHERE Id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
@@ -74,4 +71,3 @@ else if(isset($_POST['removes'])) {
         echo json_encode($data);
     }
 }
-?>

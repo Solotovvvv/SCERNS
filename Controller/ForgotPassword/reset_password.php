@@ -12,7 +12,7 @@ if ($_POST['user_id'] || $_POST['confirmpass'] != $_POST['password']) {
 }
 $hash_password = sha1($password);
 
-$sql = "UPDATE scerns_v2.login SET password = '$hash_password' WHERE Id = '$id'";
+$sql = "UPDATE scerns_login SET password = '$hash_password' WHERE Id = '$id'";
 $result = mysqli_query($conn, $sql);
 
 if ($result) {

@@ -15,7 +15,7 @@ $orderColumn = $_POST['order'][0]['column'] ?? 0;
 $orderDirection = $_POST['order'][0]['dir'] ?? 'asc';
 
 // Define the base SQL query
-$sql = "SELECT r.*, rd.Dispatcher_Code, rd.Name, rd.Category, ud.Fullname, ud.Phone, ud.Email FROM reports AS r LEFT JOIN respondent AS rd ON r.Dispatcher_Id = rd.Id INNER JOIN user_details AS ud ON r.User_id = ud.User_id WHERE r.Status != 'Arrived' AND r.TypeOfEmergency = :userType";
+$sql = "SELECT r.*, rd.Dispatcher_Code, rd.Name, rd.Category, ud.Fullname, ud.Phone, ud.Email FROM scerns_reports AS r LEFT JOIN scerns_respondents AS rd ON r.Dispatcher_Id = rd.Id INNER JOIN scerns_user_details AS ud ON r.User_id = ud.User_id WHERE r.Status != 'Arrived' AND r.TypeOfEmergency = :userType";
 
 // Add search condition if search keyword is provided
 if (!empty($searchValue)) {
@@ -51,7 +51,7 @@ if ($stmt->execute()) {
 }
 
 
-$totalRecordsCount = $pdo->prepare("SELECT COUNT(*) FROM reports WHERE Status != 'Arrived' AND TypeOfEmergency = :userType");
+$totalRecordsCount = $pdo->prepare("SELECT COUNT(*) FROM scerns_reports WHERE Status != 'Arrived' AND TypeOfEmergency = :userType");
 $totalRecordsCount->bindParam(':userType', $_SESSION['type'], PDO::PARAM_STR);
 $totalRecordsCount->execute();
 $totalRecords = $totalRecordsCount->fetchColumn();
@@ -69,4 +69,3 @@ $newReportsCount = $totalRecords;
 $pusher->trigger('Scerns', 'new-report', ['counts' => $newReportsCount]);
 
 echo json_encode($output);
-?>

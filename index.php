@@ -16,10 +16,10 @@ if (isset($_COOKIE['fQnaIJDS']) && isset($_COOKIE['BJausdnK'])) {
 if (isset($_SESSION['username'])) {
   // Redirect the user to the appropriate page based on their role
   if ($_SESSION['role'] == 1) {
-    header("Location: ../../../Client3/Views/Admin/history.php");
+    header("Location: ../../../Scerns/Views/Admin/history.php");
     exit();
   } elseif ($_SESSION['role'] == 2) {
-    header("Location: ../../Client3/Views/Respondent_Admin/IncidentReport.php");
+    header("Location: ../../Scerns/Views/Respondent_Admin/IncidentReport.php");
     exit();
   }
 }

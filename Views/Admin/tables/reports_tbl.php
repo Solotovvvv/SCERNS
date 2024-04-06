@@ -16,7 +16,7 @@ $orderColumn = $_POST['order'][0]['column'] ?? 0;
 $orderDirection = $_POST['order'][0]['dir'] ?? 'asc';
 
 // Define the base SQL query
-$sql = "SELECT r.*, rd.Dispatcher_Code, rd.Name, rd.Category, ud.Fullname, ud.Phone, ud.Email FROM reports AS r LEFT JOIN respondent AS rd ON r.Dispatcher_Id = rd.Id INNER JOIN user_details AS ud ON r.User_id = ud.User_id WHERE r.Status != 'Arrived'";
+$sql = "SELECT r.*, rd.Dispatcher_Code, rd.Name, rd.Category, ud.Fullname, ud.Phone, ud.Email FROM scerns_reports AS r LEFT JOIN scerns_respondents AS rd ON r.Dispatcher_Id = rd.Id INNER JOIN scerns_user_details AS ud ON r.User_id = ud.User_id WHERE r.Status != 'Arrived'";
 
 // Add search condition if search keyword is provided
 if (!empty($searchValue)) {
@@ -51,7 +51,7 @@ if ($stmt->execute()) {
 }
 
 // Get total records count for pagination
-$totalRecordsCount = $pdo->query("SELECT COUNT(*) FROM reports WHERE Status != 'Arrived'")->fetchColumn();
+$totalRecordsCount = $pdo->query("SELECT COUNT(*) FROM scerns_reports WHERE Status != 'Arrived'")->fetchColumn();
 
 // Construct output in DataTables format
 $output = [
@@ -66,4 +66,3 @@ $newReportsCount = $totalRecordsCount;
 $pusher->trigger('Scerns', 'new-report', ['count' => $newReportsCount]);
 
 echo json_encode($output);
-

@@ -7,7 +7,7 @@ if (isset($_POST['id'])) {
     $id = $_POST['id'];
 
     // Prepare the SQL statement
-    $delete = 'DELETE FROM `respondent` WHERE `Id` = :id';
+    $delete = 'DELETE FROM `scerns_respondents` WHERE `Id` = :id';
 
     // Prepare and execute the statement
     $stmt = $pdo->prepare($delete);

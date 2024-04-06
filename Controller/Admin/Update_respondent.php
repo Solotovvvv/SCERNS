@@ -12,14 +12,14 @@ if (isset($_POST['id_r'])) {
     $department = $_POST['department'];
     $email = $_POST['email'];
 
-    $update_login_query = "UPDATE `login` SET `Username` = :username, `Password` = :password WHERE `Id` = :id";
+    $update_login_query = "UPDATE `scerns_login` SET `Username` = :username, `Password` = :password WHERE `Id` = :id";
     $stmt = $pdo->prepare($update_login_query);
     $stmt->bindParam(':username', $username, PDO::PARAM_STR);
     $stmt->bindParam(':password', $password, PDO::PARAM_STR);
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
 
-    $update_user_query = "UPDATE `user_details` SET `Fullname` = :fullname, `Email` = :email, `Type` = :department WHERE `User_id` = :id";
+    $update_user_query = "UPDATE `scerns_user_details` SET `Fullname` = :fullname, `Email` = :email, `Type` = :department WHERE `User_id` = :id";
     $stmt = $pdo->prepare($update_user_query);
     $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -29,4 +29,3 @@ if (isset($_POST['id_r'])) {
 
     echo json_encode(['status' => 'success']);
 }
-?>

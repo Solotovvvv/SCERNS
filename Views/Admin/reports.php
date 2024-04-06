@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
-    header('Location: ../../../../Client3/index.php');
+    header('Location: ../../../../Scerns/index.php');
     exit;
 }
 ?>
@@ -42,22 +42,22 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
             </div>
             <section class="content">
                 <div class="container-fluid">
-                 <div class="card p-3">
-                    <div class="table-responsive card p-3">
-                        <table id="reports_Dt" class="table table-striped table-bordered" style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th>Type of Incident</th>
-                                    <th>Date and Time</th>
-                                    <th>Location</th>
-                                    <th>Level</th>
-                                    <th>Dispatcher Code</th>
-                                    <th>Status</th>
-                                    <th>ACTIONS</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+                    <div class="card p-3">
+                        <div class="table-responsive card p-3">
+                            <table id="reports_Dt" class="table table-striped table-bordered" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th>Type of Incident</th>
+                                        <th>Date and Time</th>
+                                        <th>Location</th>
+                                        <th>Level</th>
+                                        <th>Dispatcher Code</th>
+                                        <th>Status</th>
+                                        <th>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -381,7 +381,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                 resetTeamCombo(); // Reset team combo on change of either department or dispatcher code
             });
 
-            
+
             // var pusher = new Pusher('b26a50e9e9255fc95c8f', {
             //     cluster: 'ap1',
             //     encrypted: true
@@ -395,16 +395,16 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
 
         });
 
-        
-            // var pusher = new Pusher('b26a50e9e9255fc95c8f', {
-            //     cluster: 'ap1',
-            //     encrypted: true
-            // });
 
-            // var channel = pusher.subscribe('Scerns');
-            // channel.bind('new-report', function(data) {
-            //     $('#reports_Dt_respondent').DataTable().ajax.reload();
-            // });
+        // var pusher = new Pusher('b26a50e9e9255fc95c8f', {
+        //     cluster: 'ap1',
+        //     encrypted: true
+        // });
+
+        // var channel = pusher.subscribe('Scerns');
+        // channel.bind('new-report', function(data) {
+        //     $('#reports_Dt_respondent').DataTable().ajax.reload();
+        // });
 
         function resetTeamCombo() {
             $('#teamCombo').empty().append($('<option>', {

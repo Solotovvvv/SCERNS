@@ -18,7 +18,7 @@ if (isset($_FILES['file']) && $_FILES["file"]["error"] == 0) {
     $userId = $_SESSION['user_id'];
 
     if (move_uploaded_file($_FILES["file"]["tmp_name"], $uploadDirectory . $newFileName)) {
-        $stmt = $pdo->prepare("UPDATE `user_details` SET `Images` = :Images WHERE `Id` = :Id");
+        $stmt = $pdo->prepare("UPDATE `scerns_user_details` SET `Images` = :Images WHERE `Id` = :Id");
 
         $imagePath = 'storage/images/profiles/' . $newFileName;
 
