@@ -1,5 +1,6 @@
 package com.example.scerns;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,6 +44,9 @@ public class Register extends AppCompatActivity {
     private Uri selectedImageUri;
 
     private static final String API_URL = "https://nutrilense.ucc-bscs.com/SCERNS/register.php";
+
+    // other url for hosting
+    // https://capstone-it4b.com/SCERNS/user/user_register.php
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +208,21 @@ public class Register extends AppCompatActivity {
                         // Get the image data from the URI
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+
+                        // Determine the file extension
+                        String fileExtension = getMimeType(selectedImageUri);
+
+                        // Compress the image based on the file extension
+                        if (fileExtension != null && (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg"))) {
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                        } else if (fileExtension != null && fileExtension.equalsIgnoreCase("png")) {
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                        } else {
+                            // Unsupported file format
+                            Toast.makeText(Register.this, "Unsupported image format", Toast.LENGTH_SHORT).show();
+                            return null;
+                        }
+
                         byte[] imageBytes = byteArrayOutputStream.toByteArray();
                         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
@@ -217,12 +236,17 @@ public class Register extends AppCompatActivity {
                         Toast.makeText(Register.this, "Error reading image", Toast.LENGTH_SHORT).show();
                     }
                 }
-
                 return params;
             }
         };
 
         queue.add(stringRequest);
+    }
+
+    private String getMimeType(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
 

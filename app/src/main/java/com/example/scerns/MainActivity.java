@@ -99,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 showToast("Victim selected");
                 selectedTypeTextView.setText("Victim");
                 dialog.dismiss();
-//                sendDataToServer(userId, "Victim", "");
-                showOptionsDialog("Victim"); // Pass the selected type to showOptionsDialog
+                showOptionsDialog("Victim");
             }
         });
 
@@ -110,8 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 showToast("Witness selected");
                 selectedTypeTextView.setText("Witness");
                 dialog.dismiss();
-//                sendDataToServer(userId, "Witness", "");
-                showOptionsDialog("Witness"); // Pass the selected type to showOptionsDialog
+                showOptionsDialog("Witness");
             }
         });
 
@@ -120,33 +118,6 @@ public class MainActivity extends AppCompatActivity {
         dialog = builder.create();
         dialog.show();
     }
-
-        // Inside your MainActivity class
-        private void sendDataToServer(int userId, String role, String typeOfEmergency) {
-            // Prepare the URL for sending data to the server
-            String url = "https://nutrilense.ucc-bscs.com/SCERNS/reports.php?userId=" + userId + "&role=" + role + "&typeOfEmergency=" + typeOfEmergency;
-
-            // Make an HTTP request using Volley
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            // Handle response from server
-                            Log.d("ServerResponse", "Response: " + response);
-                            showToast("Server Response: " + response);
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    // Handle error
-                    showToast("Error sending data to server");
-                }
-            });
-
-            // Add the request to the RequestQueue
-            Volley.newRequestQueue(this).add(stringRequest);
-        }
-
 
     private void showOptionsDialog(final String role) {
         View dialogOptionsView = LayoutInflater.from(this).inflate(R.layout.dialog_options, null);
@@ -165,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
                 showToast("Police selected");
                 selectedDialogOptions.setText("Police");
 
-                Intent intent = new Intent(MainActivity.this, PoliceDetails.class);
+                Intent intent = new Intent(MainActivity.this, EmergencyInfo.class);
                 intent.putExtra("userId", userId);
-                intent.putExtra("role", role); // Assuming you have the role value stored somewhere
+                intent.putExtra("role", role);
                 intent.putExtra("emergencyType", "Police");
                 startActivity(intent);
 
@@ -183,13 +154,12 @@ public class MainActivity extends AppCompatActivity {
                 selectedDialogOptions.setText("Medic");
 
                 // Pass the selected role and emergency type to the next activity
-                Intent intent = new Intent(MainActivity.this, MedicDetails.class);
+                Intent intent = new Intent(MainActivity.this, EmergencyInfo.class);
                 intent.putExtra("userId", userId);
-                intent.putExtra("role", role); // Assuming you have the role value stored somewhere
+                intent.putExtra("role", role);
                 intent.putExtra("emergencyType", "Medic");
                 startActivity(intent);
 
-                // Dismiss the dialog
                 dialog.dismiss();
             }
         });
@@ -201,13 +171,12 @@ public class MainActivity extends AppCompatActivity {
                 selectedDialogOptions.setText("Fire");
 
                 // Pass the selected role and emergency type to the next activity
-                Intent intent = new Intent(MainActivity.this, FireDetails.class);
+                Intent intent = new Intent(MainActivity.this, EmergencyInfo.class);
                 intent.putExtra("userId", userId);
-                intent.putExtra("role", role); // Assuming you have the role value stored somewhere
+                intent.putExtra("role", role);
                 intent.putExtra("emergencyType", "Fire");
                 startActivity(intent);
 
-                // Dismiss the dialog
                 dialog.dismiss();
             }
         });
@@ -219,16 +188,12 @@ public class MainActivity extends AppCompatActivity {
                 selectedDialogOptions.setText("Natural Disaster");
 
                 // Pass the selected role and emergency type to the next activity
-                Intent intent = new Intent(MainActivity.this, NaturalDisasterDetails.class);
+                Intent intent = new Intent(MainActivity.this, EmergencyInfo.class);
                 intent.putExtra("userId", userId);
-                intent.putExtra("role", role); // Assuming you have the role value stored somewhere
+                intent.putExtra("role", role);
                 intent.putExtra("emergencyType", "Natural Disaster");
                 startActivity(intent);
 
-                // Dismiss the dialog
-                dialog.dismiss();
-
-                // Dismiss the dialog
                 dialog.dismiss();
             }
         });

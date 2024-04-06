@@ -31,6 +31,9 @@ public class Login extends AppCompatActivity {
 
     private static final String LOGIN_URL = "https://nutrilense.ucc-bscs.com/SCERNS/login.php";
 
+    // other url for hosting
+    // https://capstone-it4b.com/SCERNS/user/user_login.php
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
