@@ -29,10 +29,10 @@ public class Login extends AppCompatActivity {
     private EditText editTextUsername, editTextPassword;
     private Button loginButton;
 
-    private static final String LOGIN_URL = "https://nutrilense.ucc-bscs.com/SCERNS/login.php";
+    private static final String LOGIN_URL = "https://capstone-it4b.com/Scerns/user/user_login.php";
 
     // other url for hosting
-    // https://capstone-it4b.com/SCERNS/user/user_login.php
+    // https://capstone-it4b.com/Scerns/user/user_login.php https://nutrilense.ucc-bscs.com/SCERNS/login.php
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

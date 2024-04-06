@@ -43,10 +43,10 @@ public class Register extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri selectedImageUri;
 
-    private static final String API_URL = "https://nutrilense.ucc-bscs.com/SCERNS/register.php";
+    private static final String API_URL = "https://capstone-it4b.com/Scerns/user/user_register.php";
 
     // other url for hosting
-    // https://capstone-it4b.com/SCERNS/user/user_register.php
+    // https://capstone-it4b.com/Scerns/user/user_register.php https://nutrilense.ucc-bscs.com/SCERNS/register.php
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
