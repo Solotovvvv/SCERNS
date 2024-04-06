@@ -1,4 +1,4 @@
-
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
         <li class="nav-item">
