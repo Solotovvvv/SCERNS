@@ -14,7 +14,7 @@ $sql = "SELECT
         FROM 
         scerns_reports AS r
         INNER JOIN 
-        scerns_respondent AS rd ON r.Dispatcher_Id = rd.Id
+        scerns_respondents AS rd ON r.Dispatcher_Id = rd.Id
         INNER JOIN 
         scerns_user_details AS ud ON r.User_id = ud.User_id
         WHERE 
