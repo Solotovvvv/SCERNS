@@ -62,7 +62,6 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
 
         textWelcomeScerns.setText(emergencyType.toUpperCase());
 
-        // Execute AddressSuggestionTask when address text changes
         editTextAddress.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -71,7 +70,6 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String address = s.toString();
-                // Execute AsyncTask to fetch suggestions
                 new AddressSuggestionTask(EmergencyInfo.this).execute(address);
             }
 
@@ -110,13 +108,10 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Handle response from server
                         Log.d("ServerResponse", "Response: " + response);
                         showToast("Server Response: " + response);
-                        // Optionally, you can finish the activity here or perform any other action
-                        Intent intent = new Intent(EmergencyInfo.this, ReportsInfo.class);
+                        Intent intent = new Intent(EmergencyInfo.this, ReportInfo.class);
                         startActivity(intent);
-                        finish();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -154,16 +149,13 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 }
             }
 
-            // Populate ListView with suggestions
             ListView suggestionListView = findViewById(R.id.suggestionListView);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, suggestionList);
             suggestionListView.setAdapter(adapter);
 
-            // Show the suggestion layout
             LinearLayout addressSuggestionLayout = findViewById(R.id.addressSuggestionLayout);
             addressSuggestionLayout.setVisibility(View.VISIBLE);
 
-            // Handle click on suggestion item
             suggestionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -175,8 +167,5 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
             });
         }
     }
-
-
-
 
 }

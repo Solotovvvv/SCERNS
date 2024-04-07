@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         btnVictim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Victim selected");
+//                showToast("Victim selected");
                 selectedTypeTextView.setText("Victim");
                 dialog.dismiss();
                 showOptionsDialog("Victim");
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         btnWitness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Witness selected");
+//                showToast("Witness selected");
                 selectedTypeTextView.setText("Witness");
                 dialog.dismiss();
                 showOptionsDialog("Witness");
@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("emergencyType", "Police");
                 startActivity(intent);
 
-                // Dismiss the dialog
                 dialog.dismiss();
             }
         });
@@ -153,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
                 showToast("Medic selected");
                 selectedDialogOptions.setText("Medic");
 
-                // Pass the selected role and emergency type to the next activity
                 Intent intent = new Intent(MainActivity.this, EmergencyInfo.class);
                 intent.putExtra("userId", userId);
                 intent.putExtra("role", role);
@@ -170,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
                 showToast("Fire selected");
                 selectedDialogOptions.setText("Fire");
 
-                // Pass the selected role and emergency type to the next activity
                 Intent intent = new Intent(MainActivity.this, EmergencyInfo.class);
                 intent.putExtra("userId", userId);
                 intent.putExtra("role", role);
@@ -187,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
                 showToast("Natural Disaster selected");
                 selectedDialogOptions.setText("Natural Disaster");
 
-                // Pass the selected role and emergency type to the next activity
                 Intent intent = new Intent(MainActivity.this, EmergencyInfo.class);
                 intent.putExtra("userId", userId);
                 intent.putExtra("role", role);
@@ -211,7 +207,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 }
