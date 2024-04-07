@@ -61,7 +61,7 @@ if (isset($_SESSION['username'])) {
             <img src="./assets/img/orig-logo.png" class="img-fluid px-1 mb-3">
 
             <h1>SCERNS</h1>
-            <form action="controller/user_signin.php" method="post" id="loginForm">
+            <form action="Controller/user_signin.php" method="post" id="loginForm">
               <div class="form-floating mb-3 text-start">
                 <input type="text" class="form-control rounded-4" name="username" id="username" placeholder="Username" value="<?php echo $username; ?>" required>
                 <label for="username" class="form-label">Username</label>

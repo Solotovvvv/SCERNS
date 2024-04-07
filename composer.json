@@ -1,5 +1,8 @@
 {
     "require": {
-        "pusher/pusher-php-server": "7.0.0"
+        "pusher/pusher-php-server": "^7.2",
+        "php": ">=8.0"
     }
+ 
+    
 }
