@@ -102,7 +102,11 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
     private void saveDataToDatabase(final int userId, final String role, final String emergencyType,
                                     final String address, final String landmark, final String level) {
         // other url for hosting
-        // https://capstone-it4b.com/Scerns/user/user_reports.php https://nutrilense.ucc-bscs.com/SCERNS/reports.php
+        // https://capstone-it4b.com/Scerns/user/user_reports.php
+        // https://nutrilense.ucc-bscs.com/SCERNS/reports.php
+        // http://scerns.ucc-bscs.com/user/user_reports.php
+        // http://Scerns.ucc-bscs.com/User/reports.php
+
         String url = "https://capstone-it4b.com/Scerns/user/user_reports.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -111,6 +115,7 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                         Log.d("ServerResponse", "Response: " + response);
                         showToast("Server Response: " + response);
                         Intent intent = new Intent(EmergencyInfo.this, ReportInfo.class);
+                        intent.putExtra("address", editTextAddress.getText().toString().trim());
                         startActivity(intent);
                     }
                 }, new Response.ErrorListener() {

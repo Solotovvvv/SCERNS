@@ -32,7 +32,10 @@ public class Login extends AppCompatActivity {
     private static final String LOGIN_URL = "https://capstone-it4b.com/Scerns/user/user_login.php";
 
     // other url for hosting
-    // https://capstone-it4b.com/Scerns/user/user_login.php https://nutrilense.ucc-bscs.com/SCERNS/login.php
+    // https://capstone-it4b.com/Scerns/user/user_login.php
+    // https://nutrilense.ucc-bscs.com/SCERNS/login.php
+    // http://scerns.ucc-bscs.com/user/user_login.php
+    // http://Scerns.ucc-bscs.com/User/login.php
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

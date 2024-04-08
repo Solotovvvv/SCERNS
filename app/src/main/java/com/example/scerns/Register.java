@@ -46,7 +46,10 @@ public class Register extends AppCompatActivity {
     private static final String API_URL = "https://capstone-it4b.com/Scerns/user/user_register.php";
 
     // other url for hosting
-    // https://capstone-it4b.com/Scerns/user/user_register.php https://nutrilense.ucc-bscs.com/SCERNS/register.php
+    // https://capstone-it4b.com/Scerns/user/user_register.php
+    // https://nutrilense.ucc-bscs.com/SCERNS/register.php
+    // http://scerns.ucc-bscs.com/user/user_register.php
+    // http://scerns.ucc-bscs.com/User/register.php
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +103,7 @@ public class Register extends AppCompatActivity {
             try {
                 if (cursor != null && cursor.moveToFirst()) {
                     int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    if (displayNameIndex != -1) { // Check if column index is valid
+                    if (displayNameIndex != -1) {
                         result = cursor.getString(displayNameIndex);
                     }
                 }
@@ -125,7 +128,7 @@ public class Register extends AppCompatActivity {
             String fileName = getFileName(selectedImageUri);
             TextView textViewSelectedFileName = findViewById(R.id.textViewSelectedFileName);
             textViewSelectedFileName.setText(fileName);
-            textViewSelectedFileName.setVisibility(View.VISIBLE); // Make it visible
+            textViewSelectedFileName.setVisibility(View.VISIBLE);
             Toast.makeText(this, "Image selected", Toast.LENGTH_SHORT).show();
         }
     }
@@ -202,31 +205,24 @@ public class Register extends AppCompatActivity {
                 params.put("username", editTextUsername.getText().toString());
                 params.put("password", editTextPassword.getText().toString());
 
-                // Add the selected image data
                 if (selectedImageUri != null) {
                     try {
-                        // Get the image data from the URI
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-                        // Determine the file extension
                         String fileExtension = getMimeType(selectedImageUri);
 
-                        // Compress the image based on the file extension
                         if (fileExtension != null && (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg"))) {
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                         } else if (fileExtension != null && fileExtension.equalsIgnoreCase("png")) {
                             bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
                         } else {
-                            // Unsupported file format
                             Toast.makeText(Register.this, "Unsupported image format", Toast.LENGTH_SHORT).show();
                             return null;
                         }
 
                         byte[] imageBytes = byteArrayOutputStream.toByteArray();
                         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-
-                        // Add the encoded image to the parameters
                         params.put("image_data", encodedImage);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
