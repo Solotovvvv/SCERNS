@@ -37,7 +37,8 @@ import java.util.Map;
 public class EmergencyInfo extends AppCompatActivity implements AddressSuggestionTask.AddressSuggestionListener{
 
     private int userId;
-    private EditText editTextAddress;
+    private EditText editTextAddress, getEditTextLandmark;
+    private Spinner spinnerLevels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +57,8 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
 
         TextView textWelcomeScerns = findViewById(R.id.textWelcomeScerns);
         editTextAddress = findViewById(R.id.editTextAddress);
-        EditText editTextLandmark = findViewById(R.id.editTextLandmark);
-        Spinner spinnerLevels = findViewById(R.id.spinnerLevels);
+        getEditTextLandmark = findViewById(R.id.editTextLandmark);
+        spinnerLevels = findViewById(R.id.spinnerLevels);
         Button btnConfirmRequest = findViewById(R.id.btnConfirmRequest);
 
         textWelcomeScerns.setText(emergencyType.toUpperCase());
@@ -82,17 +83,26 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
             @Override
             public void onClick(View v) {
                 String address = editTextAddress.getText().toString().trim();
-                String landmark = editTextLandmark.getText().toString().trim();
+                String landmark = getEditTextLandmark.getText().toString().trim();
                 String level = spinnerLevels.getSelectedItem().toString();
+
+                // Extract numeric part of level
+                String numericLevel = extractNumericLevel(level);
 
                 if (address.isEmpty() || landmark.isEmpty()) {
                     showToast("Please fill all fields");
                     return;
                 }
 
-                saveDataToDatabase(userId, role, emergencyType, address, landmark, level);
+                saveDataToDatabase(userId, role, emergencyType, address, landmark, numericLevel);
             }
         });
+    }
+
+    // Method to extract numeric part of level string
+    private String extractNumericLevel(String level) {
+        String numericPart = level.replaceAll("\\D+", "");
+        return numericPart.isEmpty() ? "0" : numericPart; // Return "0" if numeric part is empty
     }
 
     private void showToast(String message) {
@@ -114,10 +124,22 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                     public void onResponse(String response) {
                         Log.d("ServerResponse", "Response: " + response);
                         showToast("Server Response: " + response);
+
+                        // Create an intent to start the ReportInfo activity
                         Intent intent = new Intent(EmergencyInfo.this, ReportInfo.class);
+
+                        // Put the filled information as extras in the intent
                         intent.putExtra("address", editTextAddress.getText().toString().trim());
+                        intent.putExtra("landmark", getEditTextLandmark.getText().toString().trim());
+                        intent.putExtra("level", spinnerLevels.getSelectedItem().toString());
+
+                        // Pass the type to ReportInfo activity
+                        intent.putExtra("emergencyType", getIntent().getStringExtra("emergencyType"));
+
+                        // Start the ReportInfo activity
                         startActivity(intent);
                     }
+
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

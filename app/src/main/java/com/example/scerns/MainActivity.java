@@ -134,12 +134,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showToast("Police selected");
-                selectedDialogOptions.setText("Police");
+                selectedDialogOptions.setText("Crime");
 
                 Intent intent = new Intent(MainActivity.this, EmergencyInfo.class);
                 intent.putExtra("userId", userId);
                 intent.putExtra("role", role);
-                intent.putExtra("emergencyType", "Police");
+                intent.putExtra("emergencyType", "Crime");
                 startActivity(intent);
 
                 dialog.dismiss();

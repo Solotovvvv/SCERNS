@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Police"
+            android:text="Crime"
             android:layout_margin="8dp"
             android:backgroundTint="#000000"/>
 
