@@ -29,7 +29,7 @@ public class Login extends AppCompatActivity {
     private EditText editTextUsername, editTextPassword;
     private Button loginButton;
 
-    private static final String LOGIN_URL = "https://capstone-it4b.com/Scerns/user/user_login.php";
+    private static final String LOGIN_URL = "http://scerns.ucc-bscs.com/User/login.php";
 
     // other url for hosting
     // https://capstone-it4b.com/Scerns/user/user_login.php

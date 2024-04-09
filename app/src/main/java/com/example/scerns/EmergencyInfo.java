@@ -107,7 +107,7 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
         // http://scerns.ucc-bscs.com/user/user_reports.php
         // http://Scerns.ucc-bscs.com/User/reports.php
 
-        String url = "https://capstone-it4b.com/Scerns/user/user_reports.php";
+        String url = "http://scerns.ucc-bscs.com/User/reports.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

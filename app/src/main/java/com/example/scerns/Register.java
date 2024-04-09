@@ -43,7 +43,7 @@ public class Register extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri selectedImageUri;
 
-    private static final String API_URL = "https://capstone-it4b.com/Scerns/user/user_register.php";
+    private static final String API_URL = "http://scerns.ucc-bscs.com/User/register.php";
 
     // other url for hosting
     // https://capstone-it4b.com/Scerns/user/user_register.php
@@ -192,8 +192,13 @@ public class Register extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                // Log the error
+                Log.e("VolleyError", "An error occurred during registration: " + error.getMessage(), error);
+
+                // Display a toast message to the user
                 Toast.makeText(Register.this, "Error occurred. Please try again later.", Toast.LENGTH_SHORT).show();
             }
+
         }) {
             @Override
             protected Map<String, String> getParams() {
