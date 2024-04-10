@@ -266,7 +266,19 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                         $(this).find('td').css('background-color', backgroundColor);
                     });
                 }
+
+
             });
+
+                 // var pusher = new Pusher('b26a50e9e9255fc95c8f', {
+            //     cluster: 'ap1',
+            //     encrypted: true
+            // });
+
+            // var channel = pusher.subscribe('Scerns');
+            // channel.bind('new-report', function(data) {
+            //     $('#reports_Dt').DataTable().ajax.reload();
+            // });
 
             $('#reportModal').on('shown.bs.modal', function() {
                 // Remove the existing map
@@ -382,29 +394,12 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
             });
 
             
-            // var pusher = new Pusher('b26a50e9e9255fc95c8f', {
-            //     cluster: 'ap1',
-            //     encrypted: true
-            // });
-
-            // var channel = pusher.subscribe('Scerns');
-            // channel.bind('new-report', function(data) {
-            //     $('#reports_Dt').DataTable().ajax.reload();
-            // });
-
+          
 
         });
 
         
-            // var pusher = new Pusher('b26a50e9e9255fc95c8f', {
-            //     cluster: 'ap1',
-            //     encrypted: true
-            // });
-
-            // var channel = pusher.subscribe('Scerns');
-            // channel.bind('new-report', function(data) {
-            //     $('#reports_Dt_respondent').DataTable().ajax.reload();
-            // });
+       
 
         function resetTeamCombo() {
             $('#teamCombo').empty().append($('<option>', {

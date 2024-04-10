@@ -27,6 +27,9 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css" />
     <link rel="stylesheet" href="../../dist//css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -53,6 +56,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                                 <thead>
                                     <tr>
                                         <th>Username</th>
+                                        <th>Status</th>
                                         <th>ACTIONS</th>
                                     </tr>
                                 </thead>
@@ -64,66 +68,11 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
         </div>
     </div>
 
-    <!-- add registrar modal -->
-    <!-- <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="addRegistrarModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addRegistrarModalLabel">Add Admin Account</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-sm-6">
-                            <p class="m-0 font-weight-bold">Fullname <span class="text-danger">*</span></p>
-                            <input type="email" class="form-control" placeholder="Enter Full Name" id="fullnameR">
-                        </div>
 
-                        <div class="col-sm-6">
-                            <p class="m-0 font-weight-bold">Email <span class="text-danger">*</span></p>
-                            <input type="email" class="form-control" placeholder="Enter Email" id="email">
-                        </div>
-                    </div>
-
-                  <div class="row mb-3">
-                        <div class="col-sm-12">
-                            <p class="m-0 font-weight-bold">Address <span class="text-danger">*</span></p>
-                            <input type="text" class="form-control" placeholder="Enter Address" id="address">
-                        </div>
-
-                        <div class="col-sm-12">
-                            <p class="m-0 font-weight-bold">Phone <span class="text-danger">*</span></p>
-                            <input type="text" class="form-control" placeholder="Enter Phone" id="phone">
-                        </div>
-                    </div> -->
-
-    <!-- 
-    <div class="row mb-3">
-        <div class="col-sm-12">
-            <p class="m-0 font-weight-bold">Username <span class="text-danger">*</span></p>
-            <input type="text" class="form-control" placeholder="Enter username" id="registrar">
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <p class="m-0 font-weight-bold">Password <span class="text-danger">*</span></p>
-            <input type="password" class="form-control" placeholder="Enter password" id="passwordR">
-        </div>
-    </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="addAdmin()">SUBMIT</button>
-    </div>
-    </div>
-    </div> -->
-    <!-- </div> -->
 
 
     <div class="modal fade" id="edit_user" tabindex="-1" role="dialog" aria-labelledby="edit_user" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="edit_user">Edit Admin Account</h5>
@@ -132,47 +81,70 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-sm-6">
-                            <p class="m-0 font-weight-bold">Fullname <span class="text-danger">*</span></p>
-                            <input type="email" class="form-control" placeholder="Enter Full Name" id="edit_fullname">
-                        </div>
-
-                        <div class="col-sm-6">
-                            <p class="m-0 font-weight-bold">Email <span class="text-danger">*</span></p>
-                            <input type="email" class="form-control" placeholder="Enter Email" id="edit_email">
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-sm-6">
-                            <p class="m-0 font-weight-bold">Phone <span class="text-danger">*</span></p>
-                            <input type="email" class="form-control" placeholder="Enter Full Name" id="edit_Phone">
-                        </div>
-
-                        <div class="col-sm-6">
-                            <p class="m-0 font-weight-bold">Address <span class="text-danger">*</span></p>
-                            <input type="email" class="form-control" placeholder="Enter Email" id="edit_Address">
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-sm-12">
-                            <p class="m-0 font-weight-bold">Username <span class="text-danger">*</span></p>
-                            <input type="text" class="form-control" placeholder="Enter username" id="edit_username">
-                        </div>
-                    </div>
-
                     <div class="row">
-                        <div class="col-sm-12">
-                            <p class="m-0 font-weight-bold">Password <span class="text-danger">*</span></p>
-                            <input type="password" class="form-control" placeholder="Enter password" id="edit_password">
+
+                        <div class="col-sm-6">
+                            <!-- Left Column -->
+                            <h3 class="text-center mb-3">User Details</h3>
+                            <hr>
+                            <div class="row mb-3">
+                                <div class="col-sm-12">
+                                    <p class="m-0 font-weight-bold">Fullname <span class="text-danger">*</span></p>
+                                    <input type="email" class="form-control" placeholder="Enter Full Name" id="edit_fullname">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-12">
+                                    <p class="m-0 font-weight-bold">Username <span class="text-danger">*</span></p>
+                                    <input type="text" class="form-control" placeholder="Enter username" id="edit_username">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-12">
+                                    <p class="m-0 font-weight-bold">Email <span class="text-danger">*</span></p>
+                                    <input type="email" class="form-control" placeholder="Enter Email" id="edit_email">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-12">
+                                    <p class="m-0 font-weight-bold">Phone <span class="text-danger">*</span></p>
+                                    <input type="email" class="form-control" placeholder="Enter Phone" id="edit_Phone">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-12">
+                                    <p class="m-0 font-weight-bold">Address <span class="text-danger">*</span></p>
+                                    <input type="email" class="form-control" placeholder="Enter Address" id="edit_Address">
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Right Column -->
+                        <div class="col-sm-6" style="border-left: 2px solid rgba(0, 0, 0, 0.2);">
+                            <h3 class="text-center mb-3">Requirements</h3>
+                            <hr>
+
+                            <a href="#" id="userImageLink" data-lightbox="user-image" data-title="User Image">
+                                <img id="userImage" src="#" alt="Requirements" style="max-width: 100%; height: 300px;display: block; margin: 0 auto; border: 2px solid #000; padding: 5px;">
+                            </a>
+
+                            <div class="d-flex justify-content-center w-100">
+                                <select id="statusSelect" class="form-control mt-4 col-sm-6">
+                                    <option selected disabled>Select Status</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="0">Approved</option>
+                                </select>
+                            </div>
+
                         </div>
                     </div>
                 </div>
+
+
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="updateAdmin()">SAVE CHANGES</button>
-                    <input type="text" id="hiddendata_Admin">
+                    <button type="button" class="btn btn-primary" onclick="updateAdmin_User()">SAVE CHANGES</button>
+                    <input type="text" id="hiddendata_Admin_user">
                 </div>
             </div>
         </div>
@@ -191,6 +163,8 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
         <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
 
         <script>
             $(document).ready(function() {
@@ -262,7 +236,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
 
 
             function view_user(id) {
-                $('#hiddendata_Admin').val(id);
+                $('#hiddendata_Admin_user').val(id);
                 $.post("../../Controller/Admin/Admin_Account.php", {
                     id: id
                 }, function(data,
@@ -272,40 +246,48 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                     $('#edit_password').val(userids.Password);
                     $('#edit_email').val(userids.Email);
                     $('#edit_fullname').val(userids.Fullname);
+                    $('#edit_Address').val(userids.Address);
+                    $('#edit_Phone').val(userids.Phone);
+
+                    // var imageUrl = '../../img/images/120010373_188303342829713_2819285125688300863_n.jpg'; // Replace 'ImageUrl' with the appropriate property name from your fetched data
+                    // $('#userImage').attr('src', imageUrl);
+                    // $('#userImageLink').attr('href', imageUrl);
+
+                    if (userids.RequirementBase64) {
+                        // Display the image using Base64 data
+                        $('#userImage').attr('src', 'data:image/jpeg;base64,' + userids.RequirementBase64);
+                        $('#userImageLink').attr('href', 'data:image/jpeg;base64,' + userids.RequirementBase64);
+                    }
+
                     // $('#edit_password').val(userids.password);
                 });
                 $('#edit_user').modal("show");
             }
 
-            // function updateAdmin() {
-            //     var username = $('#edit_username').val();
-            //     var password = $('#edit_password').val();
-            //     var email = $('#edit_email').val();
-            //     var fullname = $('#edit_fullname').val();
-            //     var id = $('#hiddendata_Admin').val();
+            function updateAdmin_User() {
+                var status = $('#statusSelect').val();
+                var id = $('#hiddendata_Admin_user').val();
+        
 
-            //     $.post("../../Controller/Admin/Update_admin.php", {
-            //         password: password,
-            //         username: username,
-            //         fullname: fullname,
-            //         email: email,
-            //         id_a: id
-            //     }, function(data, status) {
-            //         var jsons = JSON.parse(data);
-            //         status = jsons.status;
-            //         if (status == 'success') {
-            //             Swal.fire({
-            //                 title: 'Record Updated!',
-            //                 icon: 'success',
-            //                 showConfirmButton: false,
-            //                 timer: 1000
-            //             });
-            //             var update = $('#admin_tbls').DataTable().ajax.reload();
-            //         }
-            //         $('#editAdminModal').modal("hide");
-            //     });
+                $.post("../../Controller/Admin/Update_user_status.php", {
+                    status: status,
+                    id_s: id
+                }, function(data, status) {
+                    var jsons = JSON.parse(data);
+                    status = jsons.status;
+                    if (status == 'success') {
+                        Swal.fire({
+                            title: 'Record Updated!',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1000
+                        });
+                        var update = $('#user_tbl').DataTable().ajax.reload();
+                    }
+                    $('#edit_user').modal("hide");
+                });
 
-            // }
+            }
 
             // function delete_admin(id) {
             //     Swal.fire({

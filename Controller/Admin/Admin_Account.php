@@ -9,17 +9,17 @@ if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
     $password = sha1($_POST['password']); // Hash the password
 
 
-   
+
     $check_username_query = "SELECT * FROM login WHERE Username = :username";
     $stmt = $pdo->prepare($check_username_query);
     $stmt->bindParam(':username', $username, PDO::PARAM_STR);
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
-        
+
         echo json_encode(['status' => 'data_exist']);
     } else {
-        
+
         $insert_login_query = "INSERT INTO `login` (`Username`, `Password`, `UserRole`)
                                VALUES (:username, :password, :role)";
         $stmt = $pdo->prepare($insert_login_query);
@@ -30,32 +30,32 @@ if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
         $insert_login_result = $stmt->execute();
 
         if ($insert_login_result) {
-           
+
             $user_id = $pdo->lastInsertId(); // Get the last inserted user_id
             $insert_user_query = "INSERT INTO `user_details` (`Fullname`, `Email`, `User_id`)
                                   VALUES (:fullname, :email, :user_id)";
             $stmt = $pdo->prepare($insert_user_query);
-            $stmt->bindParam(':fullname', $username, PDO::PARAM_STR); 
+            $stmt->bindParam(':fullname', $username, PDO::PARAM_STR);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
             $insert_user_result = $stmt->execute();
 
             if ($insert_user_result) {
-                
+
                 echo json_encode(['status' => 'success']);
             } else {
-               
+
                 echo json_encode(['status' => 'user_details_insert_failed']);
             }
         } else {
-           
+
             echo json_encode(['status' => 'login_insert_failed']);
         }
     }
-} else if(isset($_POST['id'])) {
+} else if (isset($_POST['id'])) {
     $id = $_POST['id'];
 
-    
+
     $select_query = "SELECT login.*, user_details.* FROM login 
                      JOIN user_details ON login.Id = user_details.User_id
                      WHERE login.Id = :id";
@@ -63,13 +63,15 @@ if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Convert the blob data to Base64
+    $base64Image = base64_encode($data['Requirement']);
+
+    // Add the Base64 image data to the data array
+    $data['RequirementBase64'] = $base64Image;
+
 
     echo json_encode($data);
-}
-
-
-
-else if(isset($_POST['remove'])) {
+} else if (isset($_POST['remove'])) {
     $id = $_POST['remove'];
 
     try {
@@ -80,7 +82,7 @@ else if(isset($_POST['remove'])) {
         $stmt = $pdo->prepare("DELETE FROM `user_details` WHERE User_id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        
+
 
         $data = array(
             'status' => 'success',
@@ -94,4 +96,3 @@ else if(isset($_POST['remove'])) {
         echo json_encode($data);
     }
 }
-?>

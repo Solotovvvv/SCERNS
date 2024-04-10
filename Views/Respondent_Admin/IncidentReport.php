@@ -226,6 +226,10 @@
                     });
 
 
+             
+                }
+
+                
                     //     var pusher = new Pusher('b26a50e9e9255fc95c8f', {
                     //         cluster: 'ap1',
                     //         encrypted: true
@@ -235,8 +239,6 @@
                     //     channel.bind('new-report', function(data) {
                     //         $('#reports_Dt_respondent').DataTable().ajax.reload();
                     //     });
-                }
-
 
             });
 
