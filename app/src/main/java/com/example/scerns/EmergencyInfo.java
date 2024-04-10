@@ -1,11 +1,13 @@
 package com.example.scerns;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -61,6 +63,35 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
         spinnerLevels = findViewById(R.id.spinnerLevels);
         Button btnConfirmRequest = findViewById(R.id.btnConfirmRequest);
 
+        List<String> levelsList = new ArrayList<>();
+        levelsList.add("Select Level");
+        levelsList.add("Level 1");
+        levelsList.add("Level 2");
+        levelsList.add("Level 3");
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, levelsList) {
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                if (position == 0) {
+                    textView.setTextColor(Color.GRAY);
+                } else {
+                    textView.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
+
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerLevels.setAdapter(spinnerAdapter);
+        spinnerLevels.setSelection(0, false);
+
         textWelcomeScerns.setText(emergencyType.toUpperCase());
 
         editTextAddress.addTextChangedListener(new TextWatcher() {
@@ -86,23 +117,28 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 String landmark = getEditTextLandmark.getText().toString().trim();
                 String level = spinnerLevels.getSelectedItem().toString();
 
-                // Extract numeric part of level
-                String numericLevel = extractNumericLevel(level);
+                String selectedLevel = spinnerLevels.getSelectedItem().toString();
 
-                if (address.isEmpty() || landmark.isEmpty()) {
-                    showToast("Please fill all fields");
-                    return;
+                if (!address.isEmpty() && !landmark.isEmpty()) {
+                    if (selectedLevel.equals("Select Level")) {
+                        showToast("Please select a level");
+                        return;
+                    }
+                } else {
+                    if (address.isEmpty() || landmark.isEmpty()) {
+                        showToast("Please fill all fields");
+                        return;
+                    }
                 }
-
+                String numericLevel = extractNumericLevel(level);
                 saveDataToDatabase(userId, role, emergencyType, address, landmark, numericLevel);
             }
         });
     }
 
-    // Method to extract numeric part of level string
     private String extractNumericLevel(String level) {
         String numericPart = level.replaceAll("\\D+", "");
-        return numericPart.isEmpty() ? "0" : numericPart; // Return "0" if numeric part is empty
+        return numericPart.isEmpty() ? "0" : numericPart;
     }
 
     private void showToast(String message) {
@@ -125,18 +161,13 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                         Log.d("ServerResponse", "Response: " + response);
                         showToast("Server Response: " + response);
 
-                        // Create an intent to start the ReportInfo activity
                         Intent intent = new Intent(EmergencyInfo.this, ReportInfo.class);
 
-                        // Put the filled information as extras in the intent
                         intent.putExtra("address", editTextAddress.getText().toString().trim());
                         intent.putExtra("landmark", getEditTextLandmark.getText().toString().trim());
                         intent.putExtra("level", spinnerLevels.getSelectedItem().toString());
-
-                        // Pass the type to ReportInfo activity
                         intent.putExtra("emergencyType", getIntent().getStringExtra("emergencyType"));
 
-                        // Start the ReportInfo activity
                         startActivity(intent);
                     }
 
@@ -176,9 +207,18 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 }
             }
 
+            // Ensure at least three suggestions are available
+            while (suggestionList.size() < 3) {
+                suggestionList.add(""); // Add empty strings as placeholders
+            }
+
             ListView suggestionListView = findViewById(R.id.suggestionListView);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, suggestionList);
             suggestionListView.setAdapter(adapter);
+
+            // Set maximum height for the ListView
+            suggestionListView.getLayoutParams().height = 300; // Adjust as needed
+            suggestionListView.requestLayout();
 
             LinearLayout addressSuggestionLayout = findViewById(R.id.addressSuggestionLayout);
             addressSuggestionLayout.setVisibility(View.VISIBLE);
@@ -194,5 +234,6 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
             });
         }
     }
+
 
 }

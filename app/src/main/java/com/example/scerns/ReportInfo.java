@@ -35,12 +35,13 @@ public class ReportInfo extends AppCompatActivity {
 
         address = getIntent().getStringExtra("address");
         landmark = getIntent().getStringExtra("landmark");
-        type = getIntent().getStringExtra("type");
+        type = getIntent().getStringExtra("emergencyType");
         level = getIntent().getStringExtra("level");
 
         if (address != null) {
             TextView textViewAddress = findViewById(R.id.textViewAddress);
-            textViewAddress.setText(address);
+            String addressLabel = "Address: " + address;
+            textViewAddress.setText(addressLabel);
 
             // Initialize the map view
             Configuration.getInstance().load(getApplicationContext(), getSharedPreferences("osmdroid", MODE_PRIVATE));
@@ -52,17 +53,22 @@ public class ReportInfo extends AppCompatActivity {
             new GeocodeTask().execute(address);
         }
 
-        if (landmark != null) {
-            TextView textViewLandmark = findViewById(R.id.textViewLandmark);
-            textViewLandmark.setText(landmark);
-        }
         if (type != null) {
             TextView textViewType = findViewById(R.id.textViewType);
-            textViewType.setText(type);
+            String typeLabel = "Type: " + type;
+            textViewType.setText(typeLabel);
         }
+
+        if (landmark != null) {
+            TextView textViewLandmark = findViewById(R.id.textViewLandmark);
+            String landmarkLabel = "Landmark: " + landmark;
+            textViewLandmark.setText(landmarkLabel);
+        }
+
         if (level != null) {
             TextView textViewLevel = findViewById(R.id.textViewLevel);
-            textViewLevel.setText(level);
+            String levelLabel = "Level: " + level;
+            textViewLevel.setText(levelLabel);
         }
     }
 
@@ -82,7 +88,6 @@ public class ReportInfo extends AppCompatActivity {
         protected GeoPoint doInBackground(String... params) {
             String address = params[0];
             try {
-                // Create URL for Nominatim API
                 URL url = new URL("https://nominatim.openstreetmap.org/search?format=json&q=" + address);
 
                 // Open connection
@@ -109,7 +114,7 @@ public class ReportInfo extends AppCompatActivity {
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-            return null; // Return null if location retrieval fails
+            return null;
         }
 
         @Override
@@ -130,7 +135,7 @@ public class ReportInfo extends AppCompatActivity {
 
         private void adjustZoomToAddress(GeoPoint addressLocation) {
             // Zoom level adjustment based on address location
-            final int zoomLevel = 15;
+            final int zoomLevel = 18;
 
             // Set the zoom level and center of the map
             mapView.getController().setZoom(zoomLevel);
