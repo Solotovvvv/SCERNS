@@ -86,7 +86,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                                 <hr>
                                 <div class="row">
                                     <div class="col text-center">
-                                        <h4>Victim</h4>
+                                        <h4 id="Role"></h4>
                                     </div>
                                 </div>
                                 <div class="row justify-content-start">
@@ -153,14 +153,14 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                                 <div class="form-group">
                                     <label for="dispatcherCodeCombo">Dispatcher-Code</label>
                                     <select class="form-control mb-2" id="dispatcherCodeCombo">
-                                        <option value="option1">Option 1</option>
+                                        <option value="">Select Dispatcher Code</option>
 
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="teamCombo">Team</label>
                                     <select class="form-control mb-2" id="teamCombo">
-                                        <option value="option1">Option 1</option>
+                                        <option value="">Select Team</option>
 
                                     </select>
                                 </div>
@@ -424,6 +424,7 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                 $('#date').text(userids.Date);
                 $('#location').text(userids.Address);
                 $('#textarea1').val(userids.Remarks);
+                $('#Role').text(userids.Role);
 
                 // Load respondents and populate dropdowns if Dispatcher_Id is not null
                 if (userids.Dispatcher_Id !== null) {

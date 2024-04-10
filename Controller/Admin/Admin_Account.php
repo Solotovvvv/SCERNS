@@ -55,7 +55,6 @@ if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
 } else if (isset($_POST['id'])) {
     $id = $_POST['id'];
 
-
     $select_query = "SELECT login.*, user_details.* FROM login 
                      JOIN user_details ON login.Id = user_details.User_id
                      WHERE login.Id = :id";
@@ -63,13 +62,17 @@ if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    // Convert the blob data to Base64
-    $base64Image = base64_encode($data['Requirement']);
 
-    // Add the Base64 image data to the data array
-    $data['RequirementBase64'] = $base64Image;
+    if ($data && isset($data['Requirement']) && !empty($data['Requirement'])) {
+        // Convert the BLOB data to Base64
+        $base64Requirement = base64_encode($data['Requirement']);
+        // Replace the 'Requirement' field with the Base64 encoded value
+        $data['RequirementBase64'] = $base64Requirement;
+        // Remove the original 'Requirement' field
+        unset($data['Requirement']);
+    }
 
-
+    // Return JSON response
     echo json_encode($data);
 } else if (isset($_POST['remove'])) {
     $id = $_POST['remove'];

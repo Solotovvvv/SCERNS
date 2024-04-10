@@ -189,58 +189,12 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
 
 
 
-            function addAdmin() {
-
-                var fullname = $('#fullnameR').val();
-                var email = $('#email').val();
-                var username = $('#registrar').val();
-                var password = $('#passwordR').val();
-
-                $.ajax({
-                    url: '../../Controller/Admin/Admin_Account.php',
-                    method: 'POST',
-                    data: {
-                        fullname: fullname,
-                        email: email,
-                        username: username,
-                        password: password
-                    },
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        if (data.status == 'data_exist') {
-                            Swal.fire({
-                                title: 'Record Already Exist!',
-                                icon: 'warning',
-                                showConfirmButton: false,
-                                timer: 1000
-                            });
-                        } else if (data.status == 'success') {
-                            var c = $('#admin_tbls').DataTable().ajax.reload();
-                            Swal.fire({
-                                title: 'Record Added!',
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 1000
-                            });
-                        } else {
-                            alert('Failed to add data.');
-                        }
-
-                        $('#addAdmin').modal("hide");
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Error: ' + error);
-                    }
-                });
-            }
-
-
+        
             function view_user(id) {
                 $('#hiddendata_Admin_user').val(id);
                 $.post("../../Controller/Admin/Admin_Account.php", {
                     id: id
-                }, function(data,
-                    status) {
+                }, function(data, status) {
                     var userids = JSON.parse(data);
                     $('#edit_username').val(userids.Username);
                     $('#edit_password').val(userids.Password);
@@ -249,25 +203,20 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                     $('#edit_Address').val(userids.Address);
                     $('#edit_Phone').val(userids.Phone);
 
-                    // var imageUrl = '../../img/images/120010373_188303342829713_2819285125688300863_n.jpg'; // Replace 'ImageUrl' with the appropriate property name from your fetched data
-                    // $('#userImage').attr('src', imageUrl);
-                    // $('#userImageLink').attr('href', imageUrl);
-
+                    // Display the image using Base64 data if available
                     if (userids.RequirementBase64) {
-                        // Display the image using Base64 data
                         $('#userImage').attr('src', 'data:image/jpeg;base64,' + userids.RequirementBase64);
                         $('#userImageLink').attr('href', 'data:image/jpeg;base64,' + userids.RequirementBase64);
                     }
 
-                    // $('#edit_password').val(userids.password);
+                    $('#edit_user').modal("show");
                 });
-                $('#edit_user').modal("show");
             }
 
             function updateAdmin_User() {
                 var status = $('#statusSelect').val();
                 var id = $('#hiddendata_Admin_user').val();
-        
+
 
                 $.post("../../Controller/Admin/Update_user_status.php", {
                     status: status,
@@ -288,41 +237,6 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                 });
 
             }
-
-            // function delete_admin(id) {
-            //     Swal.fire({
-            //         title: 'Are you sure?',
-            //         text: 'You are about to delete this registrar record.',
-            //         icon: 'warning',
-            //         showCancelButton: true,
-            //         confirmButtonColor: '#3085d6',
-            //         cancelButtonColor: '#d33',
-            //         confirmButtonText: 'Yes, delete it!'
-            //     }).then((result) => {
-            //         if (result.isConfirmed) {
-            //             // User confirmed deletion
-            //             $.ajax({
-            //                 url: '../../Controller/Admin/Admin_Account.php',
-            //                 type: 'post',
-            //                 data: {
-            //                     remove: id
-            //                 },
-            //                 success: function(data, status) {
-            //                     var json = JSON.parse(data);
-            //                     status = json.status;
-            //                     if (status == 'success') {
-            //                         Swal.fire({
-            //                             title: 'Record Deleted!',
-            //                             text: 'The admin record has been successfully deleted.',
-            //                             icon: 'success',
-            //                         });
-            //                         $('#admin_tbls').DataTable().ajax.reload();
-            //                     }
-            //                 }
-            //             });
-            //         }
-            //     });
-            // }
         </script>
 </body>
 

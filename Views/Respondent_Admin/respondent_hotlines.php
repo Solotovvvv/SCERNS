@@ -170,6 +170,12 @@
                     url: '../../Controller/Hotlines/addhotline.php',
                     data: payload,
                     success: function(response) {
+
+                        $("#numberID").val('');
+                        $("#dispatchID").val('');
+                        $("#orgnameID").val('');
+                       
+
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',

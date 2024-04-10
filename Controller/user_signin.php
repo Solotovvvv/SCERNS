@@ -75,7 +75,8 @@ if (isset($_POST['username'], $_POST['password'])) {
             }
         } else {
             // Handle invalid credentials
-            header("Location: ../../../Client3/index.php");
+            header("Location: ../../../Client3/index.php?errors=Invalid+Username+or+Password");
+       
             exit();
         }
     } catch (PDOException $e) {
@@ -83,3 +84,4 @@ if (isset($_POST['username'], $_POST['password'])) {
         die(); // Terminate script execution
     }
 }
+?>

@@ -83,10 +83,7 @@ if (isset($_SESSION['username'])) {
 
               <button type="submit" class="btn btn-primary btn-lg m-3 rounded-pill fw-bold w-50 mt-2">Log In</button>
             </form>
-            <div class="d-flex justify-content-around mt-5">
-              <a class="text-decoration-none text-dark">Don't have Account?</a>
-              <a class="text-decoration-none text-primary" href="./register.php">Create Account</a>
-            </div>
+         
 
           </div>
         </div>

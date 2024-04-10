@@ -62,7 +62,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col text-center">
-                                        <h4>Victim</h4>
+                                        <h4 id="Role_respondent"></h4>
                                     </div>
                                 </div>
                                 <div class="row justify-content-start">
@@ -129,15 +129,14 @@
                                 <div class="form-group">
                                     <label for="dispatcherCodeCombo_respondent">Dispatcher-Code</label>
                                     <select class="form-control mb-2" id="dispatcherCodeCombo_respondent">
-                                        <option value="option1_respondent">Option 1</option>
+                                        <option value="">Select Dispatcher-Code</option>
 
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="teamCombo_respondent">Team</label>
                                     <select class="form-control mb-2" id="teamCombo_respondent">
-                                        <option value="option1_respondent">Option 1</option>
-
+                                        <option value="">Select Team</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -245,14 +244,14 @@
 
 
             $('#reportModal_respondent').on('shown.bs.modal', function() {
-                // Remove the existing map
+                
                 if (map_respondent) {
                     map_respondent.remove();
                 }
 
                 const userids_respondent = $('#hiddendata_report_respondent').data('userids');
 
-                // Check if latitude and longitude are available
+                
                 if (userids_respondent && userids_respondent.latitude && userids_respondent.longitude) {
                     map_respondent = L.map('map_respondent').setView([userids_respondent.latitude, userids_respondent.longitude], 13);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -262,7 +261,7 @@
                         .bindPopup(userids_respondent.Address)
                         .openPopup();
                 } else {
-                    // Handle the case when latitude and longitude are not available
+               
                     console.log("Latitude and longitude not available");
                 }
             });
@@ -382,6 +381,7 @@
                 $('#date_respondent').text(userids_respondent.Date);
                 $('#location_respondent').text(userids_respondent.Address);
                 $('#textarea1_respondent').val(userids_respondent.Remarks);
+                $('#Role_respondent').val(userids_respondent.Role);
 
                 // Load respondents and populate dropdowns if Dispatcher_Id is not null
                 if (userids_respondent.Dispatcher_Id !== null) {
