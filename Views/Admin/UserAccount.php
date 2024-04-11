@@ -184,12 +184,25 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                     },
                 });
 
+
+
+                var pusher = new Pusher('b26a50e9e9255fc95c8f', {
+                    cluster: 'ap1',
+                    encrypted: true
+                });
+
+
+                var channel = pusher.subscribe('Scerns');
+                channel.bind('user-tbl', function(data) {
+                    $('#user_tbl').DataTable().ajax.reload();
+                });
+
             });
 
 
 
 
-        
+
             function view_user(id) {
                 $('#hiddendata_Admin_user').val(id);
                 $.post("../../Controller/Admin/Admin_Account.php", {

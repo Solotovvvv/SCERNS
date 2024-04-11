@@ -34,13 +34,16 @@
                         <i class="nav-icon fas fa-user mr-3"></i>
                         <p>Admin Account</p>
                         <i class="right fas fa-angle-left"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle" style="left: 190px;  display: none;" id="notif_general"></span>
+
+
                     </a>
+
                     <ul class="nav nav-treeview">
 
                         <li class="nav-item">
-                            <a href="UserAccount.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'UserAccount.php' ? 'active' : ''; ?>">
-                                <span class="position-absolute top-6 start-100 translate-middle badge rounded-pill bg-danger " id="" style="margin-left: -0.5rem;"></span>
-                                <p>User Accounts</p>
+                            <a href="UserAccount.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'UserAccount.php' ? 'active' : ''; ?>">                           
+                                <p>User Accounts</p> <span class="position-absolute top-6 start-500 translate-middle badge rounded-pill bg-danger" id="user_notif" style="margin-left: 5rem;">1</span>
                             </a>
                         </li>
 
@@ -101,11 +104,16 @@
 
     var channel = pusher.subscribe('Scerns');
     channel.bind('new-report', function(data) {
-        // Call your AJAX function
         sendReportData();
     });
 
-    // Define your AJAX function
+    channel.bind('new-user', function(data) {
+        User_notif();
+    });
+
+
+
+
     function sendReportData() {
         $.ajax({
             url: "../../Controller/Admin/get_notif_admin.php",
@@ -125,8 +133,34 @@
     }
 
 
+    
+    
+    function User_notif() {
+        $.ajax({
+            url: "../../Controller/Admin/get_user_notif.php",
+            method: "GET",
+            success: function(response) {
+                // Update report_notifs element with received data
+                if (response === '0') {
+                    $('#notif_general').hide();
+                    $('#user_notif').hide();
+                } else {
+                    $('#notif_general').show();
+                    $('#user_notif').text(response).show();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error occurred while fetching data:", error);
+            }
+        });
+    }
+
+
+
 
     $(document).ready(function() {
+        
         sendReportData();
+        User_notif();
     })
-    </script>
+</script>

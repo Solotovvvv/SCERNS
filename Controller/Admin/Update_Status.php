@@ -1,6 +1,10 @@
 <?php
 session_start();
 include '../../includes/config.php';
+// Pusher configuration
+require_once '../../vendor/autoload.php';
+include '../../Controller/pusher.php';
+
 
 $pdo = Database::connection();
 
@@ -32,6 +36,7 @@ if (isset($_POST['id'])) {
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
 
+    $pusher->trigger('Scerns', 'new-report-table', null);
     echo json_encode(['status' => 'success']);
 }
 ?>

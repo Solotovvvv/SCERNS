@@ -1,5 +1,9 @@
 <?php
 include '../../includes/config.php';
+// Pusher configuration
+require_once '../../vendor/autoload.php';
+include '../../Controller/pusher.php';
+
 
 $pdo = Database::connection();
 
@@ -15,6 +19,9 @@ if (isset($_POST['id_s'])) {
 
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
+
+    $pusher->trigger('Scerns', 'user-tbl', null);
+    $pusher->trigger('Scerns', 'new-user', null);
     echo json_encode(['status' => 'success']);
 }
 ?>

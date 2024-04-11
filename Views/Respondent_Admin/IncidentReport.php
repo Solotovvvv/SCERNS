@@ -161,6 +161,7 @@
         </div>
     </div>
     <?php include 'footers/footer.php' ?>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
 
     <script>
@@ -223,35 +224,29 @@
                         }
                         $(this).find('td').css('background-color', backgroundColor);
                     });
-
-
-             
                 }
+            });
 
-                
-                    //     var pusher = new Pusher('b26a50e9e9255fc95c8f', {
-                    //         cluster: 'ap1',
-                    //         encrypted: true
-                    //     });
-
-                    //     var channel = pusher.subscribe('Scerns');
-                    //     channel.bind('new-report', function(data) {
-                    //         $('#reports_Dt_respondent').DataTable().ajax.reload();
-                    //     });
-
+            var pusher = new Pusher('b26a50e9e9255fc95c8f', {
+                cluster: 'ap1',
+                encrypted: true
             });
 
 
+            var channel = pusher.subscribe('Scerns');
+            channel.bind('new-report-table', function(data) {
+                $('#reports_Dt_respondent').DataTable().ajax.reload();
+            });
 
             $('#reportModal_respondent').on('shown.bs.modal', function() {
-                
+
                 if (map_respondent) {
                     map_respondent.remove();
                 }
 
                 const userids_respondent = $('#hiddendata_report_respondent').data('userids');
 
-                
+
                 if (userids_respondent && userids_respondent.latitude && userids_respondent.longitude) {
                     map_respondent = L.map('map_respondent').setView([userids_respondent.latitude, userids_respondent.longitude], 13);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -261,7 +256,7 @@
                         .bindPopup(userids_respondent.Address)
                         .openPopup();
                 } else {
-               
+
                     console.log("Latitude and longitude not available");
                 }
             });

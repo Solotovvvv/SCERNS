@@ -1,6 +1,10 @@
 <?php
 session_start();
 include '../../includes/config.php';
+// Pusher configuration
+require_once '../../vendor/autoload.php';
+include '../../Controller/pusher.php';
+
 
 $pdo = Database::connection();
 if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
@@ -41,7 +45,7 @@ if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
             $insert_user_result = $stmt->execute();
 
             if ($insert_user_result) {
-
+                $pusher->trigger('Scerns', 'new-user', null);
                 echo json_encode(['status' => 'success']);
             } else {
 
@@ -96,6 +100,8 @@ if (isset($_POST['email'], $_POST['username'], $_POST['password'])) {
             'status' => 'failed',
             'error' => $e->getMessage(),
         );
+
+        $pusher->trigger('Scerns', 'new-user', null);
         echo json_encode($data);
     }
 }
