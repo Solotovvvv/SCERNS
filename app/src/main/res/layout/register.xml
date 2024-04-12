@@ -48,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:text="Insert Valid Id"
+                android:backgroundTint="#618264"
                 android:layout_marginTop="16dp"/>
 
             <TextView

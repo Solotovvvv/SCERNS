@@ -1,7 +1,11 @@
 package com.example.scerns;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -38,6 +41,19 @@ public class ReportInfo extends AppCompatActivity {
         type = getIntent().getStringExtra("emergencyType");
         level = getIntent().getStringExtra("level");
 
+        Button backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ReportInfo.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
+        loadingLayout.setVisibility(View.VISIBLE);
+
         if (address != null) {
             TextView textViewAddress = findViewById(R.id.textViewAddress);
             String addressLabel = "Address: " + address;
@@ -49,7 +65,6 @@ public class ReportInfo extends AppCompatActivity {
             mapView.setTileSource(TileSourceFactory.MAPNIK);
             mapView.setMultiTouchControls(true);
 
-            // Geocode the address to get its location
             new GeocodeTask().execute(address);
         }
 
@@ -81,7 +96,6 @@ public class ReportInfo extends AppCompatActivity {
         }
     }
 
-    // AsyncTask to fetch latitude and longitude from Nominatim API
     private class GeocodeTask extends AsyncTask<String, Void, GeoPoint> {
 
         @Override
@@ -90,11 +104,9 @@ public class ReportInfo extends AppCompatActivity {
             try {
                 URL url = new URL("https://nominatim.openstreetmap.org/search?format=json&q=" + address);
 
-                // Open connection
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
 
-                // Read response
                 InputStream inputStream = connection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 StringBuilder response = new StringBuilder();
@@ -103,13 +115,12 @@ public class ReportInfo extends AppCompatActivity {
                     response.append(line);
                 }
 
-                // Parse JSON response
                 JSONArray jsonArray = new JSONArray(response.toString());
                 if (jsonArray.length() > 0) {
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
                     double lat = jsonObject.getDouble("lat");
                     double lon = jsonObject.getDouble("lon");
-                    return new GeoPoint(lat, lon); // Return the obtained GeoPoint
+                    return new GeoPoint(lat, lon);
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -123,7 +134,6 @@ public class ReportInfo extends AppCompatActivity {
                 // Set map's center to the address location
                 mapView.getController().setCenter(result);
 
-                // Adjust zoom level to fit the pin on the map
                 adjustZoomToAddress(result);
 
                 // Add a marker to indicate the address location
@@ -134,10 +144,7 @@ public class ReportInfo extends AppCompatActivity {
         }
 
         private void adjustZoomToAddress(GeoPoint addressLocation) {
-            // Zoom level adjustment based on address location
             final int zoomLevel = 18;
-
-            // Set the zoom level and center of the map
             mapView.getController().setZoom(zoomLevel);
             mapView.getController().setCenter(addressLocation);
         }

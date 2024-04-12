@@ -10,8 +10,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        app:cardCornerRadius="8dp"
+        android:padding="13dp"
+        app:cardCornerRadius="20dp"
         app:cardBackgroundColor="#e0dada">
 
         <LinearLayout
@@ -61,7 +61,8 @@
                 android:inputType="textPassword"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="15dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -69,21 +70,13 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp">
-
-                <CheckBox
-                    android:id="@+id/checkBoxRememberPassword"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Remember Password" />
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp">
 
                 <TextView
                     android:id="@+id/textViewForgotPassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
                     android:text="Forgot Password?" />
 
             </LinearLayout>
@@ -95,7 +88,8 @@
                 android:layout_gravity="center_horizontal"
                 android:text="Login"
                 android:textStyle="bold"
-                android:backgroundTint="#618264"/>
+                android:backgroundTint="#618264"
+                android:layout_marginBottom="10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -103,7 +97,8 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp">
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="15dp">
 
                 <TextView
                     android:id="@+id/textViewDontHaveAccount"

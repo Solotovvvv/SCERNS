@@ -13,13 +13,23 @@
         android:visibility="gone"/>
 
     <Button
+        android:id="@+id/vwbackBTN"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:background="@android:color/transparent"
+        android:text="&lt;"
+        android:textColor="@android:color/black"
+        android:textSize="25sp" />
+
+    <Button
         android:id="@+id/btnVictim"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:backgroundTint="#618264"
         android:gravity="center"
         android:text="VICTIM"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="25sp"
         android:textStyle="bold"
         android:layout_gravity="center_vertical" />
@@ -42,11 +52,9 @@
         android:backgroundTint="#618264"
         android:gravity="center"
         android:text="WITNESS"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="25sp"
         android:textStyle="bold"
         android:layout_gravity="center_vertical" />
-
-
 
 </LinearLayout>

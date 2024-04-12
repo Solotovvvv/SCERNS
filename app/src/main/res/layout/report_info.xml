@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:background="#618264">
 
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:background="@android:color/transparent"
+        android:text="&lt;"
+        android:textSize="30sp"
+        android:textColor="@android:color/white" />
+
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:text="Report's Info"
+                android:text="Report's Details"
                 android:gravity="center"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -34,7 +44,31 @@
                 android:layout_height="200dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                tools:ignore="MissingConstraints" />
+                tools:ignore="MissingConstraints"
+                android:layout_marginBottom="20dp"/>
+
+            <LinearLayout
+                android:id="@+id/loadingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/loadingProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:id="@+id/textViewWaiting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Waiting for response..."
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textViewType"
@@ -43,7 +77,7 @@
                 android:padding="16dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:text="Type" />
+                android:text="Emergency Type: " />
 
             <TextView
                 android:id="@+id/textViewAddress"
@@ -52,7 +86,7 @@
                 android:padding="16dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:text="Address" />
+                android:text="Address: " />
 
             <TextView
                 android:id="@+id/textViewLandmark"
@@ -61,7 +95,7 @@
                 android:padding="16dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:text="Landmark" />
+                android:text="Landmark: " />
 
             <TextView
                 android:id="@+id/textViewLevel"
@@ -70,7 +104,14 @@
                 android:padding="16dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:text="Level" />
+                android:text="Level: " />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

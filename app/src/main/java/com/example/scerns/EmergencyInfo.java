@@ -63,6 +63,16 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
         spinnerLevels = findViewById(R.id.spinnerLevels);
         Button btnConfirmRequest = findViewById(R.id.btnConfirmRequest);
 
+        Button homeButton = findViewById(R.id.btnHome);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EmergencyInfo.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         List<String> levelsList = new ArrayList<>();
         levelsList.add("Select Level");
         levelsList.add("Level 1");

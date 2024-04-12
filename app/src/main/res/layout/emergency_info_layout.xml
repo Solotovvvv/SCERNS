@@ -7,13 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:menu="@menu/sidebar_menu" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainConstraintLayout"
         android:layout_width="match_parent"
@@ -26,17 +19,16 @@
             android:background="#618264"
             tools:ignore="MissingConstraints">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+            <TextView
+                android:id="@+id/textScreenTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:navigationIcon="@drawable/drawer_icon">
-            </androidx.appcompat.widget.Toolbar>
+                android:text="@string/app_name"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="10dp"/>
 
         </LinearLayout>
 
@@ -70,7 +62,7 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             app:layout_constraintTop_toBottomOf="@id/titleLinearLayout" >
-            <requestFocus />
+            <requestFocus/>
         </EditText>
 
         <ScrollView
@@ -86,9 +78,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:background="#DDDDDD"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="#DDDDDD"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:visibility="gone">
@@ -158,14 +150,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
-
-            <!--        <Button-->
-            <!--            android:id="@+id/btnMap"-->
-            <!--            android:layout_width="wrap_content"-->
-            <!--            android:layout_height="match_parent"-->
-            <!--            android:textColor="@android:color/black"-->
-            <!--            android:backgroundTint="#618264"-->
-            <!--            android:drawableLeft="@drawable/map_icon"/>-->
 
             <Button
                 android:id="@+id/btnHome"

@@ -90,13 +90,20 @@ public class MainActivity extends AppCompatActivity {
 
         Button btnVictim = dialogView.findViewById(R.id.btnVictim);
         Button btnWitness = dialogView.findViewById(R.id.btnWitness);
+        Button btnBackVW = dialogView.findViewById(R.id.vwbackBTN);
+
+        btnBackVW.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
 
         selectedTypeTextView = dialogView.findViewById(R.id.selectedTypeTextView);
 
         btnVictim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                showToast("Victim selected");
                 selectedTypeTextView.setText("Victim");
                 dialog.dismiss();
                 showOptionsDialog("Victim");
@@ -106,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         btnWitness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                showToast("Witness selected");
                 selectedTypeTextView.setText("Witness");
                 dialog.dismiss();
                 showOptionsDialog("Witness");
@@ -115,7 +121,9 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
+        builder.setCancelable(true);
         dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
 
@@ -196,13 +204,14 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogOptionsView);
+        builder.setCancelable(true);
         AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Back Button Selected");
                 dialog.dismiss();
             }
         });
