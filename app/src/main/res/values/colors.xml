@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="scernscolor">#618264</color>
+    <color name="blue">#0b5394</color>
 </resources>

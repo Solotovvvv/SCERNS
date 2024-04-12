@@ -27,6 +27,7 @@ import java.util.Map;
 public class Login extends AppCompatActivity {
 
     private EditText editTextUsername, editTextPassword;
+    private TextView textViewForgotPassword;
     private Button loginButton;
 
     private static final String LOGIN_URL = "http://scerns.ucc-bscs.com/User/login.php";
@@ -44,6 +45,7 @@ public class Login extends AppCompatActivity {
 
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
+        textViewForgotPassword = findViewById(R.id.textViewForgotPassword);
         loginButton = findViewById(R.id.loginButton);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +60,13 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Login.this, Register.class));
+            }
+        });
+
+        textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Login.this, ForgotPass.class));
             }
         });
     }
@@ -147,5 +156,4 @@ public class Login extends AppCompatActivity {
         // Add the request to the RequestQueue
         queue.add(stringRequest);
     }
-
 }
