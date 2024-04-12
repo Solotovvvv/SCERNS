@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="scernscolor">#618264</color>
     <color name="blue">#0b5394</color>
+    <color name="scernsbg">#8DA48F</color>
 </resources>

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +32,7 @@ public class ForgotPass extends AppCompatActivity {
     private Button btnSend;
     private TextView txtviewLogin;
     private EditText editTextEmail;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class ForgotPass extends AppCompatActivity {
         btnSend = findViewById(R.id.btnSendOTP);
         txtviewLogin = findViewById(R.id.textViewLogin);
         editTextEmail = findViewById(R.id.emailEditText);
+        sharedPreferences = getSharedPreferences("ForgotPassPREF", this.MODE_PRIVATE);
 
         // Apply UI changes
         UICHanges();
@@ -79,7 +82,7 @@ public class ForgotPass extends AppCompatActivity {
         });
     }
 
-    public void checkEmail(final String email) {
+    public void  checkEmail(final String email) {
         RequestQueue queue = Volley.newRequestQueue(this);
         String URL = "http://scerns.ucc-bscs.com/Controller/ForgotPassword/email_check.php";
 
@@ -87,12 +90,40 @@ public class ForgotPass extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                     Log.d("Email", response);
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            // Check if the response contains any data
+                            if (jsonResponse.has("id") && jsonResponse.has("otp")) {
+                                // Data found, proceed with storing and navigation
+                                String userID = jsonResponse.getString("id");
+                                String otp = jsonResponse.getString("otp");
+
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("otp", otp);
+                                editor.putString("userID", userID);
+                                editor.apply();
+
+                                Intent intent = new Intent(ForgotPass.this, ForgotPassOTP.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                // No records found, display Toast message
+                                Toast.makeText(ForgotPass.this, "No records found", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error", error.getMessage());
+                String errorMessage = error.getMessage();
+                if (errorMessage != null) {
+                    Log.e("Error", errorMessage);
+                } else {
+                    Toast.makeText(ForgotPass.this, "Please Try Again Later.", Toast.LENGTH_SHORT).show();
+                }
             }
         }) {
             @Override
