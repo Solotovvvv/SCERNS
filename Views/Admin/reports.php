@@ -303,8 +303,14 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1)) {
                     console.log("Latitude and longitude not available");
                 }
             });
+
+
             $('#reportModal').on('hidden.bs.modal', function() {
                 resetComboBoxes();
+                if (map) {
+                    map.remove();
+                    map = null;
+                }
             });
 
 
