@@ -133,22 +133,13 @@ public class ForgotPassChange extends AppCompatActivity {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            try {
-                                JSONObject jsonResponse = new JSONObject(response);
-                                Log.d("diddy", response.toString());
-                                if (jsonResponse.has("success")) {
-
-//                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                                    editor.clear(); // Clear all data from shared preferences
-//                                    editor.apply(); // Apply changes
-//
-//                                    Intent intent = new Intent(ForgotPassChange.this, Login.class);
-//                                    startActivity(intent);
-//                                    finish();
-                                }
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
-                            }
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.clear();
+                            editor.apply();
+                            Toast.makeText(ForgotPassChange.this, "Changing of Password Success", Toast.LENGTH_LONG).show();
+                          Intent intent = new Intent(ForgotPassChange.this, Login.class);
+                          startActivity(intent);
+                          finish();
                         }
                     }, new Response.ErrorListener() {
                 @Override
