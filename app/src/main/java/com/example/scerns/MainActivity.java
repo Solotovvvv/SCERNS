@@ -5,11 +5,11 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,24 +17,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.Request;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private NavigationView navigationView;
     private Toolbar toolbar;
 
     private int userId;
@@ -59,18 +47,19 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        navigationView.setNavigationItemSelectedListener(this);
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                return true;
-            }
-        });
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_item1);
+        }
+
 
         Button emergencyButton = findViewById(R.id.btnEmergency);
         emergencyButton.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +68,46 @@ public class MainActivity extends AppCompatActivity {
                 showVictimOrWitnessDialog();
             }
         });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.nav_item1) {
+            // Handle Profile item click
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+            Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.nav_item2) {
+            // Handle Emergency Contacts item click
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+            Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.nav_item3) {
+            // Handle History item click
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EContactsFragment()).commit();
+            Toast.makeText(this, "Emergency Contacts clicked", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.nav_item4) {
+            // Handle Logout item click
+            // Add your logout logic here
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HistoryFragment()).commit();
+            Toast.makeText(this, "History clicked", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.nav_item5) {
+            // Handle Logout item click
+            // Add your logout logic here
+            Toast.makeText(this, "Logout clicked", Toast.LENGTH_SHORT).show();
+        }
+
+        // Close the navigation drawer
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void showToast(String message) {
@@ -216,5 +245,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 }

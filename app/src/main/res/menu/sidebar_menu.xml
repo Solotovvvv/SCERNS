@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view">
     <item
         android:id="@+id/nav_item1"
-        android:title="Profile" />
+        android:title="Home" />
     <item
         android:id="@+id/nav_item2"
-        android:title="Emergency Contacts" />
+        android:title="Profile" />
     <item
         android:id="@+id/nav_item3"
-        android:title="History" />
+        android:title="Emergency Contacts" />
     <item
         android:id="@+id/nav_item4"
+        android:title="History" />
+
+    <item
+        android:id="@+id/nav_item5"
         android:title="Logout" />
 </menu>
