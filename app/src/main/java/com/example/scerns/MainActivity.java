@@ -56,11 +56,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_item1);
         }
-
-
+        
         Button emergencyButton = findViewById(R.id.btnEmergency);
         emergencyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EContactsFragment()).commit();
             Toast.makeText(this, "Emergency Contacts clicked", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.nav_item4) {
-            // Handle Logout item click
-            // Add your logout logic here
+            // Handle History item click
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HistoryFragment()).commit();
             Toast.makeText(this, "History clicked", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.nav_item5) {
@@ -100,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     @Override
     public void onBackPressed() {
