@@ -1,71 +1,107 @@
 package com.example.scerns;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HistoryFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class HistoryFragment extends Fragment {
 
     private int userId;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HistoryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HistoryFragment newInstance(String param1, String param2) {
-        HistoryFragment fragment = new HistoryFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private ListView listView;
+    private ArrayAdapter<String> adapter;
 
     public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public HistoryFragment() {
-        // Required empty public constructor
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
+
+        if (userId != -1) {
+            Toast.makeText(requireContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "User ID not found", Toast.LENGTH_SHORT).show();
         }
+
+        listView = view.findViewById(R.id.list_view);
+
+        fetchDataFromAPI();
+
+        return view;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Log.d("HistoryFragment", "onCreateView called");
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history, container, false);
+    private void fetchDataFromAPI() {
+        String url = "http://scerns.ucc-bscs.com/User/history.php?User_Id=" + userId;
+
+        VolleyRequestManager volleyRequestManager = new VolleyRequestManager(requireContext());
+        volleyRequestManager.get(url, new VolleyRequestManager.VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String response) {
+                Log.d("JSON_RESPONSE", response);
+
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+
+                    if (jsonResponse.has("reports")) {
+                        JSONArray jsonArray = jsonResponse.getJSONArray("reports");
+                        ArrayList<String> dataList = new ArrayList<>();
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            String typeOfEmergency = jsonObject.optString("TypeOfEmergency", "");
+                            String address = jsonObject.optString("Address", "");
+                            String landmark = jsonObject.optString("Landmark", "");
+                            String level = jsonObject.optString("Level", "");
+                            String date = jsonObject.optString("Date", "");
+                            String status = jsonObject.optString("Status", "");
+
+                            String reportDetails = "Type Of Emergency: " + typeOfEmergency + "\n"
+                                    + "Address: " + address + "\n"
+                                    + "Landmark: " + landmark + "\n"
+                                    + "Level: " + level + "\n"
+                                    + "Date: " + date + "\n"
+                                    + "Status: " + status;
+
+                            dataList.add(reportDetails);
+                        }
+
+                        adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, dataList);
+                        listView.setAdapter(adapter);
+                    } else {
+                        Toast.makeText(requireContext(), "No reports found", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(requireContext(), "Error parsing JSON", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onErrorResponse(String errorMessage) {
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
+
+
 }
+
