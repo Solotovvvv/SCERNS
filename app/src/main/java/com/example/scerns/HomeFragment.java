@@ -1,64 +1,180 @@
 package com.example.scerns;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private int userId; // Assuming you have userId variable declared
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public HomeFragment() {
-        // Required empty public constructor
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+
+        // Find the emergency button by its ID
+        Button emergencyButton = view.findViewById(R.id.btnEmergency);
+
+        // Set onClickListener for the emergency button
+        emergencyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showVictimOrWitnessDialog();
+            }
+        });
+
+        return view;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+    private void showVictimOrWitnessDialog() {
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.victimorwitness, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(dialogView);
+        final AlertDialog dialog = builder.create();
+
+        Button btnVictim = dialogView.findViewById(R.id.btnVictim);
+        Button btnWitness = dialogView.findViewById(R.id.btnWitness);
+        Button btnBackVW = dialogView.findViewById(R.id.vwbackBTN);
+
+        btnBackVW.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        TextView selectedTypeTextView = dialogView.findViewById(R.id.selectedTypeTextView);
+
+        btnVictim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedTypeTextView.setText("Victim");
+                dialog.dismiss();
+                showOptionsDialog("Victim");
+            }
+        });
+
+        btnWitness.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedTypeTextView.setText("Witness");
+                dialog.dismiss();
+                showOptionsDialog("Witness");
+            }
+        });
+
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    private void showOptionsDialog(final String role) {
+        View dialogOptionsView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_options, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setView(dialogOptionsView);
+        builder.setCancelable(true);
+        final AlertDialog dialog = builder.create();
+
+        Button btnPolice = dialogOptionsView.findViewById(R.id.btnPolice);
+        Button btnMedic = dialogOptionsView.findViewById(R.id.btnMedic);
+        Button btnFire = dialogOptionsView.findViewById(R.id.btnFire);
+        Button btnNaturalDisaster = dialogOptionsView.findViewById(R.id.btnNaturalDisaster);
+        Button btnBack = dialogOptionsView.findViewById(R.id.btnBack);
+
+        TextView selectedDialogOptions = dialogOptionsView.findViewById(R.id.selectedDialogOptions);
+
+        btnPolice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Police selected");
+                selectedDialogOptions.setText("Crime");
+                Intent intent = new Intent(requireContext(), EmergencyInfo.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("role", role);
+                intent.putExtra("emergencyType", "Crime");
+                startActivity(intent);
+
+                dialog.dismiss();
+            }
+        });
+
+        btnMedic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Medic selected");
+                selectedDialogOptions.setText("Medic");
+
+                Intent intent = new Intent(requireContext(), EmergencyInfo.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("role", role);
+                intent.putExtra("emergencyType", "Medic");
+                startActivity(intent);
+
+                dialog.dismiss();
+            }
+        });
+
+        btnFire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Fire selected");
+                selectedDialogOptions.setText("Fire");
+
+                Intent intent = new Intent(requireContext(), EmergencyInfo.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("role", role);
+                intent.putExtra("emergencyType", "Fire");
+                startActivity(intent);
+
+                dialog.dismiss();
+            }
+        });
+
+        btnNaturalDisaster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Natural Disaster selected");
+                selectedDialogOptions.setText("Natural Disaster");
+
+                Intent intent = new Intent(requireContext(), EmergencyInfo.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("role", role);
+                intent.putExtra("emergencyType", "Natural Disaster");
+                startActivity(intent);
+
+                dialog.dismiss();
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+
+    private void showToast(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

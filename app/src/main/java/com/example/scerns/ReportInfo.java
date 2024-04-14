@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,10 +32,21 @@ public class ReportInfo extends AppCompatActivity {
     private String address, landmark, level, type;
     private MapView mapView;
 
+    private int userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_info);
+
+        userId = getIntent().getIntExtra("userId", -1);
+        if (userId == -1) {
+            Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        } else{
+            Toast.makeText(this, "User ID: " + userId, Toast.LENGTH_SHORT).show();
+        }
 
         address = getIntent().getStringExtra("address");
         landmark = getIntent().getStringExtra("landmark");
@@ -46,6 +58,7 @@ public class ReportInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ReportInfo.this, MainActivity.class);
+                intent.putExtra("userId", userId);
                 startActivity(intent);
                 finish();
             }
