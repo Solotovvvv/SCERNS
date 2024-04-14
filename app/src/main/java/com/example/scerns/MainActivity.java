@@ -27,10 +27,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private int userId;
 
-    private TextView selectedTypeTextView;
-
-    private AlertDialog dialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,22 +67,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
             Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.nav_profile) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+            ProfileFragment profileFragment = new ProfileFragment();
+            profileFragment.setUserId(userId); // Set the userId
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, profileFragment).commit();
             Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.nav_contact) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EContactsFragment()).commit();
+            EContactsFragment eContactsFragment = new EContactsFragment();
+            eContactsFragment.setUserId(userId); // Set the userId
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, eContactsFragment).commit();
             Toast.makeText(this, "Emergency Contacts clicked", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.nav_history) {
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HistoryFragment()).commit();
+            HistoryFragment historyFragment = new HistoryFragment();
+            historyFragment.setUserId(userId); // Set the userId
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, historyFragment).commit();
             Toast.makeText(this, "History clicked", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.nav_logout) {
-
             Toast.makeText(this, "Logout clicked", Toast.LENGTH_SHORT).show();
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     @Override
     public void onBackPressed() {

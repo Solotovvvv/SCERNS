@@ -56,37 +56,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btnEmergency"-->
-<!--        android:layout_width="300dp"-->
-<!--        android:layout_height="300dp"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:backgroundTint="#618264"-->
-<!--        android:text="Emergency Button"-->
-<!--        android:textColor="@android:color/white"-->
-<!--        android:textSize="40sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/mainLinearLayout"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"/>-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/textViewAdditionalInfo"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="20dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:text="Tap the button to send alerts."-->
-<!--        android:textColor="@android:color/black"-->
-<!--        android:gravity="center"-->
-<!--        android:textSize="18sp"-->
-<!--        android:textStyle="italic"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/btnEmergency"-->
-<!--        android:layout_marginEnd="20dp"/>-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView

@@ -26,7 +26,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-
         // Find the emergency button by its ID
         Button emergencyButton = view.findViewById(R.id.btnEmergency);
 
