@@ -1,70 +1,184 @@
 package com.example.scerns;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EContactsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class EContactsFragment extends Fragment {
 
     private int userId;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Spinner spinner;
+    private ListView listView;
+    private ArrayAdapter<String> adapter;
+    private List<String> allData;
+    private List<String> filteredData;
 
     public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public EContactsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EContactsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EContactsFragment newInstance(String param1, String param2) {
-        EContactsFragment fragment = new EContactsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_e_contacts, container, false);
+
+        // Show userId in toast
+        if (userId != -1) {
+            Toast.makeText(requireContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "User ID not found", Toast.LENGTH_SHORT).show();
         }
+
+        spinner = view.findViewById(R.id.dropdown_spinner);
+        listView = view.findViewById(R.id.list_view);
+
+        allData = new ArrayList<>();
+        filteredData = new ArrayList<>();
+
+        adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, filteredData);
+        listView.setAdapter(adapter);
+
+        fetchCategories();
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCategory = parent.getItemAtPosition(position).toString();
+                filterData(selectedCategory);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+
+        return view;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_e_contacts, container, false);
+    private void fetchCategories() {
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(requireContext());
+        String url = "http://scerns.ucc-bscs.com/User/getRespondent.php";
+
+        // Request a JSON response from the provided URL.
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        allData.clear();
+
+                        // Add "All Category" as the first option
+                        allData.add("All Category");
+
+                        // Parse the JSON response and add unique categories to the list
+                        Set<String> uniqueCategories = new HashSet<>();
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                String category = jsonObject.getString("Category");
+                                uniqueCategories.add(category);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        // Add unique categories to allData list
+                        allData.addAll(uniqueCategories);
+
+                        // Update Spinner adapter
+                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, allData);
+                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(spinnerAdapter);
+
+                        // Set default selection to "All Category"
+                        spinner.setSelection(0);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Handle errors
+                error.printStackTrace();
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonArrayRequest);
+    }
+
+    private void fetchContacts(String category) {
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(requireContext());
+
+        // URL to fetch all contacts if "All Category" is selected
+        String url;
+        if (category.equals("All Category")) {
+            url = "http://scerns.ucc-bscs.com/User/getRespondent.php";
+        } else {
+            // URL with the selected category as a parameter
+            url = "http://scerns.ucc-bscs.com/User/getRespondent.php?category=" + category;
+        }
+
+        // Request a JSON response from the provided URL.
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        // Clearing the list before fetching new contacts
+                        filteredData.clear();
+
+                        // Parse the JSON response and add contacts to the list
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                String name = jsonObject.getString("Name");
+                                String hotlineNumber = jsonObject.getString("HotlineNumber");
+                                filteredData.add(name + ": " + hotlineNumber);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        // Update ListView adapter
+                        adapter.notifyDataSetChanged();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Handle errors
+                error.printStackTrace();
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonArrayRequest);
+    }
+
+
+    private void filterData(String category) {
+        fetchContacts(category);
     }
 }

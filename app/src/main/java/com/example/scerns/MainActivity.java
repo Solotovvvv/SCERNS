@@ -51,12 +51,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
-        // Create an instance of HomeFragment and set the userId
         HomeFragment homeFragment = new HomeFragment();
-        homeFragment.setUserId(userId);
-
-        // Replace the fragment container with the HomeFragment
+        homeFragment.setUserId(userId); // Set the userId
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+
         navigationView.setCheckedItem(R.id.nav_home);
     }
 
@@ -64,7 +62,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.nav_home) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+            HomeFragment homeFragment = new HomeFragment();
+            homeFragment.setUserId(userId); // Set the userId
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
             Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.nav_profile) {
             ProfileFragment profileFragment = new ProfileFragment();
@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     @Override
     public void onBackPressed() {

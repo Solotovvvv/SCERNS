@@ -33,6 +33,7 @@ public class ProfileFragment extends Fragment {
     private Button buttonEditProfile;
 
     public void setUserId(int userId) {
+
         this.userId = userId;
     }
 
@@ -40,6 +41,14 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        // Show userId in toast
+        if (userId != -1) {
+            Toast.makeText(requireContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "User ID not found", Toast.LENGTH_SHORT).show();
+        }
+
         imageViewProfile = view.findViewById(R.id.imageViewProfile);
         textViewNoImage = view.findViewById(R.id.textViewNoImage);
         textViewFullName = view.findViewById(R.id.textViewFullName);
@@ -52,7 +61,6 @@ public class ProfileFragment extends Fragment {
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle edit profile button click
                 ProfileEditFragment profileEditFragment = new ProfileEditFragment();
                 Bundle args = new Bundle();
                 args.putInt("userId", userId);
@@ -62,7 +70,6 @@ public class ProfileFragment extends Fragment {
                 args.putString("email", textViewEmail.getText().toString());
                 profileEditFragment.setArguments(args);
 
-                // Start fragment transaction to replace the current fragment with the profile edit fragment
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, profileEditFragment);
                 transaction.addToBackStack(null);
