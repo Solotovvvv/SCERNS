@@ -61,9 +61,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Replace the current fragment with the "History" fragment
                 HistoryFragment historyFragment = new HistoryFragment();
-                historyFragment.setUserId(userId); // Set the userId
+                historyFragment.setUserId(userId);
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, historyFragment).commit();
             }
         });
@@ -74,24 +73,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int itemId = item.getItemId();
         if (itemId == R.id.nav_home) {
             HomeFragment homeFragment = new HomeFragment();
-            homeFragment.setUserId(userId); // Set the userId
+            homeFragment.setUserId(userId);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
-            Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.nav_profile) {
             ProfileFragment profileFragment = new ProfileFragment();
-            profileFragment.setUserId(userId); // Set the userId
+            profileFragment.setUserId(userId);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, profileFragment).commit();
-            Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.nav_contact) {
             EContactsFragment eContactsFragment = new EContactsFragment();
-            eContactsFragment.setUserId(userId); // Set the userId
+            eContactsFragment.setUserId(userId);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, eContactsFragment).commit();
-            Toast.makeText(this, "Emergency Contacts clicked", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Emergency Contacts clicked", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.nav_history) {
             HistoryFragment historyFragment = new HistoryFragment();
             historyFragment.setUserId(userId); // Set the userId
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, historyFragment).commit();
-            Toast.makeText(this, "History clicked", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "History clicked", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.nav_logout) {
             Toast.makeText(this, "Logout clicked", Toast.LENGTH_SHORT).show();
         }

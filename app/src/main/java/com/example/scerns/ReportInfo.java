@@ -45,7 +45,7 @@ public class ReportInfo extends AppCompatActivity {
             finish();
             return;
         } else{
-            Toast.makeText(this, "User ID: " + userId, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "User ID: " + userId, Toast.LENGTH_SHORT).show();
         }
 
         address = getIntent().getStringExtra("address");
@@ -72,7 +72,6 @@ public class ReportInfo extends AppCompatActivity {
             String addressLabel = "Address: " + address;
             textViewAddress.setText(addressLabel);
 
-            // Initialize the map view
             Configuration.getInstance().load(getApplicationContext(), getSharedPreferences("osmdroid", MODE_PRIVATE));
             mapView = findViewById(R.id.mapView);
             mapView.setTileSource(TileSourceFactory.MAPNIK);
@@ -103,7 +102,6 @@ public class ReportInfo extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Release resources when the activity is destroyed
         if (mapView != null) {
             mapView.onDetach();
         }
@@ -144,12 +142,10 @@ public class ReportInfo extends AppCompatActivity {
         @Override
         protected void onPostExecute(GeoPoint result) {
             if (result != null) {
-                // Set map's center to the address location
                 mapView.getController().setCenter(result);
 
                 adjustZoomToAddress(result);
 
-                // Add a marker to indicate the address location
                 Marker marker = new Marker(mapView);
                 marker.setPosition(result);
                 mapView.getOverlays().add(marker);

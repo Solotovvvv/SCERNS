@@ -47,7 +47,7 @@ public class EContactsFragment extends Fragment {
 
         // Show userId in toast
         if (userId != -1) {
-            Toast.makeText(requireContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(requireContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(requireContext(), "User ID not found", Toast.LENGTH_SHORT).show();
         }
@@ -84,17 +84,14 @@ public class EContactsFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(requireContext());
         String url = "http://scerns.ucc-bscs.com/User/getRespondent.php";
 
-        // Request a JSON response from the provided URL.
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         allData.clear();
 
-                        // Add "All Category" as the first option
                         allData.add("All Category");
 
-                        // Parse the JSON response and add unique categories to the list
                         Set<String> uniqueCategories = new HashSet<>();
                         for (int i = 0; i < response.length(); i++) {
                             try {
@@ -106,15 +103,12 @@ public class EContactsFragment extends Fragment {
                             }
                         }
 
-                        // Add unique categories to allData list
                         allData.addAll(uniqueCategories);
 
-                        // Update Spinner adapter
                         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, allData);
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner.setAdapter(spinnerAdapter);
 
-                        // Set default selection to "All Category"
                         spinner.setSelection(0);
                     }
                 }, new Response.ErrorListener() {
@@ -125,32 +119,24 @@ public class EContactsFragment extends Fragment {
             }
         });
 
-        // Add the request to the RequestQueue.
         queue.add(jsonArrayRequest);
     }
 
     private void fetchContacts(String category) {
-        // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(requireContext());
 
-        // URL to fetch all contacts if "All Category" is selected
         String url;
         if (category.equals("All Category")) {
             url = "http://scerns.ucc-bscs.com/User/getRespondent.php";
         } else {
-            // URL with the selected category as a parameter
             url = "http://scerns.ucc-bscs.com/User/getRespondent.php?category=" + category;
         }
 
-        // Request a JSON response from the provided URL.
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        // Clearing the list before fetching new contacts
                         filteredData.clear();
-
-                        // Parse the JSON response and add contacts to the list
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject jsonObject = response.getJSONObject(i);
@@ -162,21 +148,17 @@ public class EContactsFragment extends Fragment {
                             }
                         }
 
-                        // Update ListView adapter
                         adapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // Handle errors
                 error.printStackTrace();
             }
         });
 
-        // Add the request to the RequestQueue.
         queue.add(jsonArrayRequest);
     }
-
 
     private void filterData(String category) {
         fetchContacts(category);

@@ -18,6 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.views.MapView;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Marker;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +46,7 @@ public class HistoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         if (userId != -1) {
-            Toast.makeText(requireContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(requireContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(requireContext(), "User ID not found", Toast.LENGTH_SHORT).show();
         }
@@ -68,11 +73,9 @@ public class HistoryFragment extends Fragment {
     private void showDetailDialog(JSONObject jsonObject) throws JSONException {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
 
-        // Inflate custom layout for the dialog
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.custom_dialog_layout, null);
 
-        // Find views in custom layout
         TextView textViewTitle = dialogView.findViewById(R.id.textViewTitle);
         TextView textViewType = dialogView.findViewById(R.id.textViewType);
         TextView textViewAddress = dialogView.findViewById(R.id.textViewAddress);
@@ -100,6 +103,43 @@ public class HistoryFragment extends Fragment {
             loadingProgressBar.setVisibility(View.GONE);
             textViewWaiting.setVisibility(View.GONE);
         }
+
+        String address = jsonObject.optString("Address", "");
+
+        MapView mapView = dialogView.findViewById(R.id.mapView);
+        mapView.setTileSource(TileSourceFactory.MAPNIK);
+
+        String mapUrl = "https://nominatim.openstreetmap.org/search?format=json&q=" + address;
+        VolleyRequestManager volleyRequestManager = new VolleyRequestManager(requireContext());
+        volleyRequestManager.get(mapUrl, new VolleyRequestManager.VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String response) {
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    if (jsonArray.length() > 0) {
+                        JSONObject result = jsonArray.getJSONObject(0);
+                        double lat = result.getDouble("lat");
+                        double lon = result.getDouble("lon");
+                        GeoPoint point = new GeoPoint(lat, lon);
+
+                        mapView.getController().setZoom(19);
+                        mapView.getController().setCenter(point);
+
+                        Marker marker = new Marker(mapView);
+                        marker.setPosition(point);
+                        mapView.getOverlays().add(marker);
+                        mapView.invalidate();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onErrorResponse(String errorMessage) {
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         builder.setView(dialogView).setPositiveButton("OK", null);
 
@@ -147,7 +187,4 @@ public class HistoryFragment extends Fragment {
             }
         });
     }
-
-
 }
-

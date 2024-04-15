@@ -207,16 +207,14 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 }
             }
 
-            // Ensure at least three suggestions are available
             while (suggestionList.size() < 3) {
-                suggestionList.add(""); // Add empty strings as placeholders
+                suggestionList.add("");
             }
 
             ListView suggestionListView = findViewById(R.id.suggestionListView);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, suggestionList);
             suggestionListView.setAdapter(adapter);
 
-            // Set maximum height for the ListView
             suggestionListView.getLayoutParams().height = 300; // Adjust as needed
             suggestionListView.requestLayout();
 
@@ -234,6 +232,5 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
             });
         }
     }
-
 
 }

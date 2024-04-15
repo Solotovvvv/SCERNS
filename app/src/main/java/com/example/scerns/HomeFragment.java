@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 public class HomeFragment extends Fragment {
 
-    private int userId; // Assuming you have userId variable declared
+    private int userId;
 
     public void setUserId(int userId) {
         this.userId = userId;
@@ -28,15 +28,13 @@ public class HomeFragment extends Fragment {
 
         // Show userId in toast
         if (userId != -1) {
-            Toast.makeText(requireContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(requireContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(requireContext(), "User ID not found", Toast.LENGTH_SHORT).show();
         }
 
-        // Find the emergency button by its ID
         Button emergencyButton = view.findViewById(R.id.btnEmergency);
 
-        // Set onClickListener for the emergency button
         emergencyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,7 +176,6 @@ public class HomeFragment extends Fragment {
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
-
 
     private void showToast(String message) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();

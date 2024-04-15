@@ -13,7 +13,6 @@ public class VolleyRequestManager {
     private RequestQueue requestQueue;
     private static VolleyRequestManager instance;
 
-    // Public constructor to allow instantiation from outside the class
     public VolleyRequestManager(Context context) {
         requestQueue = Volley.newRequestQueue(context.getApplicationContext());
     }
