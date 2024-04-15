@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         userId = getIntent().getIntExtra("userId", -1);
         if (userId != -1) {
-            Toast.makeText(MainActivity.this, "User ID: " + userId, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "User ID: " + userId, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(MainActivity.this, "User ID not found", Toast.LENGTH_SHORT).show();
         }
@@ -52,10 +52,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
 
         HomeFragment homeFragment = new HomeFragment();
-        homeFragment.setUserId(userId); // Set the userId
+        homeFragment.setUserId(userId);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
 
         navigationView.setCheckedItem(R.id.nav_home);
+
+        Button btnAlert = findViewById(R.id.btnAlert);
+        btnAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Replace the current fragment with the "History" fragment
+                HistoryFragment historyFragment = new HistoryFragment();
+                historyFragment.setUserId(userId); // Set the userId
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, historyFragment).commit();
+            }
+        });
     }
 
     @Override
