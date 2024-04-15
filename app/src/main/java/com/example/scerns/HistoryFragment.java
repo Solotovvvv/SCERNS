@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,8 +79,10 @@ public class HistoryFragment extends Fragment {
         TextView textViewLandmark = dialogView.findViewById(R.id.textViewLandmark);
         TextView textViewLevel = dialogView.findViewById(R.id.textViewLevel);
         TextView textViewStatus = dialogView.findViewById(R.id.textViewStatus);
+        LinearLayout loadingLayout = dialogView.findViewById(R.id.loadingLayout);
+        ProgressBar loadingProgressBar = dialogView.findViewById(R.id.loadingProgressBar);
+        TextView textViewWaiting = dialogView.findViewById(R.id.textViewWaiting);
 
-        // Set data to views
         textViewTitle.setText("Report's Details");
         textViewType.setText("Emergency Type: " + jsonObject.optString("TypeOfEmergency", ""));
         textViewAddress.setText("Address: " + jsonObject.optString("Address", ""));
@@ -86,13 +90,22 @@ public class HistoryFragment extends Fragment {
         textViewLevel.setText("Level: " + jsonObject.optString("Level", ""));
         textViewStatus.setText("Status: " + jsonObject.optString("Status", ""));
 
-        builder.setView(dialogView)
-                .setPositiveButton("OK", null);
+        String status = jsonObject.optString("Status", "");
+        if (status.equalsIgnoreCase("Pending")) {
+            loadingLayout.setVisibility(View.VISIBLE);
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            textViewWaiting.setVisibility(View.VISIBLE);
+        } else {
+            loadingLayout.setVisibility(View.GONE);
+            loadingProgressBar.setVisibility(View.GONE);
+            textViewWaiting.setVisibility(View.GONE);
+        }
+
+        builder.setView(dialogView).setPositiveButton("OK", null);
 
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
 
 
     private void fetchDataFromAPI() {
@@ -108,7 +121,7 @@ public class HistoryFragment extends Fragment {
                     JSONObject jsonResponse = new JSONObject(response);
 
                     if (jsonResponse.has("reports")) {
-                        jsonArray = jsonResponse.getJSONArray("reports"); // Assigning jsonArray
+                        jsonArray = jsonResponse.getJSONArray("reports");
                         ArrayList<String> dataList = new ArrayList<>();
 
                         for (int i = 0; i < jsonArray.length(); i++) {
