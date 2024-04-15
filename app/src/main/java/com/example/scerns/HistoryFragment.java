@@ -26,6 +26,7 @@ public class HistoryFragment extends Fragment {
     private int userId;
     private ListView listView;
     private ArrayAdapter<String> adapter;
+    private JSONArray jsonArray;
 
     public void setUserId(int userId) {
         this.userId = userId;
@@ -46,8 +47,40 @@ public class HistoryFragment extends Fragment {
 
         fetchDataFromAPI();
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    JSONObject clickedItem = jsonArray.getJSONObject(position);
+                    showDetailDialog(clickedItem);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
         return view;
     }
+
+    private void showDetailDialog(JSONObject jsonObject) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Report Details");
+
+        StringBuilder detailsBuilder = new StringBuilder();
+        detailsBuilder.append("Role: ").append(jsonObject.optString("Role", "")).append("\n")
+                .append("Type Of Emergency: ").append(jsonObject.optString("TypeOfEmergency", "")).append("\n")
+                .append("Address: ").append(jsonObject.optString("Address", "")).append("\n")
+                .append("Landmark: ").append(jsonObject.optString("Landmark", "")).append("\n")
+                .append("Level: ").append(jsonObject.optString("Level", "")).append("\n")
+                .append("Date: ").append(jsonObject.optString("Date", "")).append("\n")
+                .append("Status: ").append(jsonObject.optString("Status", ""));
+
+        builder.setMessage(detailsBuilder.toString());
+        builder.setPositiveButton("OK", null);
+        builder.show();
+    }
+
 
     private void fetchDataFromAPI() {
         String url = "http://scerns.ucc-bscs.com/User/history.php?User_Id=" + userId;
@@ -62,25 +95,13 @@ public class HistoryFragment extends Fragment {
                     JSONObject jsonResponse = new JSONObject(response);
 
                     if (jsonResponse.has("reports")) {
-                        JSONArray jsonArray = jsonResponse.getJSONArray("reports");
+                        jsonArray = jsonResponse.getJSONArray("reports"); // Assigning jsonArray
                         ArrayList<String> dataList = new ArrayList<>();
 
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            String typeOfEmergency = jsonObject.optString("TypeOfEmergency", "");
-                            String address = jsonObject.optString("Address", "");
-                            String landmark = jsonObject.optString("Landmark", "");
-                            String level = jsonObject.optString("Level", "");
-                            String date = jsonObject.optString("Date", "");
-                            String status = jsonObject.optString("Status", "");
-
-                            String reportDetails = "Type Of Emergency: " + typeOfEmergency + "\n"
-                                    + "Address: " + address + "\n"
-                                    + "Landmark: " + landmark + "\n"
-                                    + "Level: " + level + "\n"
-                                    + "Date: " + date + "\n"
-                                    + "Status: " + status;
-
+                            String role = jsonObject.optString("Role", "");
+                            String reportDetails = "Role: " + role;
                             dataList.add(reportDetails);
                         }
 
@@ -101,7 +122,6 @@ public class HistoryFragment extends Fragment {
         });
     }
 
-
-
+    
 }
 
