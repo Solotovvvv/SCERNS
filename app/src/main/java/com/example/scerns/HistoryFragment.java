@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -59,27 +60,39 @@ public class HistoryFragment extends Fragment {
             }
         });
 
-
         return view;
     }
 
-    private void showDetailDialog(JSONObject jsonObject) {
+    private void showDetailDialog(JSONObject jsonObject) throws JSONException {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Report Details");
 
-        StringBuilder detailsBuilder = new StringBuilder();
-        detailsBuilder.append("Role: ").append(jsonObject.optString("Role", "")).append("\n")
-                .append("Type Of Emergency: ").append(jsonObject.optString("TypeOfEmergency", "")).append("\n")
-                .append("Address: ").append(jsonObject.optString("Address", "")).append("\n")
-                .append("Landmark: ").append(jsonObject.optString("Landmark", "")).append("\n")
-                .append("Level: ").append(jsonObject.optString("Level", "")).append("\n")
-                .append("Date: ").append(jsonObject.optString("Date", "")).append("\n")
-                .append("Status: ").append(jsonObject.optString("Status", ""));
+        // Inflate custom layout for the dialog
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_dialog_layout, null);
 
-        builder.setMessage(detailsBuilder.toString());
-        builder.setPositiveButton("OK", null);
-        builder.show();
+        // Find views in custom layout
+        TextView textViewTitle = dialogView.findViewById(R.id.textViewTitle);
+        TextView textViewType = dialogView.findViewById(R.id.textViewType);
+        TextView textViewAddress = dialogView.findViewById(R.id.textViewAddress);
+        TextView textViewLandmark = dialogView.findViewById(R.id.textViewLandmark);
+        TextView textViewLevel = dialogView.findViewById(R.id.textViewLevel);
+        TextView textViewStatus = dialogView.findViewById(R.id.textViewStatus);
+
+        // Set data to views
+        textViewTitle.setText("Report's Details");
+        textViewType.setText("Emergency Type: " + jsonObject.optString("TypeOfEmergency", ""));
+        textViewAddress.setText("Address: " + jsonObject.optString("Address", ""));
+        textViewLandmark.setText("Landmark: " + jsonObject.optString("Landmark", ""));
+        textViewLevel.setText("Level: " + jsonObject.optString("Level", ""));
+        textViewStatus.setText("Status: " + jsonObject.optString("Status", ""));
+
+        builder.setView(dialogView)
+                .setPositiveButton("OK", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
+
 
 
     private void fetchDataFromAPI() {
@@ -122,6 +135,6 @@ public class HistoryFragment extends Fragment {
         });
     }
 
-    
+
 }
 
