@@ -144,11 +144,9 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 }
                 String numericLevel = extractNumericLevel(level);
                 saveDataToDatabase(userId, role, emergencyType, address, landmark, numericLevel);
-
                 triggerPusherEvent();
             }
         });
-
     }
 
     @Override
@@ -177,16 +175,23 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                     @Override
                     public void onResponse(String response) {
                         Log.d("ServerResponse", "Response: " + response);
-                        showToast("Server Response: " + response);
-
-                        Intent intent = new Intent(EmergencyInfo.this, ReportInfo.class);
-                        intent.putExtra("userId", userId);
-                        intent.putExtra("address", editTextAddress.getText().toString().trim());
-                        intent.putExtra("landmark", getEditTextLandmark.getText().toString().trim());
-                        intent.putExtra("level", spinnerLevels.getSelectedItem().toString());
-                        intent.putExtra("emergencyType", getIntent().getStringExtra("emergencyType"));
-
-                        startActivity(intent);
+                        if (response.startsWith("Error")) {
+                            showToast("Error: " + response);
+                        } else {
+                            try {
+                                int reportId = Integer.parseInt(response.trim());
+                                Intent intent = new Intent(EmergencyInfo.this, ReportInfo.class);
+                                intent.putExtra("userId", userId);
+                                intent.putExtra("reportId", reportId);
+                                intent.putExtra("address", editTextAddress.getText().toString().trim());
+                                intent.putExtra("landmark", getEditTextLandmark.getText().toString().trim());
+                                intent.putExtra("level", spinnerLevels.getSelectedItem().toString());
+                                intent.putExtra("emergencyType", getIntent().getStringExtra("emergencyType"));
+                                startActivity(intent);
+                            } catch (NumberFormatException e) {
+                                showToast("Invalid report ID received from server");
+                            }
+                        }
                     }
 
                 }, new Response.ErrorListener() {
@@ -207,7 +212,6 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 return params;
             }
         };
-
         Volley.newRequestQueue(this).add(stringRequest);
     }
 
@@ -235,7 +239,6 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 }
             });
         }
-
 
     @Override
     public void onAddressSuggestionReceived(JSONArray suggestions) {

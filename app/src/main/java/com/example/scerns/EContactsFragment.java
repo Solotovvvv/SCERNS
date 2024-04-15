@@ -114,7 +114,6 @@ public class EContactsFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // Handle errors
                 error.printStackTrace();
             }
         });

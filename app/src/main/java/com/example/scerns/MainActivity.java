@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 HistoryFragment historyFragment = new HistoryFragment();
                 historyFragment.setUserId(userId);
+                navigationView.setCheckedItem(R.id.nav_history);
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, historyFragment).commit();
             }
         });
