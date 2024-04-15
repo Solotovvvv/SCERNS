@@ -8,9 +8,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.pusher.client.Pusher;
+import com.pusher.client.PusherOptions;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.SubscriptionEventListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +21,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,27 +32,35 @@ public class ReportInfo extends AppCompatActivity {
 
     private String address, landmark, level, type;
     private MapView mapView;
+    private Pusher pusher;
 
     private int userId;
+
+    private TextView textViewStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_info);
 
+        // Initialize Pusher
+        PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
+        pusher = new Pusher("b26a50e9e9255fc95c8f", options);
+        pusher.connect();
+
         userId = getIntent().getIntExtra("userId", -1);
         if (userId == -1) {
             Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
-        } else{
-//            Toast.makeText(this, "User ID: " + userId, Toast.LENGTH_SHORT).show();
         }
 
         address = getIntent().getStringExtra("address");
         landmark = getIntent().getStringExtra("landmark");
         type = getIntent().getStringExtra("emergencyType");
         level = getIntent().getStringExtra("level");
+
+        textViewStatus = findViewById(R.id.textViewStatus);
 
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -97,11 +106,41 @@ public class ReportInfo extends AppCompatActivity {
             String levelLabel = "Level: " + level;
             textViewLevel.setText(levelLabel);
         }
+
+        Channel channel = pusher.subscribe("Scerns");
+
+        channel.bind("new-report", new SubscriptionEventListener() {
+            @Override
+            public void onEvent(com.pusher.client.channel.PusherEvent event) {
+                try {
+                    JSONObject eventData = new JSONObject(event.getData());
+                    String newStatus = eventData.getString("status");
+                    updateStatus(newStatus);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void updateStatus(String newStatus) {
+        if ("Pending".equals(newStatus) || "Waiting for Response".equals(newStatus)) {
+            textViewStatus.setText("Status: Pending");
+            LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
+            loadingLayout.setVisibility(View.VISIBLE);
+        } else if ("Arrived".equals(newStatus)) {
+            textViewStatus.setText("Status: Arrived");
+            LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
+            loadingLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (pusher != null) {
+            pusher.disconnect();
+        }
         if (mapView != null) {
             mapView.onDetach();
         }
@@ -159,3 +198,4 @@ public class ReportInfo extends AppCompatActivity {
         }
     }
 }
+

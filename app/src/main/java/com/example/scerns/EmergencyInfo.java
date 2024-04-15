@@ -14,13 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -36,11 +33,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.pusher.client.Pusher;
+import com.pusher.client.PusherOptions;
+import com.pusher.client.channel.PusherEvent;
+import com.pusher.client.channel.SubscriptionEventListener;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.connection.ConnectionEventListener;
+import com.pusher.client.connection.ConnectionState;
+import com.pusher.client.connection.ConnectionStateChange;
+
 public class EmergencyInfo extends AppCompatActivity implements AddressSuggestionTask.AddressSuggestionListener{
 
     private int userId;
     private EditText editTextAddress, getEditTextLandmark;
     private Spinner spinnerLevels;
+    private Pusher pusher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,11 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
 
         String role = getIntent().getStringExtra("role");
         String emergencyType = getIntent().getStringExtra("emergencyType");
+
+        // Initialize Pusher
+        PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
+        pusher = new Pusher("b26a50e9e9255fc95c8f", options);
+        pusher.connect();
 
         TextView textWelcomeScerns = findViewById(R.id.textWelcomeScerns);
         editTextAddress = findViewById(R.id.editTextAddress);
@@ -132,8 +144,19 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 }
                 String numericLevel = extractNumericLevel(level);
                 saveDataToDatabase(userId, role, emergencyType, address, landmark, numericLevel);
+
+                triggerPusherEvent();
             }
         });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (pusher != null) {
+            pusher.disconnect();
+        }
     }
 
     private String extractNumericLevel(String level) {
@@ -147,11 +170,6 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
 
     private void saveDataToDatabase(final int userId, final String role, final String emergencyType,
                                     final String address, final String landmark, final String level) {
-        // other url for hosting
-        // https://capstone-it4b.com/Scerns/user/user_reports.php
-        // https://nutrilense.ucc-bscs.com/SCERNS/reports.php
-        // http://scerns.ucc-bscs.com/user/user_reports.php
-        // http://Scerns.ucc-bscs.com/User/reports.php
 
         String url = "http://scerns.ucc-bscs.com/User/reports.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -192,6 +210,32 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
 
         Volley.newRequestQueue(this).add(stringRequest);
     }
+
+        private void triggerPusherEvent() {
+            Channel channel = pusher.subscribe("Scerns");
+
+            SubscriptionEventListener eventListener = new SubscriptionEventListener() {
+                @Override
+                public void onEvent(PusherEvent event) {
+                    Log.d("Pusher", "Received new-report event: " + event.getData());
+                }
+            };
+
+            channel.bind("new-report", eventListener);
+
+            pusher.getConnection().bind(ConnectionState.ALL, new ConnectionEventListener() {
+                @Override
+                public void onConnectionStateChange(ConnectionStateChange change) {
+                    Log.d("Pusher", "State changed to: " + change.getCurrentState());
+                }
+
+                @Override
+                public void onError(String message, String code, Exception e) {
+                    Log.e("Pusher", "Error: " + message);
+                }
+            });
+        }
+
 
     @Override
     public void onAddressSuggestionReceived(JSONArray suggestions) {

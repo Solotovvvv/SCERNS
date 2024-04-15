@@ -13,19 +13,19 @@
         android:background="@android:color/transparent"
         android:text="&lt;"
         android:textSize="30sp"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/black" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="20dp"
+        android:layout_margin="15dp"
         app:cardCornerRadius="15dp"
         app:cardElevation="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
@@ -71,10 +71,19 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/textViewStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="13dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="Status: " />
+
+            <TextView
                 android:id="@+id/textViewType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="13dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:text="Emergency Type: " />
