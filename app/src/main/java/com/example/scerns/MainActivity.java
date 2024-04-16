@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +26,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Toolbar toolbar;
 
+
     private int userId;
+    private long lastVolumeUpPressTime = 0;
+    private long lastVolumeDownPressTime = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,5 +110,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastVolumeUpPressTime <= 300) {
+                Toast.makeText(this, "Double Click", Toast.LENGTH_SHORT).show();
+                lastVolumeUpPressTime = 0; // Reset last press time
+                return true;
+            }
+            lastVolumeUpPressTime = currentTime;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastVolumeDownPressTime <= 300) {
+                Toast.makeText(this, "3ple Click", Toast.LENGTH_SHORT).show();
+                lastVolumeDownPressTime = 0; // Reset last press time
+                return true;
+            }
+            lastVolumeDownPressTime = currentTime;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
