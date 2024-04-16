@@ -3,6 +3,8 @@ package com.example.scerns;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,7 +19,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
 import com.google.android.material.navigation.NavigationView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -25,11 +37,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Toolbar toolbar;
 
-
-    private int userId;
     private long lastVolumeUpPressTime = 0;
     private long lastVolumeDownPressTime = 0;
 
+    private int userId;
+    private int badgeCount = 0;
+    private TextView badgeTextView;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        badgeTextView = findViewById(R.id.badge);
+
+        requestQueue = Volley.newRequestQueue(this);
+
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
@@ -67,12 +85,64 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fetchBadgeCountFromAPI();
                 HistoryFragment historyFragment = new HistoryFragment();
                 historyFragment.setUserId(userId);
                 navigationView.setCheckedItem(R.id.nav_history);
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, historyFragment).commit();
             }
         });
+    }
+
+    private void fetchBadgeCountFromAPI() {
+        // URL of the API endpoint with userId parameter
+        String url = "http://scerns.ucc-bscs.com/User/getCount.php?userId=" + userId;
+
+        // Create a JSON object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // Log response to see if it's correct
+                            Log.d("Response", response.toString());
+
+                            // Parse response and update badge count
+                            badgeCount = response.getInt("count");
+                            Log.d("BadgeCount", "Count: " + badgeCount);
+                            // Update badge count text
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateBadge();
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle errors
+                        error.printStackTrace();
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        requestQueue.add(jsonObjectRequest);
+    }
+
+
+    private void updateBadge() {
+        Log.d("BadgeCount", "Count: " + badgeCount); // Add this line to log the badge count
+        if (badgeCount != 0) {
+            badgeTextView.setText(String.valueOf(badgeCount));
+            badgeTextView.setVisibility(View.VISIBLE);
+        } else {
+            badgeTextView.setVisibility(View.GONE);
+        }
     }
 
     @Override
