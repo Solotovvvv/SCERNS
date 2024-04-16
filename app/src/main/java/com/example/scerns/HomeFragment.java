@@ -26,6 +26,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+
         // Show userId in toast
         if (userId != -1) {
 //            Toast.makeText(requireContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();

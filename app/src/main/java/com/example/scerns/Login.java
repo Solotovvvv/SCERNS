@@ -1,7 +1,9 @@
 package com.example.scerns;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -69,6 +71,16 @@ public class Login extends AppCompatActivity {
                 startActivity(new Intent(Login.this, ForgotPass.class));
             }
         });
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int userId = sharedPreferences.getInt("userId", -1);
+        if (userId != -1) {
+            // User is already logged in, redirect to MainActivity
+            Intent intent = new Intent(Login.this, MainActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void loginUser() {
@@ -94,6 +106,13 @@ public class Login extends AppCompatActivity {
                                 if (jsonObject.has("user_role") && jsonObject.has("user_id")) {
                                     String userRole = jsonObject.getString("user_role");
                                     int userId = jsonObject.getInt("user_id");
+
+                                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Login.this);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putInt("userId", userId);
+                                    editor.putString("userRole", userRole);
+                                    editor.apply();
+
                                     if (userRole.equals("0")) {
                                         String message = jsonObject.getString("message");
                                         Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
@@ -123,7 +142,6 @@ public class Login extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // Handle Volley error
                 Toast.makeText(Login.this, "Error occurred. Please try again later.", Toast.LENGTH_SHORT).show();
             }
         }) {

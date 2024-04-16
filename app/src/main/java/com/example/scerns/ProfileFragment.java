@@ -67,7 +67,6 @@ public class ProfileFragment extends Fragment {
                 transaction.commit();
             }
         });
-
         return view;
     }
 
@@ -80,7 +79,6 @@ public class ProfileFragment extends Fragment {
     public void populateProfile(JSONObject userDetails) {
         try {
             String fullName = userDetails.getString("fullName");
-            String image = userDetails.getString("image");
             String address = userDetails.getString("address");
             String phone = userDetails.getString("phone");
             String email = userDetails.getString("email");
@@ -95,10 +93,6 @@ public class ProfileFragment extends Fragment {
         }
 
     }
-
-
-
-
 
 }
 
