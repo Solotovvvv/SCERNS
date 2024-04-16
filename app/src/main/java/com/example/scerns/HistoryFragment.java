@@ -173,6 +173,7 @@ public class HistoryFragment extends Fragment {
 
                         adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, dataList);
                         listView.setAdapter(adapter);
+
                     } else {
                         Toast.makeText(requireContext(), "No reports found", Toast.LENGTH_SHORT).show();
                     }

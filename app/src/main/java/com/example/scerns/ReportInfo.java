@@ -43,11 +43,6 @@ public class ReportInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_info);
 
-        // Initialize Pusher
-        PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
-        pusher = new Pusher("b26a50e9e9255fc95c8f", options);
-        pusher.connect();
-
         userId = getIntent().getIntExtra("userId", -1);
         if (userId == -1) {
             Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
@@ -107,43 +102,6 @@ public class ReportInfo extends AppCompatActivity {
             textViewLevel.setText(levelLabel);
         }
 
-        Channel channel = pusher.subscribe("Scerns");
-
-        channel.bind("new-report", new SubscriptionEventListener() {
-            @Override
-            public void onEvent(com.pusher.client.channel.PusherEvent event) {
-                try {
-                    JSONObject eventData = new JSONObject(event.getData());
-                    String newStatus = eventData.getString("status");
-                    updateStatus(newStatus);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void updateStatus(String newStatus) {
-        if ("Pending".equals(newStatus) || "Waiting for Response".equals(newStatus)) {
-            textViewStatus.setText("Status: Pending");
-            LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
-            loadingLayout.setVisibility(View.VISIBLE);
-        } else if ("Arrived".equals(newStatus)) {
-            textViewStatus.setText("Status: Arrived");
-            LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
-            loadingLayout.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (pusher != null) {
-            pusher.disconnect();
-        }
-        if (mapView != null) {
-            mapView.onDetach();
-        }
     }
 
     private class GeocodeTask extends AsyncTask<String, Void, GeoPoint> {
