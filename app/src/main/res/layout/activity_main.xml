@@ -66,7 +66,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <!-- Notification badge layout -->
             <RelativeLayout
                 android:id="@+id/notificationLayout"
                 android:layout_width="wrap_content"
@@ -91,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textSize="15sp"
+                    android:layout_marginStart="16dp"
                     android:textColor="#FFFFFF" />
             </RelativeLayout>
         </LinearLayout>

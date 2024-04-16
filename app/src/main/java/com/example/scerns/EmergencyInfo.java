@@ -221,11 +221,11 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
             SubscriptionEventListener eventListener = new SubscriptionEventListener() {
                 @Override
                 public void onEvent(PusherEvent event) {
-                    Log.d("Pusher", "Received new-report event: " + event.getData());
+                    Log.d("Pusher", "Received user-report event: " + event.getData());
                 }
             };
 
-            channel.bind("new-report", eventListener);
+            channel.bind("user-report", eventListener);
 
             pusher.getConnection().bind(ConnectionState.ALL, new ConnectionEventListener() {
                 @Override

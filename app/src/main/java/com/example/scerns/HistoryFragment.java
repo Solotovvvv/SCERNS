@@ -23,6 +23,12 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Marker;
 
+import com.pusher.client.Pusher;
+import com.pusher.client.PusherOptions;
+import com.pusher.client.channel.PusherEvent;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.SubscriptionEventListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +41,12 @@ public class HistoryFragment extends Fragment {
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private JSONArray jsonArray;
+    private Pusher pusher;
+
+    private TextView textViewStatus;
+    private LinearLayout loadingLayout;
+    private ProgressBar loadingProgressBar;
+    private TextView textViewWaiting;
 
     public void setUserId(int userId) {
         this.userId = userId;
@@ -46,27 +58,61 @@ public class HistoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         if (userId != -1) {
-//            Toast.makeText(requireContext(), "User ID: " + userId, Toast.LENGTH_SHORT).show();
+            PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
+            pusher = new Pusher("b26a50e9e9255fc95c8f", options);
+            pusher.connect();
+
+            Channel channel = pusher.subscribe("Scerns");
+
+            SubscriptionEventListener eventListener = new SubscriptionEventListener() {
+                @Override
+                public void onEvent(PusherEvent event) {
+                    try {
+                        JSONObject eventData = new JSONObject(event.getData());
+                        String updatedStatus = eventData.optString("status", "");
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViewStatus.setText("Status: " + updatedStatus);
+
+                                if (updatedStatus.equalsIgnoreCase("Pending")) {
+                                    loadingLayout.setVisibility(View.VISIBLE);
+                                    loadingProgressBar.setVisibility(View.VISIBLE);
+                                    textViewWaiting.setVisibility(View.VISIBLE);
+                                } else {
+                                    loadingLayout.setVisibility(View.GONE);
+                                    loadingProgressBar.setVisibility(View.GONE);
+                                    textViewWaiting.setVisibility(View.GONE);
+                                }
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            channel.bind("user-report", eventListener);
+
+            listView = view.findViewById(R.id.list_view);
+
+            fetchDataFromAPI();
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    try {
+                        JSONObject clickedItem = jsonArray.getJSONObject(position);
+                        showDetailDialog(clickedItem);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         } else {
             Toast.makeText(requireContext(), "User ID not found", Toast.LENGTH_SHORT).show();
         }
-
-        listView = view.findViewById(R.id.list_view);
-
-        fetchDataFromAPI();
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    JSONObject clickedItem = jsonArray.getJSONObject(position);
-                    showDetailDialog(clickedItem);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
         return view;
     }
 
@@ -81,10 +127,10 @@ public class HistoryFragment extends Fragment {
         TextView textViewAddress = dialogView.findViewById(R.id.textViewAddress);
         TextView textViewLandmark = dialogView.findViewById(R.id.textViewLandmark);
         TextView textViewLevel = dialogView.findViewById(R.id.textViewLevel);
-        TextView textViewStatus = dialogView.findViewById(R.id.textViewStatus);
-        LinearLayout loadingLayout = dialogView.findViewById(R.id.loadingLayout);
-        ProgressBar loadingProgressBar = dialogView.findViewById(R.id.loadingProgressBar);
-        TextView textViewWaiting = dialogView.findViewById(R.id.textViewWaiting);
+        textViewStatus = dialogView.findViewById(R.id.textViewStatus);
+        loadingLayout = dialogView.findViewById(R.id.loadingLayout);
+        loadingProgressBar = dialogView.findViewById(R.id.loadingProgressBar);
+        textViewWaiting = dialogView.findViewById(R.id.textViewWaiting);
 
         textViewTitle.setText("Report's Details");
         textViewType.setText("Emergency Type: " + jsonObject.optString("TypeOfEmergency", ""));
@@ -167,7 +213,9 @@ public class HistoryFragment extends Fragment {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             String role = jsonObject.optString("Role", "");
-                            String reportDetails = "Role: " + role;
+                            String datetime = jsonObject.optString("Date", "");
+                            String reportDetails = "Role: " + role +
+                                                    ", Date: " + datetime;
                             dataList.add(reportDetails);
                         }
 
