@@ -19,7 +19,12 @@ import com.android.volley.Response;
 import com.pusher.client.Pusher;
 import com.pusher.client.PusherOptions;
 import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.PusherEvent;
 import com.pusher.client.channel.SubscriptionEventListener;
+import com.pusher.client.connection.ConnectionEventListener;
+import com.pusher.client.connection.ConnectionState;
+import com.pusher.client.connection.ConnectionStateChange;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +72,10 @@ public class ReportInfo extends AppCompatActivity {
             fetchReportDetails(reportId);
         }
 
+        PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
+        pusher = new Pusher("b26a50e9e9255fc95c8f", options);
+        pusher.connect();
+
         address = getIntent().getStringExtra("address");
         landmark = getIntent().getStringExtra("landmark");
         type = getIntent().getStringExtra("emergencyType");
@@ -91,6 +100,8 @@ public class ReportInfo extends AppCompatActivity {
 
         LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
         loadingLayout.setVisibility(View.VISIBLE);
+
+        triggerPusherEvent();
 
         if (address != null) {
             TextView textViewAddress = findViewById(R.id.textViewAddress);
@@ -124,6 +135,60 @@ public class ReportInfo extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (pusher != null) {
+            pusher.disconnect();
+        }
+    }
+
+    private void triggerPusherEvent() {
+        Channel channel = pusher.subscribe("Scerns");
+
+        SubscriptionEventListener eventListener = new SubscriptionEventListener() {
+            @Override
+            public void onEvent(PusherEvent event) {
+                try {
+                    JSONObject eventData = new JSONObject(event.getData());
+                    String status = eventData.getString("status");
+
+                    // Update UI based on the received status
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            textViewStatus.setText("Status: " + status);
+                            if (!status.equals("Pending")) {
+                                LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
+                                loadingLayout.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+
+                    Log.d("Pusher", "Received user-report event with status: " + status);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("Pusher", "Error parsing event data: " + e.getMessage());
+                }
+            }
+        };
+
+        channel.bind("user-report", eventListener);
+
+        pusher.getConnection().bind(ConnectionState.ALL, new ConnectionEventListener() {
+            @Override
+            public void onConnectionStateChange(ConnectionStateChange change) {
+                Log.d("Pusher", "State changed to: " + change.getCurrentState());
+            }
+
+            @Override
+            public void onError(String message, String code, Exception e) {
+                Log.e("Pusher", "Error: " + message);
+            }
+        });
+    }
+
 
     private void fetchReportDetails(int reportId) {
         String url = "http://scerns.ucc-bscs.com/User/getReport.php?Id=" + reportId;

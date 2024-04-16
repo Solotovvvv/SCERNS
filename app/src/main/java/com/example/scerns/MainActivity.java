@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Toolbar toolbar;
 
-
-    private int userId;
     private long lastVolumeUpPressTime = 0;
     private long lastVolumeDownPressTime = 0;
 
@@ -86,6 +84,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        badgeTextView = findViewById(R.id.badge);
+
+        requestQueue = Volley.newRequestQueue(this);
+
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
@@ -100,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fetchBadgeCountFromAPI();
                 HistoryFragment historyFragment = new HistoryFragment();
                 historyFragment.setUserId(userId);
                 navigationView.setCheckedItem(R.id.nav_history);
@@ -152,6 +155,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // Permission denied, handle accordingly
                 Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private void fetchBadgeCountFromAPI() {
+        // URL of the API endpoint with userId parameter
+        String url = "http://scerns.ucc-bscs.com/User/getCount.php?userId=" + userId;
+
+        // Create a JSON object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // Log response to see if it's correct
+                            Log.d("Response", response.toString());
+
+                            // Parse response and update badge count
+                            badgeCount = response.getInt("count");
+                            Log.d("BadgeCount", "Count: " + badgeCount);
+                            // Update badge count text
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateBadge();
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle errors
+                        error.printStackTrace();
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        requestQueue.add(jsonObjectRequest);
+    }
+
+
+    private void updateBadge() {
+        Log.d("BadgeCount", "Count: " + badgeCount); // Add this line to log the badge count
+        if (badgeCount != 0) {
+            badgeTextView.setText(String.valueOf(badgeCount));
+            badgeTextView.setVisibility(View.VISIBLE);
+        } else {
+            badgeTextView.setVisibility(View.GONE);
         }
     }
 
