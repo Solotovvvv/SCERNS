@@ -30,7 +30,6 @@
                 android:padding="10dp"
                 android:layout_gravity="center"/>
 
-            <!-- Profile Image -->
             <ImageView
                 android:id="@+id/imageViewProfile"
                 android:layout_width="100dp"
@@ -44,9 +43,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="No Image Uploaded"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"/>
 
-            <!-- Full Name -->
             <TextView
                 android:id="@+id/textViewFullName"
                 android:layout_width="wrap_content"
@@ -56,7 +55,6 @@
                 android:layout_marginTop="16dp"
                 android:layout_gravity="center_horizontal"/>
 
-            <!-- Address -->
             <TextView
                 android:id="@+id/textViewAddress"
                 android:layout_width="wrap_content"
@@ -66,7 +64,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_gravity="center_horizontal"/>
 
-            <!-- Phone -->
             <TextView
                 android:id="@+id/textViewPhone"
                 android:layout_width="wrap_content"
@@ -76,7 +73,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_gravity="center_horizontal"/>
 
-            <!-- Email -->
             <TextView
                 android:id="@+id/textViewEmail"
                 android:layout_width="wrap_content"
@@ -86,13 +82,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_gravity="center_horizontal"/>
 
-            <!-- Edit Profile Button -->
             <Button
                 android:id="@+id/buttonEditProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Edit Profile"
                 android:layout_marginTop="16dp"
+                android:backgroundTint="#618264"
                 android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
