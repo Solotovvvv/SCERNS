@@ -22,13 +22,22 @@
             android:padding="15dp">
 
             <Button
-                android:id="@+id/buttonEditImage"
+                android:id="@+id/buttonSelectImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit Image"
+                android:text="Select Image"
                 android:layout_marginTop="16dp"
                 android:backgroundTint="#618264"
                 android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/textViewImageName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No image selected"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                android:gravity="center"/>
 
             <EditText
                 android:id="@+id/editTextFullName"

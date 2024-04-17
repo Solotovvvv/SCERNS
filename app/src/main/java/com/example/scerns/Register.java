@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
@@ -192,10 +191,8 @@ public class Register extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // Log the error
                 Log.e("VolleyError", "An error occurred during registration: " + error.getMessage(), error);
 
-                // Display a toast message to the user
                 Toast.makeText(Register.this, "Error occurred. Please try again later.", Toast.LENGTH_SHORT).show();
             }
 
