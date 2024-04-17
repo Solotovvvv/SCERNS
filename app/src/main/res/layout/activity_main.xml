@@ -70,7 +70,6 @@
                 android:id="@+id/notificationLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
                 app:layout_constraintBottom_toBottomOf="@id/bottomLinearLayout"
                 app:layout_constraintEnd_toEndOf="@id/bottomLinearLayout">
 
@@ -89,7 +88,8 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textSize="15sp"
-                    android:layout_marginStart="16dp"
+                    android:background="@drawable/badge_background"
+                    android:layout_marginStart="35dp"
                     android:textColor="#FFFFFF" />
             </RelativeLayout>
         </LinearLayout>

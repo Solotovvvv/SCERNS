@@ -25,6 +25,7 @@ public class ProfileFragment extends Fragment {
     private TextView textViewAddress;
     private TextView textViewPhone;
     private TextView textViewEmail;
+    private TextView textViewNoImage;
     private Button buttonEditProfile;
 
     public void setUserId(int userId) {
@@ -48,6 +49,7 @@ public class ProfileFragment extends Fragment {
         textViewPhone = view.findViewById(R.id.textViewPhone);
         textViewEmail = view.findViewById(R.id.textViewEmail);
         buttonEditProfile = view.findViewById(R.id.buttonEditProfile);
+        textViewNoImage = view.findViewById(R.id.textViewNoImage);
 
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,17 +84,37 @@ public class ProfileFragment extends Fragment {
             String address = userDetails.getString("address");
             String phone = userDetails.getString("phone");
             String email = userDetails.getString("email");
+            String profileImage = userDetails.getString("image");
 
             textViewFullName.setText(fullName);
             textViewAddress.setText(address);
             textViewPhone.setText(phone);
             textViewEmail.setText(email);
 
+            if (profileImage != null && !profileImage.isEmpty()) {
+                // If profile image is available, set the image resource and hide the "No Image Uploaded" text
+                int drawableId = getResources().getIdentifier(profileImage, "drawable", requireContext().getPackageName());
+                if (drawableId != 0) {
+                    imageViewProfile.setImageResource(drawableId);
+                    imageViewProfile.setVisibility(View.VISIBLE);
+                    textViewNoImage.setVisibility(View.GONE);
+                } else {
+                    // If the drawable resource does not exist, hide the image view and show the "No Image Uploaded" text
+                    imageViewProfile.setVisibility(View.GONE);
+                    textViewNoImage.setVisibility(View.VISIBLE);
+                }
+            } else {
+                // If no profile image is available, hide the image view and show the "No Image Uploaded" text
+                imageViewProfile.setVisibility(View.GONE);
+                textViewNoImage.setVisibility(View.VISIBLE);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
+
+
 
 }
 

@@ -35,8 +35,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:src="@drawable/profile_icon"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/textViewNoImage"
