@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class EmergencyInfo extends AppCompatActivity implements AddressSuggestionTask.AddressSuggestionListener{
 
-    private int userId;
+    private int userId, reportId;
     private EditText editTextAddress, getEditTextLandmark;
     private Spinner spinnerLevels;
 
@@ -156,21 +156,29 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                             showToast("Error: " + response);
                         } else {
                             try {
-                                int reportId = Integer.parseInt(response.trim());
-                                Intent intent = new Intent(EmergencyInfo.this, ReportInfo.class);
-                                intent.putExtra("userId", userId);
-                                intent.putExtra("reportId", reportId);
-                                intent.putExtra("address", editTextAddress.getText().toString().trim());
-                                intent.putExtra("landmark", getEditTextLandmark.getText().toString().trim());
-                                intent.putExtra("level", spinnerLevels.getSelectedItem().toString());
-                                intent.putExtra("emergencyType", getIntent().getStringExtra("emergencyType"));
-                                startActivity(intent);
+                                // Check if the response is a valid report ID or a message indicating the address is already reported
+                                if (!response.equals("This address is already reported.")) {
+                                    // If it's a valid report ID, proceed to ReportInfo activity
+                                    int reportId = Integer.parseInt(response.trim());
+                                    Intent intent = new Intent(EmergencyInfo.this, ReportInfo.class);
+                                    intent.putExtra("userId", userId);
+                                    intent.putExtra("reportId", reportId);
+                                    intent.putExtra("address", editTextAddress.getText().toString().trim());
+                                    intent.putExtra("landmark", getEditTextLandmark.getText().toString().trim());
+                                    intent.putExtra("level", spinnerLevels.getSelectedItem().toString());
+                                    intent.putExtra("emergencyType", getIntent().getStringExtra("emergencyType"));
+                                    startActivity(intent);
+                                } else {
+                                    // If the address is already reported, show a toast message
+                                    showToast("This address is already reported.");
+                                    // Fetch and display the details of the existing report
+//                                    fetchExistingReportDetails(editTextAddress.getText().toString().trim());
+                                }
                             } catch (NumberFormatException e) {
                                 showToast("Invalid report ID received from server");
                             }
                         }
                     }
-
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -191,6 +199,8 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
         };
         Volley.newRequestQueue(this).add(stringRequest);
     }
+
+
 
     @Override
     public void onAddressSuggestionReceived(JSONArray suggestions) {

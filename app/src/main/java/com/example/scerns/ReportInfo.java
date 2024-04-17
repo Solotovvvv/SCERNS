@@ -68,7 +68,6 @@ public class ReportInfo extends AppCompatActivity {
             finish();
             return;
         } else {
-            Toast.makeText(this, "Report ID: " + reportId, Toast.LENGTH_SHORT).show();
             fetchReportDetails(reportId);
         }
 
@@ -133,8 +132,8 @@ public class ReportInfo extends AppCompatActivity {
             String levelLabel = "Level: " + level;
             textViewLevel.setText(levelLabel);
         }
-
     }
+
 
     @Override
     protected void onDestroy() {
