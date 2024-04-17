@@ -371,31 +371,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void executeReport(Context context, final int userID, final String TOE, final double LAT, final double LONG) {
         String URL = "http://scerns.ucc-bscs.com/Controller/Gesture/gesture.php";
-        JSONObject requestData = new JSONObject();
-        try {
-            requestData.put("userID", userID);
-            requestData.put("TypeOfEmergency", TOE);
-            requestData.put("latitude", LAT);
-            requestData.put("longitude", LONG);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-        Log.d("Lugars", requestData.toString());
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, requestData,
-                new Response.Listener<JSONObject>() {
+        StringRequest request = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(String response) {
                         // Handle successful response
-                        Log.d("Lugars", response.toString());
+                        Log.d("Lugars", response);
                         try {
-                            boolean success = response.getBoolean("success");
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
                             if (success) {
-                                Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, jsonResponse.getString("message"), Toast.LENGTH_SHORT).show();
                             } else {
-                                String message = response.getString("message");
-                                Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
+                                String message = jsonResponse.getString("message");
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -403,13 +393,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 },
-                error -> {
-                    Toast.makeText(context, "Something Went Wrong. Please Try Again Later.", Toast.LENGTH_SHORT).show();
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error response
+                        Toast.makeText(context, "Something Went Wrong. Please Try Again Later.", Toast.LENGTH_SHORT).show();
+                    }
                 }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("userID", String.valueOf(userID));
+                params.put("TypeOfEmergency", TOE);
+                params.put("latitude", String.valueOf(LAT));
+                params.put("longitude", String.valueOf(LONG));
+                return params;
+            }
+
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Content-Type", "application/json");
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
                 return headers;
             }
         };
