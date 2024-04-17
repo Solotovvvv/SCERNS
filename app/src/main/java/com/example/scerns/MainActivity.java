@@ -86,10 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LocationManager locationManager;
     private LocationListener locationListener;
 
-    private int userId;
-    private TextView badgeTextView;
-    private RequestQueue requestQueue;
-
     private Pusher pusher;
 
     @Override
