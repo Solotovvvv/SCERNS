@@ -1,6 +1,7 @@
 package com.example.scerns;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -133,81 +134,12 @@ public class HistoryFragment extends Fragment {
     }
 
     private void showDetailDialog(JSONObject jsonObject) throws JSONException {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.custom_dialog_layout, null);
-
-        TextView textViewTitle = dialogView.findViewById(R.id.textViewTitle);
-        TextView textViewType = dialogView.findViewById(R.id.textViewType);
-        TextView textViewAddress = dialogView.findViewById(R.id.textViewAddress);
-        TextView textViewLandmark = dialogView.findViewById(R.id.textViewLandmark);
-        TextView textViewLevel = dialogView.findViewById(R.id.textViewLevel);
-        textViewStatus = dialogView.findViewById(R.id.textViewStatus);
-        loadingLayout = dialogView.findViewById(R.id.loadingLayout);
-        loadingProgressBar = dialogView.findViewById(R.id.loadingProgressBar);
-        textViewWaiting = dialogView.findViewById(R.id.textViewWaiting);
-
-        textViewTitle.setText("Report's Details");
-        textViewType.setText("Emergency Type: " + jsonObject.optString("TypeOfEmergency", ""));
-        textViewAddress.setText("Address: " + jsonObject.optString("Address", ""));
-        textViewLandmark.setText("Landmark: " + jsonObject.optString("Landmark", ""));
-        textViewLevel.setText("Level: " + jsonObject.optString("Level", ""));
-        textViewStatus.setText("Status: " + jsonObject.optString("Status", ""));
-
-        String status = jsonObject.optString("Status", "");
-        if (status.equalsIgnoreCase("Pending")) {
-            loadingLayout.setVisibility(View.VISIBLE);
-            loadingProgressBar.setVisibility(View.VISIBLE);
-            textViewWaiting.setVisibility(View.VISIBLE);
-        } else {
-            loadingLayout.setVisibility(View.GONE);
-            loadingProgressBar.setVisibility(View.GONE);
-            textViewWaiting.setVisibility(View.GONE);
-        }
-
-        String address = jsonObject.optString("Address", "");
-
-        MapView mapView = dialogView.findViewById(R.id.mapView);
-        mapView.setTileSource(TileSourceFactory.MAPNIK);
-
-        String mapUrl = "https://nominatim.openstreetmap.org/search?format=json&q=" + address;
-        VolleyRequestManager volleyRequestManager = new VolleyRequestManager(requireContext());
-        volleyRequestManager.get(mapUrl, new VolleyRequestManager.VolleyCallback() {
-            @Override
-            public void onSuccessResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    if (jsonArray.length() > 0) {
-                        JSONObject result = jsonArray.getJSONObject(0);
-                        double lat = result.getDouble("lat");
-                        double lon = result.getDouble("lon");
-                        GeoPoint point = new GeoPoint(lat, lon);
-
-                        mapView.getController().setZoom(19);
-                        mapView.getController().setCenter(point);
-
-                        Marker marker = new Marker(mapView);
-                        marker.setPosition(point);
-                        mapView.getOverlays().add(marker);
-                        mapView.invalidate();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onErrorResponse(String errorMessage) {
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setView(dialogView).setPositiveButton("OK", null);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        Intent intent = new Intent(requireContext(), DetailsActivity.class);
+        intent.putExtra("jsonData", jsonObject.toString());
+        intent.putExtra("userId", userId);
+        startActivity(intent);
     }
+
 
     private void fetchDataFromAPI() {
         String url = "http://scerns.ucc-bscs.com/User/history.php?User_Id=" + userId;
