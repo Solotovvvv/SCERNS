@@ -41,7 +41,7 @@ public class HistoryFragment extends Fragment {
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private JSONArray jsonArray;
-    private Pusher pusher;
+//    private Pusher pusher;
 
     private TextView textViewStatus;
     private LinearLayout loadingLayout;
@@ -58,48 +58,67 @@ public class HistoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         if (userId != -1) {
-            PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
-            pusher = new Pusher("b26a50e9e9255fc95c8f", options);
-            pusher.connect();
+//            PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
+//            pusher = new Pusher("b26a50e9e9255fc95c8f", options);
+//            pusher.connect();
+//
+//            Channel channel = pusher.subscribe("Scerns");
+//
+//            SubscriptionEventListener eventListener = new SubscriptionEventListener() {
+//                @Override
+//                public void onEvent(PusherEvent event) {
+//                    try {
+//                        JSONObject eventData = new JSONObject(event.getData());
+//                        String updatedStatus = eventData.optString("status", "");
+//
+//                        getActivity().runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                textViewStatus.setText("Status: " + updatedStatus);
+//
+//                                if (updatedStatus.equalsIgnoreCase("Pending")) {
+//                                    loadingLayout.setVisibility(View.VISIBLE);
+//                                    loadingProgressBar.setVisibility(View.VISIBLE);
+//                                    textViewWaiting.setVisibility(View.VISIBLE);
+//                                } else {
+//                                    loadingLayout.setVisibility(View.GONE);
+//                                    loadingProgressBar.setVisibility(View.GONE);
+//                                    textViewWaiting.setVisibility(View.GONE);
+//                                }
+//                            }
+//                        });
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            };
+//
+//            channel.bind("user-history-report", eventListener);
+//
+//            listView = view.findViewById(R.id.list_view);
+//
+//            fetchDataFromAPI();
+//
+//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    try {
+//                        JSONObject clickedItem = jsonArray.getJSONObject(position);
+//                        showDetailDialog(clickedItem);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+        } else {
+            Toast.makeText(requireContext(), "User ID not found", Toast.LENGTH_SHORT).show();
+        }
 
-            Channel channel = pusher.subscribe("Scerns");
+        listView = view.findViewById(R.id.list_view);
 
-            SubscriptionEventListener eventListener = new SubscriptionEventListener() {
-                @Override
-                public void onEvent(PusherEvent event) {
-                    try {
-                        JSONObject eventData = new JSONObject(event.getData());
-                        String updatedStatus = eventData.optString("status", "");
+        fetchDataFromAPI();
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                textViewStatus.setText("Status: " + updatedStatus);
-
-                                if (updatedStatus.equalsIgnoreCase("Pending")) {
-                                    loadingLayout.setVisibility(View.VISIBLE);
-                                    loadingProgressBar.setVisibility(View.VISIBLE);
-                                    textViewWaiting.setVisibility(View.VISIBLE);
-                                } else {
-                                    loadingLayout.setVisibility(View.GONE);
-                                    loadingProgressBar.setVisibility(View.GONE);
-                                    textViewWaiting.setVisibility(View.GONE);
-                                }
-                            }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-
-            channel.bind("user-report", eventListener);
-
-            listView = view.findViewById(R.id.list_view);
-
-            fetchDataFromAPI();
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     try {
@@ -110,9 +129,6 @@ public class HistoryFragment extends Fragment {
                     }
                 }
             });
-        } else {
-            Toast.makeText(requireContext(), "User ID not found", Toast.LENGTH_SHORT).show();
-        }
         return view;
     }
 
@@ -192,7 +208,6 @@ public class HistoryFragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
 
     private void fetchDataFromAPI() {
         String url = "http://scerns.ucc-bscs.com/User/history.php?User_Id=" + userId;

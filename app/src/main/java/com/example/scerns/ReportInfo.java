@@ -64,11 +64,11 @@ public class ReportInfo extends AppCompatActivity {
 
         reportId = getIntent().getIntExtra("reportId", -1);
         if (reportId == -1) {
-            Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Report ID not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
         } else {
-            Toast.makeText(this, "Report ID " + reportId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Report ID: " + reportId, Toast.LENGTH_SHORT).show();
             fetchReportDetails(reportId);
         }
 
@@ -154,7 +154,6 @@ public class ReportInfo extends AppCompatActivity {
                     JSONObject eventData = new JSONObject(event.getData());
                     String status = eventData.getString("status");
 
-                    // Update UI based on the received status
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -165,7 +164,6 @@ public class ReportInfo extends AppCompatActivity {
                             }
                         }
                     });
-
                     Log.d("Pusher", "Received user-report event with status: " + status);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -188,7 +186,6 @@ public class ReportInfo extends AppCompatActivity {
             }
         });
     }
-
 
     private void fetchReportDetails(int reportId) {
         String url = "http://scerns.ucc-bscs.com/User/getReport.php?Id=" + reportId;
@@ -283,5 +280,6 @@ public class ReportInfo extends AppCompatActivity {
             mapView.getController().setCenter(addressLocation);
         }
     }
+
 }
 

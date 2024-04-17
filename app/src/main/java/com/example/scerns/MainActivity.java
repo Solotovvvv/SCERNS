@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +29,16 @@ import android.widget.Button;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import com.google.android.material.navigation.NavigationView;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.PusherEvent;
+import com.pusher.client.channel.SubscriptionEventListener;
+import com.pusher.client.connection.ConnectionEventListener;
+import com.pusher.client.connection.ConnectionState;
+import com.pusher.client.connection.ConnectionStateChange;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -40,6 +51,15 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.pusher.client.Pusher;
+import com.pusher.client.PusherOptions;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.PusherEvent;
+import com.pusher.client.channel.SubscriptionEventListener;
+import com.pusher.client.connection.ConnectionEventListener;
+import com.pusher.client.connection.ConnectionState;
+import com.pusher.client.connection.ConnectionStateChange;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -61,6 +81,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LocationManager locationManager;
     private LocationListener locationListener;
 
+    private int userId;
+    private TextView badgeTextView;
+    private RequestQueue requestQueue;
+
+    private Pusher pusher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +96,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         userId = sharedPreferences.getInt("userId", -1);
 
         if (userId != -1) {
-             Toast.makeText(MainActivity.this, "User ID: " + userId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "User ID: " + userId, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(MainActivity.this, "User ID not found", Toast.LENGTH_SHORT).show();
         }
+
+        PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
+        pusher = new Pusher("b26a50e9e9255fc95c8f", options);
+        pusher.connect();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -83,6 +112,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        triggerPusherEvent();
 
         badgeTextView = findViewById(R.id.badge);
 
@@ -98,11 +129,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setCheckedItem(R.id.nav_home);
 
+        fetchBadgeCountFromAPI(userId);
+
         Button btnAlert = findViewById(R.id.btnAlert);
         btnAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fetchBadgeCountFromAPI();
                 HistoryFragment historyFragment = new HistoryFragment();
                 historyFragment.setUserId(userId);
                 navigationView.setCheckedItem(R.id.nav_history);
@@ -158,49 +190,86 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void fetchBadgeCountFromAPI() {
-        // URL of the API endpoint with userId parameter
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (pusher != null) {
+            pusher.disconnect();
+        }
+    }
+
+    private void triggerPusherEvent() {
+        Channel channel = pusher.subscribe("Scerns");
+
+        SubscriptionEventListener eventListener = new SubscriptionEventListener() {
+            @Override
+            public void onEvent(PusherEvent event) {
+                try {
+                    JSONObject eventData = new JSONObject(event.getData());
+
+                    // Call the function to fetch data from API
+                    fetchBadgeCountFromAPI(userId);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("Pusher", "Error parsing event data: " + e.getMessage());
+                }
+            }
+        };
+
+        channel.bind("count-report", eventListener);
+
+        pusher.getConnection().bind(ConnectionState.ALL, new ConnectionEventListener() {
+            @Override
+            public void onConnectionStateChange(ConnectionStateChange change) {
+                Log.d("Pusher", "State changed to: " + change.getCurrentState());
+            }
+
+            @Override
+            public void onError(String message, String code, Exception e) {
+                Log.e("Pusher", "Error: " + message);
+            }
+        });
+    }
+
+
+    private void fetchBadgeCountFromAPI(int userId) {
         String url = "http://scerns.ucc-bscs.com/User/getCount.php?userId=" + userId;
 
-        // Create a JSON object request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(String response) {
                         try {
-                            // Log response to see if it's correct
-                            Log.d("Response", response.toString());
+                            int badgeCount = Integer.parseInt(response.trim());
+//                            Toast.makeText(MainActivity.this, "Badge Count: " + badgeCount, Toast.LENGTH_SHORT).show();
 
-                            // Parse response and update badge count
-                            badgeCount = response.getInt("count");
-                            Log.d("BadgeCount", "Count: " + badgeCount);
-                            // Update badge count text
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateBadge();
-                                }
-                            });
-                        } catch (JSONException e) {
+                            updateBadge(badgeCount);
+                        } catch (NumberFormatException e) {
                             e.printStackTrace();
+                            Toast.makeText(MainActivity.this, "Error: Invalid badge count format", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Handle errors
                         error.printStackTrace();
+                        Toast.makeText(MainActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
-        // Add the request to the RequestQueue
-        requestQueue.add(jsonObjectRequest);
+        requestQueue.add(stringRequest);
     }
 
-
-    private void updateBadge() {
-        Log.d("BadgeCount", "Count: " + badgeCount); // Add this line to log the badge count
+    private void updateBadge(int badgeCount) {
+        Log.d("BadgeCount", "Count: " + badgeCount);
         if (badgeCount != 0) {
             badgeTextView.setText(String.valueOf(badgeCount));
             badgeTextView.setVisibility(View.VISIBLE);
@@ -226,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, eContactsFragment).commit();
         } else if (itemId == R.id.nav_history) {
             HistoryFragment historyFragment = new HistoryFragment();
-            historyFragment.setUserId(userId); // Set the userId
+            historyFragment.setUserId(userId);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, historyFragment).commit();
         } else if (itemId == R.id.nav_logout) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
