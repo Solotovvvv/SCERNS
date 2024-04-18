@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         userId = sharedPreferences.getInt("userId", -1);
 
         if (userId != -1) {
-            Toast.makeText(MainActivity.this, "User ID: " + userId, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "User ID: " + userId, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(MainActivity.this, "User ID not found", Toast.LENGTH_SHORT).show();
         }

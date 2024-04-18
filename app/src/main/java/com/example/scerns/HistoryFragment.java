@@ -103,16 +103,21 @@ public class HistoryFragment extends Fragment {
         fetchDataFromAPI();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    try {
-                        JSONObject clickedItem = jsonArray.getJSONObject(position);
-                        showDetailDialog(clickedItem);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    JSONObject clickedItem = jsonArray.getJSONObject(position);
+                    int clickedReportId = clickedItem.optInt("Id", -1); // Assuming "Id" is the key for reportId in your JSON
+                    if (clickedReportId != -1) {
+                        // Only update the reportId if it's not -1
+                        reportId = clickedReportId;
                     }
+                    showDetailDialog(clickedItem);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
+            }
+        });
         return view;
     }
 

@@ -1,5 +1,6 @@
 package com.example.scerns;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,6 +41,14 @@ public class DetailsActivity extends AppCompatActivity {
 
         reportId = getIntent().getIntExtra("Id", -1);
 
+        if (reportId == -1) {
+            Toast.makeText(this, "Report ID not found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        } else {
+//            Toast.makeText(this, "Report ID:" + reportId, Toast.LENGTH_SHORT).show();
+        }
+
         userId = getIntent().getIntExtra("userId", -1);
         if (userId == -1) {
             Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
@@ -70,8 +79,11 @@ public class DetailsActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("userId", userId);
+                intent.putExtra("Id", "");
+                setResult(Activity.RESULT_OK, intent);
                 finish();
-
             }
         });
 
@@ -140,14 +152,12 @@ public class DetailsActivity extends AppCompatActivity {
         TextView textViewWaiting = findViewById(R.id.textViewWaiting);
         MapView mapView = findViewById(R.id.mapView);
 
-        // Set data to TextViews
         textViewType.setText("Emergency Type: " + jsonObject.optString("TypeOfEmergency", ""));
         textViewAddress.setText("Address: " + jsonObject.optString("Address", ""));
         textViewLandmark.setText("Landmark: " + jsonObject.optString("Landmark", ""));
         textViewLevel.setText("Level: " + jsonObject.optString("Level", ""));
         textViewStatus.setText("Status: " + jsonObject.optString("Status", ""));
 
-        // Handle visibility of loading indicators based on status
         String status = jsonObject.optString("Status", "");
         if (status.equalsIgnoreCase("Pending")) {
             loadingLayout.setVisibility(View.VISIBLE);
