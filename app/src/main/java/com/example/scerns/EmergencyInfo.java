@@ -36,7 +36,7 @@ import java.util.Map;
 public class EmergencyInfo extends AppCompatActivity implements AddressSuggestionTask.AddressSuggestionListener{
 
     private int userId, reportId;
-    private EditText editTextAddress, getEditTextLandmark;
+    private EditText editTextAddress, getEditTextLandmark, editTextRemarks;
     private Spinner spinnerLevels;
 
     @Override
@@ -58,6 +58,7 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
         editTextAddress = findViewById(R.id.editTextAddress);
         getEditTextLandmark = findViewById(R.id.editTextLandmark);
         spinnerLevels = findViewById(R.id.spinnerLevels);
+        editTextRemarks = findViewById(R.id.editTextRemarks);
         Button btnConfirmRequest = findViewById(R.id.btnConfirmRequest);
 
         List<String> levelsList = new ArrayList<>();
@@ -115,6 +116,7 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 String level = spinnerLevels.getSelectedItem().toString();
 
                 String selectedLevel = spinnerLevels.getSelectedItem().toString();
+                String remarks = editTextRemarks.getText().toString().trim();
 
                 if (!address.isEmpty() && !landmark.isEmpty()) {
                     if (selectedLevel.equals("Select Level")) {
@@ -128,7 +130,7 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                     }
                 }
                 String numericLevel = extractNumericLevel(level);
-                saveDataToDatabase(userId, role, emergencyType, address, landmark, numericLevel);
+                saveDataToDatabase(userId, role, emergencyType, address, landmark, numericLevel, remarks);
             }
         });
     }
@@ -143,7 +145,7 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
     }
 
     private void saveDataToDatabase(final int userId, final String role, final String emergencyType,
-                                    final String address, final String landmark, final String level) {
+                                    final String address, final String landmark, final String level, final String remarks) {
 
         String url = "http://scerns.ucc-bscs.com/User/reports.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -154,13 +156,13 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                         if (response.startsWith("Error")) {
                             showToast("Error: " + response);
                         } else if (response.equals("This address is already reported.")) {
-                            // The address is already reported, fetch and pass the existing report details
+                            showToast("This address is already reported");
                             fetchExistingReportDetails(userId, address, landmark, level, emergencyType);
                         } else {
-                            // Parse the response as a new report ID
                             try {
                                 reportId = Integer.parseInt(response.trim());
                                 startReportInfoActivity(userId, reportId, address, landmark, level, emergencyType);
+                                showToast("Report Success");
                             } catch (NumberFormatException e) {
                                 showToast("Invalid report ID received from server");
                             }
@@ -181,12 +183,12 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 params.put("address", address);
                 params.put("landmark", landmark);
                 params.put("level", level);
+                params.put("remarks", remarks); // Add remarks here
                 return params;
             }
         };
         Volley.newRequestQueue(this).add(stringRequest);
     }
-
 
     private void startReportInfoActivity(int userId, int reportId, String address, String landmark, String level, String emergencyType) {
         Intent intent = new Intent(EmergencyInfo.this, ReportInfo.class);
@@ -225,11 +227,8 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 Log.e("fetchExistingReportDetails", "Volley error: " + error.getMessage());
             }
         });
-
         Volley.newRequestQueue(this).add(stringRequest);
     }
-
-
 
     @Override
     public void onAddressSuggestionReceived(JSONArray suggestions) {

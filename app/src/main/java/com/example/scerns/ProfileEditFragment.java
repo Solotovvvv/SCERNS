@@ -1,23 +1,41 @@
-// ProfileEditFragment.java
-
 package com.example.scerns;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +45,15 @@ public class ProfileEditFragment extends Fragment {
     private EditText editTextAddress;
     private EditText editTextPhone;
     private EditText editTextEmail;
+    private static final int PICK_IMAGE = 1;
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+
+    private Bitmap selectedImageBitmap;
+    private String encodedImage;
+    private ImageView imageViewSelectedImage;
+    private TextView textViewImageName;
+    private Uri selectedImageUri;
 
     private int userId;
 
@@ -58,27 +85,160 @@ public class ProfileEditFragment extends Fragment {
             editTextEmail.setText(email);
         }
 
+        Button selectImageButton = view.findViewById(R.id.buttonSelectImage);
+        imageViewSelectedImage = view.findViewById(R.id.imageViewSelectedImage);
+        textViewImageName = view.findViewById(R.id.textViewImgName);
+
+        selectImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                openGallery();
+                openImagePicker();
+
+            }
+        });
 
         Button saveButton = view.findViewById(R.id.buttonSaveProfile);
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String updatedFullName = editTextFullName.getText().toString();
-                String updatedAddress = editTextAddress.getText().toString();
-                String updatedPhone = editTextPhone.getText().toString();
-                String updatedEmail = editTextEmail.getText().toString();
 
-                updateUserDetails(userId, updatedFullName, updatedAddress, updatedPhone, updatedEmail);
+                String updatedFullName = editTextFullName.getText() != null ? editTextFullName.getText().toString() : "";
+                String updatedAddress = editTextAddress.getText() != null ? editTextAddress.getText().toString() : "";
+                String updatedPhone = editTextPhone.getText() != null ? editTextPhone.getText().toString() : "";
+                String updatedEmail = editTextEmail.getText() != null ? editTextEmail.getText().toString() : "";
+
+                if (selectedImageBitmap != null) {
+                    updateUserDetails(userId, updatedFullName, updatedAddress, updatedPhone, updatedEmail, encodedImage, true);
+                } else {
+                    updateUserDetails(userId, updatedFullName, updatedAddress, updatedPhone, updatedEmail, null, false);
+                }
+
             }
         });
+
+//        saveButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String updatedFullName = editTextFullName.getText() != null ? editTextFullName.getText().toString() : "";
+//                String updatedAddress = editTextAddress.getText() != null ? editTextAddress.getText().toString() : "";
+//                String updatedPhone = editTextPhone.getText() != null ? editTextPhone.getText().toString() : "";
+//                String updatedEmail = editTextEmail.getText() != null ? editTextEmail.getText().toString() : "";
+//
+//                // Assuming selectedImageUri is a Uri pointing to the image file
+//                try {
+//                    InputStream inputStream = requireContext().getContentResolver().openInputStream(selectedImageUri);
+//                    if (inputStream != null) {
+//                        FileOutputStream outputStream = requireContext().openFileOutput("image.jpg", Context.MODE_PRIVATE);
+//
+//                        byte[] buffer = new byte[1024];
+//                        int length;
+//                        while ((length = inputStream.read(buffer)) > 0) {
+//                            outputStream.write(buffer, 0, length);
+//                        }
+//
+//                        // Close streams
+//                        outputStream.close();
+//                        inputStream.close();
+//
+//                        String savedImagePath = requireContext().getFilesDir() + "/image.jpg";
+//                        updateUserDetails(userId, updatedFullName, updatedAddress, updatedPhone, updatedEmail, savedImagePath);
+//                    } else {
+//                        // Handle null inputStream
+//                        Log.e("SaveProfile", "Input stream is null");
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
         return view;
     }
 
-    private void updateUserDetails(int userId, String fullName, String address, String phone, String email) {
+    private void openImagePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            Uri uri = data.getData();
+            try {
+                selectedImageBitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
+                imageViewSelectedImage.setImageBitmap(selectedImageBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, PICK_IMAGE);
+    }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+//            selectedImageUri = data.getData();
+//            if (selectedImageUri != null) {
+//                imageViewSelectedImage.setImageURI(selectedImageUri);
+//                String imageName = getFileName(selectedImageUri);
+//                textViewImageName.setText(imageName);
+//            }
+//        }
+//    }
+
+    private String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            try (Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (displayNameIndex != -1) {
+                        result = cursor.getString(displayNameIndex);
+                    } else {
+                        Log.e("ProfileEditFragment", "Error: DISPLAY_NAME column not found.");
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("ProfileEditFragment", "Error getting file name: " + e.getMessage());
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
+
+    private void updateUserDetails(int userId, String fullName, String address, String phone, String email, final String image, boolean hasImage) {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         String url = "http://scerns.ucc-bscs.com/User/updateProfile.php";
+
+        // Convert the selected image to base64 if available
+        String encodedImage = "";
+        if (hasImage && selectedImageBitmap != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            selectedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            byte[] imageBytes = byteArrayOutputStream.toByteArray();
+            encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        }
+
+        final String finalEncodedImage = encodedImage;
 
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -88,6 +248,7 @@ public class ProfileEditFragment extends Fragment {
                         Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
 
                         if (response.equals("User details updated successfully")) {
+                            // Handle success, maybe navigate back or show a success message
                             getActivity().getSupportFragmentManager().popBackStack();
                         }
                     }
@@ -108,10 +269,28 @@ public class ProfileEditFragment extends Fragment {
                 params.put("address", address);
                 params.put("phone", phone);
                 params.put("email", email);
+
+                // Add the encoded image data only if available
+                if (hasImage) {
+                    params.put("image", finalEncodedImage);
+                }
+
                 return params;
             }
         };
 
         queue.add(postRequest);
     }
+
+    private String getRealPathFromURI(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+        if (cursor == null) return null;
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+        return result;
+    }
+
 }

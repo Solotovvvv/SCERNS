@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,6 +26,7 @@ public class ProfileFragment extends Fragment {
     private TextView textViewAddress;
     private TextView textViewPhone;
     private TextView textViewEmail;
+    private TextView textViewNoImage;
     private Button buttonEditProfile;
 
     public void setUserId(int userId) {
@@ -47,6 +49,7 @@ public class ProfileFragment extends Fragment {
         textViewAddress = view.findViewById(R.id.textViewAddress);
         textViewPhone = view.findViewById(R.id.textViewPhone);
         textViewEmail = view.findViewById(R.id.textViewEmail);
+        textViewNoImage = view.findViewById(R.id.textViewNoImage); // Initialize textViewNoImage
         buttonEditProfile = view.findViewById(R.id.buttonEditProfile);
 
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
@@ -82,17 +85,31 @@ public class ProfileFragment extends Fragment {
             String address = userDetails.getString("address");
             String phone = userDetails.getString("phone");
             String email = userDetails.getString("email");
+            String imagePath = userDetails.getString("image");
 
             textViewFullName.setText(fullName);
             textViewAddress.setText(address);
             textViewPhone.setText(phone);
             textViewEmail.setText(email);
 
+            if (!imagePath.isEmpty()) {
+                // If imagePath is not empty, display the ImageView and load the image
+                imageViewProfile.setVisibility(View.VISIBLE);
+                Glide.with(requireContext()).load(imagePath).into(imageViewProfile);
+                // Hide the TextView for no image
+                textViewNoImage.setVisibility(View.GONE);
+            } else {
+                // If imagePath is empty, hide the ImageView and show the TextView for no image
+                imageViewProfile.setVisibility(View.GONE);
+                // Optionally, you can set a placeholder image in the ImageView
+                imageViewProfile.setImageResource(R.drawable.placeholder_image);
+                textViewNoImage.setVisibility(View.VISIBLE);
+            }
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
 }
-

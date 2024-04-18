@@ -204,7 +204,7 @@ public class ReportInfo extends AppCompatActivity {
                             textViewLevel.setText("Level: " + level);
                             textViewType.setText("Type: " + type);
 
-                            Toast.makeText(ReportInfo.this, "Report details fetched successfully", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(ReportInfo.this, "Report details fetched successfully", Toast.LENGTH_SHORT).show();
 
                             Log.d("ReportInfo", "Report details fetched successfully");
                         } catch (JSONException e) {

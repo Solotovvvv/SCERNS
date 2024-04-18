@@ -127,13 +127,26 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"/>
 
+        <EditText
+            android:id="@+id/editTextRemarks"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/round_bg"
+            android:hint="Remarks"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinnerLevels"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"/>
+
         <Button
             android:id="@+id/btnConfirmRequest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#618264"
             android:text="Confirm Request"
-            app:layout_constraintTop_toBottomOf="@id/spinnerLevels"
+            app:layout_constraintTop_toBottomOf="@id/editTextRemarks"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="10dp"
