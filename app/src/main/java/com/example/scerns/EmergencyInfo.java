@@ -157,7 +157,10 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                             showToast("Error: " + response);
                         } else if (response.equals("This address is already reported.")) {
                             showToast("This Address is already reported");
-                            fetchExistingReportDetails(userId, address, landmark, level, emergencyType);
+                            Intent intent = new Intent(EmergencyInfo.this, MainActivity.class);
+//                            intent.putExtra("userId", userId);
+                            startActivity(intent);
+//                            fetchExistingReportDetails(userId, address, landmark, level, emergencyType);
                         } else {
                             try {
                                 reportId = Integer.parseInt(response.trim());
@@ -201,34 +204,34 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
         startActivity(intent);
     }
 
-    private void fetchExistingReportDetails(final int userId, final String address, final String landmark, final String level, final String emergencyType) {
-        String url = "http://scerns.ucc-bscs.com/User/getReportByAddress.php?address=" + address;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                int existingReportId = jsonObject.getInt("Id");
-                                startReportInfoActivity(userId, existingReportId, address, landmark, level, emergencyType);
-                            }
-                        } catch (JSONException e) {
-                            showToast("Error parsing JSON for existing report details");
-                            Log.e("fetchExistingReportDetails", "Error parsing JSON: " + e.getMessage());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                showToast("Error fetching existing report details by address");
-                Log.e("fetchExistingReportDetails", "Volley error: " + error.getMessage());
-            }
-        });
-        Volley.newRequestQueue(this).add(stringRequest);
-    }
+//    private void fetchExistingReportDetails(final int userId, final String address, final String landmark, final String level, final String emergencyType) {
+//        String url = "http://scerns.ucc-bscs.com/User/getReportByAddress.php?address=" + address;
+//
+//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        try {
+//                            JSONArray jsonArray = new JSONArray(response);
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                                int existingReportId = jsonObject.getInt("Id");
+//                                startReportInfoActivity(userId, existingReportId, address, landmark, level, emergencyType);
+//                            }
+//                        } catch (JSONException e) {
+//                            showToast("Error parsing JSON for existing report details");
+//                            Log.e("fetchExistingReportDetails", "Error parsing JSON: " + e.getMessage());
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                showToast("Error fetching existing report details by address");
+//                Log.e("fetchExistingReportDetails", "Volley error: " + error.getMessage());
+//            }
+//        });
+//        Volley.newRequestQueue(this).add(stringRequest);
+//    }
 
     @Override
     public void onAddressSuggestionReceived(JSONArray suggestions) {
