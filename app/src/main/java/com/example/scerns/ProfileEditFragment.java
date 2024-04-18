@@ -53,7 +53,6 @@ public class ProfileEditFragment extends Fragment {
     private String encodedImage;
     private ImageView imageViewSelectedImage;
     private TextView textViewImageName;
-    private Uri selectedImageUri;
 
     private int userId;
 
@@ -92,7 +91,6 @@ public class ProfileEditFragment extends Fragment {
         selectImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                openGallery();
                 openImagePicker();
 
             }
@@ -117,42 +115,6 @@ public class ProfileEditFragment extends Fragment {
 
             }
         });
-
-//        saveButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String updatedFullName = editTextFullName.getText() != null ? editTextFullName.getText().toString() : "";
-//                String updatedAddress = editTextAddress.getText() != null ? editTextAddress.getText().toString() : "";
-//                String updatedPhone = editTextPhone.getText() != null ? editTextPhone.getText().toString() : "";
-//                String updatedEmail = editTextEmail.getText() != null ? editTextEmail.getText().toString() : "";
-//
-//                // Assuming selectedImageUri is a Uri pointing to the image file
-//                try {
-//                    InputStream inputStream = requireContext().getContentResolver().openInputStream(selectedImageUri);
-//                    if (inputStream != null) {
-//                        FileOutputStream outputStream = requireContext().openFileOutput("image.jpg", Context.MODE_PRIVATE);
-//
-//                        byte[] buffer = new byte[1024];
-//                        int length;
-//                        while ((length = inputStream.read(buffer)) > 0) {
-//                            outputStream.write(buffer, 0, length);
-//                        }
-//
-//                        // Close streams
-//                        outputStream.close();
-//                        inputStream.close();
-//
-//                        String savedImagePath = requireContext().getFilesDir() + "/image.jpg";
-//                        updateUserDetails(userId, updatedFullName, updatedAddress, updatedPhone, updatedEmail, savedImagePath);
-//                    } else {
-//                        // Handle null inputStream
-//                        Log.e("SaveProfile", "Input stream is null");
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
 
         return view;
     }
@@ -179,24 +141,6 @@ public class ProfileEditFragment extends Fragment {
         }
     }
 
-    private void openGallery() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, PICK_IMAGE);
-    }
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
-//            selectedImageUri = data.getData();
-//            if (selectedImageUri != null) {
-//                imageViewSelectedImage.setImageURI(selectedImageUri);
-//                String imageName = getFileName(selectedImageUri);
-//                textViewImageName.setText(imageName);
-//            }
-//        }
-//    }
 
     private String getFileName(Uri uri) {
         String result = null;
@@ -280,17 +224,6 @@ public class ProfileEditFragment extends Fragment {
         };
 
         queue.add(postRequest);
-    }
-
-    private String getRealPathFromURI(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
-        if (cursor == null) return null;
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column_index);
-        cursor.close();
-        return result;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.scerns;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ public class ProfileFragment extends Fragment {
     private TextView textViewEmail;
     private TextView textViewNoImage;
     private Button buttonEditProfile;
+
+    private String imagePath = "";
 
     public void setUserId(int userId) {
         this.userId = userId;
@@ -62,6 +65,7 @@ public class ProfileFragment extends Fragment {
                 args.putString("address", textViewAddress.getText().toString());
                 args.putString("phone", textViewPhone.getText().toString());
                 args.putString("email", textViewEmail.getText().toString());
+                args.putString("image", imagePath); // Pass the imagePath to ProfileEditFragment
                 profileEditFragment.setArguments(args);
 
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -70,6 +74,7 @@ public class ProfileFragment extends Fragment {
                 transaction.commit();
             }
         });
+
         return view;
     }
 
@@ -85,7 +90,10 @@ public class ProfileFragment extends Fragment {
             String address = userDetails.getString("address");
             String phone = userDetails.getString("phone");
             String email = userDetails.getString("email");
-            String imagePath = userDetails.getString("image");
+            imagePath = userDetails.getString("image"); // Assign the imagePath value
+
+            // Log the image path for debugging
+            Log.d("ImagePath", "Image Path: " + imagePath);
 
             textViewFullName.setText(fullName);
             textViewAddress.setText(address);
@@ -93,20 +101,14 @@ public class ProfileFragment extends Fragment {
             textViewEmail.setText(email);
 
             if (!imagePath.isEmpty()) {
-                // If imagePath is not empty, display the ImageView and load the image
                 imageViewProfile.setVisibility(View.VISIBLE);
                 Glide.with(requireContext()).load(imagePath).into(imageViewProfile);
-                // Hide the TextView for no image
                 textViewNoImage.setVisibility(View.GONE);
             } else {
-                // If imagePath is empty, hide the ImageView and show the TextView for no image
                 imageViewProfile.setVisibility(View.GONE);
-                // Optionally, you can set a placeholder image in the ImageView
                 imageViewProfile.setImageResource(R.drawable.placeholder_image);
                 textViewNoImage.setVisibility(View.VISIBLE);
             }
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
