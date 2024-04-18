@@ -133,7 +133,6 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
         });
     }
 
-
     private String extractNumericLevel(String level) {
         String numericPart = level.replaceAll("\\D+", "");
         return numericPart.isEmpty() ? "0" : numericPart;
@@ -154,26 +153,14 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                         Log.d("ServerResponse", "Response: " + response);
                         if (response.startsWith("Error")) {
                             showToast("Error: " + response);
+                        } else if (response.equals("This address is already reported.")) {
+                            // The address is already reported, fetch and pass the existing report details
+                            fetchExistingReportDetails(userId, address, landmark, level, emergencyType);
                         } else {
+                            // Parse the response as a new report ID
                             try {
-                                // Check if the response is a valid report ID or a message indicating the address is already reported
-                                if (!response.equals("This address is already reported.")) {
-                                    // If it's a valid report ID, proceed to ReportInfo activity
-                                    int reportId = Integer.parseInt(response.trim());
-                                    Intent intent = new Intent(EmergencyInfo.this, ReportInfo.class);
-                                    intent.putExtra("userId", userId);
-                                    intent.putExtra("reportId", reportId);
-                                    intent.putExtra("address", editTextAddress.getText().toString().trim());
-                                    intent.putExtra("landmark", getEditTextLandmark.getText().toString().trim());
-                                    intent.putExtra("level", spinnerLevels.getSelectedItem().toString());
-                                    intent.putExtra("emergencyType", getIntent().getStringExtra("emergencyType"));
-                                    startActivity(intent);
-                                } else {
-                                    // If the address is already reported, show a toast message
-                                    showToast("This address is already reported.");
-                                    // Fetch and display the details of the existing report
-//                                    fetchExistingReportDetails(editTextAddress.getText().toString().trim());
-                                }
+                                reportId = Integer.parseInt(response.trim());
+                                startReportInfoActivity(userId, reportId, address, landmark, level, emergencyType);
                             } catch (NumberFormatException e) {
                                 showToast("Invalid report ID received from server");
                             }
@@ -197,6 +184,48 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 return params;
             }
         };
+        Volley.newRequestQueue(this).add(stringRequest);
+    }
+
+
+    private void startReportInfoActivity(int userId, int reportId, String address, String landmark, String level, String emergencyType) {
+        Intent intent = new Intent(EmergencyInfo.this, ReportInfo.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("reportId", reportId);
+        intent.putExtra("address", address);
+        intent.putExtra("landmark", landmark);
+        intent.putExtra("level", level);
+        intent.putExtra("emergencyType", emergencyType);
+        startActivity(intent);
+    }
+
+    private void fetchExistingReportDetails(final int userId, final String address, final String landmark, final String level, final String emergencyType) {
+        String url = "http://scerns.ucc-bscs.com/User/getReportByAddress.php?address=" + address;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                int existingReportId = jsonObject.getInt("Id");
+                                startReportInfoActivity(userId, existingReportId, address, landmark, level, emergencyType);
+                            }
+                        } catch (JSONException e) {
+                            showToast("Error parsing JSON for existing report details");
+                            Log.e("fetchExistingReportDetails", "Error parsing JSON: " + e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                showToast("Error fetching existing report details by address");
+                Log.e("fetchExistingReportDetails", "Volley error: " + error.getMessage());
+            }
+        });
+
         Volley.newRequestQueue(this).add(stringRequest);
     }
 
@@ -241,5 +270,4 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
             });
         }
     }
-
 }

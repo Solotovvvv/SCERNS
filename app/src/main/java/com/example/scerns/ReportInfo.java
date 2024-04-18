@@ -45,7 +45,6 @@ public class ReportInfo extends AppCompatActivity {
     private String address, landmark, level, type;
     private MapView mapView;
     private Pusher pusher;
-
     private int userId, reportId;
 
     private TextView textViewStatus, textViewAddress, textViewLandmark, textViewLevel, textViewType;
@@ -62,23 +61,21 @@ public class ReportInfo extends AppCompatActivity {
             return;
         }
 
+        address = getIntent().getStringExtra("address");
+        landmark = getIntent().getStringExtra("landmark");
+        type = getIntent().getStringExtra("emergencyType");
+        level = getIntent().getStringExtra("level");
+
         reportId = getIntent().getIntExtra("reportId", -1);
-        if (reportId == -1) {
-            Toast.makeText(this, "Report ID not found", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        } else {
+        if (reportId != -1) {
             fetchReportDetails(reportId);
+        } else if (address != null) {
+            fetchReportDetailsByAddress(address);
         }
 
         PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
         pusher = new Pusher("b26a50e9e9255fc95c8f", options);
         pusher.connect();
-
-        address = getIntent().getStringExtra("address");
-        landmark = getIntent().getStringExtra("landmark");
-        type = getIntent().getStringExtra("emergencyType");
-        level = getIntent().getStringExtra("level");
 
         textViewAddress = findViewById(R.id.textViewAddress);
         textViewLandmark = findViewById(R.id.textViewLandmark);
@@ -133,7 +130,6 @@ public class ReportInfo extends AppCompatActivity {
             textViewLevel.setText(levelLabel);
         }
     }
-
 
     @Override
     protected void onDestroy() {
@@ -228,6 +224,35 @@ public class ReportInfo extends AppCompatActivity {
         Volley.newRequestQueue(this).add(stringRequest);
     }
 
+    private void fetchReportDetailsByAddress(String address) {
+        String url = "http://scerns.ucc-bscs.com/User/getReportByAddress.php?address=" + address;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+                            int reportId = jsonObject.getInt("Id");
+                            fetchReportDetails(reportId);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(ReportInfo.this, "Error parsing JSON", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("ReportInfo", "Error fetching report details by address: " + error.getMessage());
+                        Toast.makeText(ReportInfo.this, "Error fetching report details by address", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        Volley.newRequestQueue(this).add(stringRequest);
+    }
+
     private class GeocodeTask extends AsyncTask<String, Void, GeoPoint> {
 
         @Override
@@ -279,6 +304,4 @@ public class ReportInfo extends AppCompatActivity {
             mapView.getController().setCenter(addressLocation);
         }
     }
-
 }
-
