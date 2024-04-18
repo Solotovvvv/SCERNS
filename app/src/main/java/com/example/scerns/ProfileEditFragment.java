@@ -41,12 +41,9 @@ import java.util.Map;
 
 public class ProfileEditFragment extends Fragment {
 
-    private EditText editTextFullName;
-    private EditText editTextAddress;
-    private EditText editTextPhone;
-    private EditText editTextEmail;
-    private static final int PICK_IMAGE = 1;
+    private EditText editTextFullName, editTextEmail, editTextAddress, editTextPhone;
 
+    private static final int PICK_IMAGE = 1;
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private Bitmap selectedImageBitmap;

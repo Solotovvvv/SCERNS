@@ -167,7 +167,7 @@ public class ReportInfo extends AppCompatActivity {
             }
         };
 
-        channel.bind("user-report", eventListener);
+        channel.bind(reportId + "-user-report", eventListener);
 
         pusher.getConnection().bind(ConnectionState.ALL, new ConnectionEventListener() {
             @Override

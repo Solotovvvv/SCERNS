@@ -156,13 +156,13 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                         if (response.startsWith("Error")) {
                             showToast("Error: " + response);
                         } else if (response.equals("This address is already reported.")) {
-                            showToast("This address is already reported");
+                            showToast("This Address is already reported");
                             fetchExistingReportDetails(userId, address, landmark, level, emergencyType);
                         } else {
                             try {
                                 reportId = Integer.parseInt(response.trim());
                                 startReportInfoActivity(userId, reportId, address, landmark, level, emergencyType);
-                                showToast("Report Success");
+                                showToast("Request Report Success");
                             } catch (NumberFormatException e) {
                                 showToast("Invalid report ID received from server");
                             }
@@ -183,7 +183,7 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                 params.put("address", address);
                 params.put("landmark", landmark);
                 params.put("level", level);
-                params.put("remarks", remarks); // Add remarks here
+                params.put("remarks", remarks);
                 return params;
             }
         };

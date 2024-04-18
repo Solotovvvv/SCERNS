@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        // Initialize location manager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // Initialize location listener

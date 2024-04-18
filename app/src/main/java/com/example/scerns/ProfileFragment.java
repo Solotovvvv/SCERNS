@@ -23,13 +23,8 @@ public class ProfileFragment extends Fragment {
 
     private int userId;
     private ImageView imageViewProfile;
-    private TextView textViewFullName;
-    private TextView textViewAddress;
-    private TextView textViewPhone;
-    private TextView textViewEmail;
-    private TextView textViewNoImage;
+    private TextView textViewFullName, textViewAddress, textViewPhone, textViewEmail, textViewNoImage;
     private Button buttonEditProfile;
-
     private String imagePath = "";
 
     public void setUserId(int userId) {
@@ -52,7 +47,7 @@ public class ProfileFragment extends Fragment {
         textViewAddress = view.findViewById(R.id.textViewAddress);
         textViewPhone = view.findViewById(R.id.textViewPhone);
         textViewEmail = view.findViewById(R.id.textViewEmail);
-        textViewNoImage = view.findViewById(R.id.textViewNoImage); // Initialize textViewNoImage
+        textViewNoImage = view.findViewById(R.id.textViewNoImage);
         buttonEditProfile = view.findViewById(R.id.buttonEditProfile);
 
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +60,7 @@ public class ProfileFragment extends Fragment {
                 args.putString("address", textViewAddress.getText().toString());
                 args.putString("phone", textViewPhone.getText().toString());
                 args.putString("email", textViewEmail.getText().toString());
-                args.putString("image", imagePath); // Pass the imagePath to ProfileEditFragment
+                args.putString("image", imagePath);
                 profileEditFragment.setArguments(args);
 
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -90,9 +85,8 @@ public class ProfileFragment extends Fragment {
             String address = userDetails.getString("address");
             String phone = userDetails.getString("phone");
             String email = userDetails.getString("email");
-            imagePath = userDetails.getString("image"); // Assign the imagePath value
+            imagePath = userDetails.getString("image");
 
-            // Log the image path for debugging
             Log.d("ImagePath", "Image Path: " + imagePath);
 
             textViewFullName.setText(fullName);

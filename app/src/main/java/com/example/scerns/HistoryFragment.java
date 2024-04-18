@@ -38,16 +38,11 @@ import java.util.ArrayList;
 
 public class HistoryFragment extends Fragment {
 
-    private int userId;
+    private int userId, reportId;
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private JSONArray jsonArray;
-//    private Pusher pusher;
-
-    private TextView textViewStatus;
-    private LinearLayout loadingLayout;
-    private ProgressBar loadingProgressBar;
-    private TextView textViewWaiting;
+    private Pusher pusher;
 
     public void setUserId(int userId) {
         this.userId = userId;
@@ -59,58 +54,46 @@ public class HistoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         if (userId != -1) {
-//            PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
-//            pusher = new Pusher("b26a50e9e9255fc95c8f", options);
-//            pusher.connect();
-//
-//            Channel channel = pusher.subscribe("Scerns");
-//
-//            SubscriptionEventListener eventListener = new SubscriptionEventListener() {
-//                @Override
-//                public void onEvent(PusherEvent event) {
-//                    try {
-//                        JSONObject eventData = new JSONObject(event.getData());
-//                        String updatedStatus = eventData.optString("status", "");
-//
-//                        getActivity().runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                textViewStatus.setText("Status: " + updatedStatus);
-//
-//                                if (updatedStatus.equalsIgnoreCase("Pending")) {
-//                                    loadingLayout.setVisibility(View.VISIBLE);
-//                                    loadingProgressBar.setVisibility(View.VISIBLE);
-//                                    textViewWaiting.setVisibility(View.VISIBLE);
-//                                } else {
-//                                    loadingLayout.setVisibility(View.GONE);
-//                                    loadingProgressBar.setVisibility(View.GONE);
-//                                    textViewWaiting.setVisibility(View.GONE);
-//                                }
-//                            }
-//                        });
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            };
-//
-//            channel.bind("user-history-report", eventListener);
-//
-//            listView = view.findViewById(R.id.list_view);
-//
-//            fetchDataFromAPI();
-//
-//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    try {
-//                        JSONObject clickedItem = jsonArray.getJSONObject(position);
-//                        showDetailDialog(clickedItem);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
+            PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
+            pusher = new Pusher("b26a50e9e9255fc95c8f", options);
+            pusher.connect();
+
+            Channel channel = pusher.subscribe("Scerns");
+
+            SubscriptionEventListener eventListener = new SubscriptionEventListener() {
+                @Override
+                public void onEvent(PusherEvent event) {
+                    try {
+                        JSONObject eventData = new JSONObject(event.getData());
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                fetchDataFromAPI();
+
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            channel.bind("user-history-report", eventListener);
+
+            listView = view.findViewById(R.id.list_view);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    try {
+                        JSONObject clickedItem = jsonArray.getJSONObject(position);
+                        showDetailDialog(clickedItem);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         } else {
             Toast.makeText(requireContext(), "User ID not found", Toast.LENGTH_SHORT).show();
         }
@@ -137,11 +120,11 @@ public class HistoryFragment extends Fragment {
         Intent intent = new Intent(requireContext(), DetailsActivity.class);
         intent.putExtra("jsonData", jsonObject.toString());
         intent.putExtra("userId", userId);
+        intent.putExtra("Id", reportId);
         startActivity(intent);
     }
 
-
-    private void fetchDataFromAPI() {
+    void fetchDataFromAPI() {
         String url = "http://scerns.ucc-bscs.com/User/history.php?User_Id=" + userId;
 
         VolleyRequestManager volleyRequestManager = new VolleyRequestManager(requireContext());
@@ -159,6 +142,7 @@ public class HistoryFragment extends Fragment {
 
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            reportId = jsonObject.optInt("Id", -1);
                             String role = jsonObject.optString("Role", "");
                             String datetime = jsonObject.optString("Date", "");
                             String reportDetails = "Role: " + role +

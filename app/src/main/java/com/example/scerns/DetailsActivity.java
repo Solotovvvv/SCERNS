@@ -2,6 +2,7 @@ package com.example.scerns;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -10,6 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.pusher.client.Pusher;
+import com.pusher.client.PusherOptions;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.PusherEvent;
+import com.pusher.client.channel.SubscriptionEventListener;
+import com.pusher.client.connection.ConnectionEventListener;
+import com.pusher.client.connection.ConnectionState;
+import com.pusher.client.connection.ConnectionStateChange;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,12 +30,15 @@ import org.osmdroid.views.overlay.Marker;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    private int userId;
+    private int userId, reportId;
+    private TextView textViewStatus;
+    private Pusher pusher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        reportId = getIntent().getIntExtra("Id", -1);
 
         userId = getIntent().getIntExtra("userId", -1);
         if (userId == -1) {
@@ -33,8 +46,12 @@ public class DetailsActivity extends AppCompatActivity {
             finish();
             return;
         } else {
-            Toast.makeText(this, "User ID:" + userId, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "User ID:" + userId, Toast.LENGTH_SHORT).show();
         }
+
+        PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
+        pusher = new Pusher("b26a50e9e9255fc95c8f", options);
+        pusher.connect();
 
         if (getIntent().hasExtra("jsonData") && getIntent().hasExtra("userId")) {
             String jsonDataString = getIntent().getStringExtra("jsonData");
@@ -45,7 +62,6 @@ public class DetailsActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else {
-
             Toast.makeText(this, "Required data not found", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -54,7 +70,61 @@ public class DetailsActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish(); // Close the DetailsActivity and return to the previous fragment
+                finish();
+
+            }
+        });
+
+        triggerPusherEvent();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (pusher != null) {
+            pusher.disconnect();
+        }
+    }
+
+    private void triggerPusherEvent() {
+        Channel channel = pusher.subscribe("Scerns");
+
+        SubscriptionEventListener eventListener = new SubscriptionEventListener() {
+            @Override
+            public void onEvent(PusherEvent event) {
+                try {
+                    JSONObject eventData = new JSONObject(event.getData());
+                    String status = eventData.getString("status");
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            textViewStatus.setText("Status: " + status);
+                            if (!status.equals("Pending")) {
+                                LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
+                                loadingLayout.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                    Log.d("Pusher", "Received user-report event with status: " + status);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("Pusher", "Error parsing event data: " + e.getMessage());
+                }
+            }
+        };
+
+        channel.bind(reportId + "-user-report", eventListener);
+
+        pusher.getConnection().bind(ConnectionState.ALL, new ConnectionEventListener() {
+            @Override
+            public void onConnectionStateChange(ConnectionStateChange change) {
+                Log.d("Pusher", "State changed to: " + change.getCurrentState());
+            }
+
+            @Override
+            public void onError(String message, String code, Exception e) {
+                Log.e("Pusher", "Error: " + message);
             }
         });
     }
@@ -64,7 +134,7 @@ public class DetailsActivity extends AppCompatActivity {
         TextView textViewAddress = findViewById(R.id.textViewAddress);
         TextView textViewLandmark = findViewById(R.id.textViewLandmark);
         TextView textViewLevel = findViewById(R.id.textViewLevel);
-        TextView textViewStatus = findViewById(R.id.textViewStatus);
+        textViewStatus = findViewById(R.id.textViewStatus);
         LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
         ProgressBar loadingProgressBar = findViewById(R.id.loadingProgressBar);
         TextView textViewWaiting = findViewById(R.id.textViewWaiting);
@@ -89,7 +159,6 @@ public class DetailsActivity extends AppCompatActivity {
             textViewWaiting.setVisibility(View.GONE);
         }
 
-        // Load map
         String address = jsonObject.optString("Address", "");
         String mapUrl = "https://nominatim.openstreetmap.org/search?format=json&q=" + address;
         VolleyRequestManager volleyRequestManager = new VolleyRequestManager(this);
