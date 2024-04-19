@@ -10,9 +10,8 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:padding="16dp"
         app:cardBackgroundColor="#e0dada"
         app:cardCornerRadius="8dp"
         tools:ignore="MissingConstraints"
@@ -22,9 +21,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:gravity="center"
+            android:layout_margin="20dp"
             android:orientation="vertical">
 
             <TextView
@@ -39,7 +37,6 @@
                 android:id="@+id/editTextFullname"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="16dp"
                 android:background="@drawable/round_bg"
                 android:hint="Fullname" />
 
@@ -90,34 +87,61 @@
                 android:id="@+id/editTextUsername"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/round_bg"
                 android:hint="Username" />
 
-            <EditText
-                android:id="@+id/editTextPassword"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/round_bg"
-                android:hint="Password"
-                android:inputType="textPassword" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/editTextConfirmPassword"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/round_bg"
-                android:hint="Confirm Password"
-                android:inputType="textPassword" />
+                <EditText
+                    android:id="@+id/editTextPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/round_bg"
+                    android:hint="Password"
+                    android:inputType="textPassword" />
+
+                <EditText
+                    android:id="@+id/editTextConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/editTextPassword"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/round_bg"
+                    android:hint="Confirm Password"
+                    android:inputType="textPassword" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonTogglePassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@id/editTextPassword"
+                    android:layout_alignBottom="@id/editTextPassword"
+                    android:padding="10dp"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="Toggle Password Visibility"
+                    android:src="@drawable/ic_password_visibility_off" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonToggleConfirmPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_password_visibility_off"
+                    android:background="@android:color/transparent"
+                    android:padding="10dp"
+                    android:contentDescription="Toggle Confirm Password Visibility"
+                    android:layout_alignBottom="@id/editTextConfirmPassword"
+                    android:layout_alignEnd="@id/editTextConfirmPassword" />
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/registerButton"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="8dp"
                 android:backgroundTint="#618264"
                 android:text="Register"
                 android:textColor="#FFFFFF"

@@ -8,12 +8,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +67,25 @@ public class Register extends AppCompatActivity {
         registerButton = findViewById(R.id.registerButton);
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
 
+        ImageButton imageButtonTogglePassword = findViewById(R.id.imageButtonTogglePassword);
+        ImageButton imageButtonToggleConfirmPassword = findViewById(R.id.imageButtonToggleConfirmPassword);
+
+        // Set OnClickListener for password visibility toggle
+        imageButtonTogglePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePasswordVisibility(editTextPassword, imageButtonTogglePassword);
+            }
+        });
+
+// Set OnClickListener for confirm password visibility toggle
+        imageButtonToggleConfirmPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePasswordVisibility(editTextConfirmPassword, imageButtonToggleConfirmPassword);
+            }
+        });
+
         buttonSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +108,23 @@ public class Register extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void togglePasswordVisibility(EditText editText, ImageButton toggleButton) {
+        int cursorPosition = editText.getSelectionStart();
+        if (editText.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+            // Show password
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            // Change icon to visible state
+            toggleButton.setImageResource(R.drawable.ic_password_visibility_on);
+        } else {
+            // Hide password
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            // Change icon to hidden state
+            toggleButton.setImageResource(R.drawable.ic_password_visibility_off);
+        }
+        // Restore cursor position
+        editText.setSelection(cursorPosition);
     }
 
     private void openImagePicker() {

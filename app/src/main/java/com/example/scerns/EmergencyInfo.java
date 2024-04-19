@@ -108,6 +108,17 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
             }
         });
 
+        Button backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EmergencyInfo.this, MainActivity.class);
+                intent.putExtra("userId", userId);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         btnConfirmRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

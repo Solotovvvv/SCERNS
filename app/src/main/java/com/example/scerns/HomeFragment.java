@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment {
         btnPolice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Police selected");
+                showToast("Crime selected");
                 selectedDialogOptions.setText("Crime");
                 Intent intent = new Intent(requireContext(), EmergencyInfo.class);
                 intent.putExtra("userId", userId);

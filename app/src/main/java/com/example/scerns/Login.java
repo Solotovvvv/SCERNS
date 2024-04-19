@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +52,14 @@ public class Login extends AppCompatActivity {
         textViewForgotPassword = findViewById(R.id.textViewForgotPassword);
         loginButton = findViewById(R.id.loginButton);
 
+        ImageButton imageButtonTogglePassword = findViewById(R.id.imageButtonTogglePassword);
+        imageButtonTogglePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePasswordVisibility();
+            }
+        });
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +91,20 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+    }
+
+    private void togglePasswordVisibility() {
+        // Toggle password visibility
+        int cursorPosition = editTextPassword.getSelectionStart();
+        if (editTextPassword.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+            // Show password
+            editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        } else {
+            // Hide password
+            editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
+        // Restore cursor position
+        editTextPassword.setSelection(cursorPosition);
     }
 
     private void loginUser() {
