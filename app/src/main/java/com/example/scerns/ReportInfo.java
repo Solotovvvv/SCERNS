@@ -287,7 +287,7 @@ public class ReportInfo extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(GeoPoint result) {
-            if (result != null) {
+            if (result != null && mapView != null) {
                 mapView.getController().setCenter(result);
 
                 adjustZoomToAddress(result);
@@ -297,6 +297,7 @@ public class ReportInfo extends AppCompatActivity {
                 mapView.getOverlays().add(marker);
             }
         }
+
 
         private void adjustZoomToAddress(GeoPoint addressLocation) {
             final int zoomLevel = 18;

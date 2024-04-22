@@ -66,18 +66,24 @@ public class HistoryFragment extends Fragment {
                     try {
                         JSONObject eventData = new JSONObject(event.getData());
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                fetchDataFromAPI();
-
-                            }
-                        });
+                        // Check if the fragment is attached to an activity
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    fetchDataFromAPI();
+                                }
+                            });
+                        } else {
+                            // Handle the case where the fragment is not attached to an activity
+                            Log.e("HistoryFragment", "Fragment is not attached to an activity");
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             };
+
 
             channel.bind("user-history-report", eventListener);
 
@@ -132,7 +138,9 @@ public class HistoryFragment extends Fragment {
     void fetchDataFromAPI() {
         String url = "http://scerns.ucc-bscs.com/User/history.php?User_Id=" + userId;
 
+        // Pass the context to the VolleyRequestManager constructor
         VolleyRequestManager volleyRequestManager = new VolleyRequestManager(requireContext());
+
         volleyRequestManager.get(url, new VolleyRequestManager.VolleyCallback() {
             @Override
             public void onSuccessResponse(String response) {
@@ -151,7 +159,7 @@ public class HistoryFragment extends Fragment {
                             String role = jsonObject.optString("Role", "");
                             String datetime = jsonObject.optString("Date", "");
                             String reportDetails = "Role: " + role +
-                                                    ", Date: " + datetime;
+                                    ", Date: " + datetime;
                             dataList.add(reportDetails);
                         }
 
@@ -166,10 +174,12 @@ public class HistoryFragment extends Fragment {
                     Toast.makeText(requireContext(), "Error parsing JSON", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onErrorResponse(String errorMessage) {
                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 }
