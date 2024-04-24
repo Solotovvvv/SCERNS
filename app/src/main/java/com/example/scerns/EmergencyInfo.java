@@ -213,6 +213,7 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
         intent.putExtra("level", level);
         intent.putExtra("emergencyType", emergencyType);
         startActivity(intent);
+        finish();
     }
 
 //    private void fetchExistingReportDetails(final int userId, final String address, final String landmark, final String level, final String emergencyType) {

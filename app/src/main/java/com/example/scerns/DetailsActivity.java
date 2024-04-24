@@ -25,6 +25,7 @@ import com.pusher.client.connection.ConnectionStateChange;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapView;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Marker;
@@ -34,6 +35,8 @@ public class DetailsActivity extends AppCompatActivity {
     private int userId, reportId;
     private TextView textViewStatus;
     private Pusher pusher;
+    private MapView mapView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +48,6 @@ public class DetailsActivity extends AppCompatActivity {
             Toast.makeText(this, "Report ID not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
-        } else {
-//            Toast.makeText(this, "Report ID:" + reportId, Toast.LENGTH_SHORT).show();
         }
 
         userId = getIntent().getIntExtra("userId", -1);
@@ -54,8 +55,6 @@ public class DetailsActivity extends AppCompatActivity {
             Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
-        } else {
-//            Toast.makeText(this, "User ID:" + userId, Toast.LENGTH_SHORT).show();
         }
 
         PusherOptions options = new PusherOptions().setCluster("ap1").setEncrypted(true);
@@ -150,7 +149,13 @@ public class DetailsActivity extends AppCompatActivity {
         LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
         ProgressBar loadingProgressBar = findViewById(R.id.loadingProgressBar);
         TextView textViewWaiting = findViewById(R.id.textViewWaiting);
-        MapView mapView = findViewById(R.id.mapView);
+        mapView = findViewById(R.id.mapView);
+
+        if (mapView != null) {
+            mapView.setTileSource(TileSourceFactory.MAPNIK);
+        } else {
+            Log.e("DetailsActivity", "mapView is null");
+        }
 
         textViewType.setText("Emergency Type: " + jsonObject.optString("TypeOfEmergency", ""));
         textViewAddress.setText("Address: " + jsonObject.optString("Address", ""));
@@ -183,13 +188,17 @@ public class DetailsActivity extends AppCompatActivity {
                         double lon = result.getDouble("lon");
                         GeoPoint point = new GeoPoint(lat, lon);
 
-                        mapView.getController().setZoom(19);
-                        mapView.getController().setCenter(point);
+                        if (mapView != null) {
+                            mapView.getController().setZoom(19);
+                            mapView.getController().setCenter(point);
 
-                        Marker marker = new Marker(mapView);
-                        marker.setPosition(point);
-                        mapView.getOverlays().add(marker);
-                        mapView.invalidate();
+                            Marker marker = new Marker(mapView);
+                            marker.setPosition(point);
+                            mapView.getOverlays().add(marker);
+                            mapView.invalidate();
+                        } else {
+                            Log.e("DetailsActivity", "mapView is null");
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -203,6 +212,4 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
-
 }
-
