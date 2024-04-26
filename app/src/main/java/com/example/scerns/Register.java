@@ -70,7 +70,6 @@ public class Register extends AppCompatActivity {
         ImageButton imageButtonTogglePassword = findViewById(R.id.imageButtonTogglePassword);
         ImageButton imageButtonToggleConfirmPassword = findViewById(R.id.imageButtonToggleConfirmPassword);
 
-        // Set OnClickListener for password visibility toggle
         imageButtonTogglePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +77,6 @@ public class Register extends AppCompatActivity {
             }
         });
 
-// Set OnClickListener for confirm password visibility toggle
         imageButtonToggleConfirmPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,17 +111,12 @@ public class Register extends AppCompatActivity {
     private void togglePasswordVisibility(EditText editText, ImageButton toggleButton) {
         int cursorPosition = editText.getSelectionStart();
         if (editText.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
-            // Show password
             editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            // Change icon to visible state
             toggleButton.setImageResource(R.drawable.ic_password_visibility_on);
         } else {
-            // Hide password
             editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            // Change icon to hidden state
             toggleButton.setImageResource(R.drawable.ic_password_visibility_off);
         }
-        // Restore cursor position
         editText.setSelection(cursorPosition);
     }
 
@@ -218,8 +211,16 @@ public class Register extends AppCompatActivity {
                                 Toast.makeText(Register.this, message, Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(Register.this, Login.class);
                                 startActivity(intent);
-                            } else {
-                                Toast.makeText(Register.this, message, Toast.LENGTH_SHORT).show();
+                            } else if (status.equals("error")) {
+                                if (message.equals("Username already exists")) {
+                                    editTextUsername.setError(message);
+                                    editTextUsername.requestFocus();
+                                } else if (message.equals("Email already exists")) {
+                                    editTextEmail.setError(message);
+                                    editTextEmail.requestFocus();
+                                } else {
+                                    Toast.makeText(Register.this, message, Toast.LENGTH_SHORT).show();
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
