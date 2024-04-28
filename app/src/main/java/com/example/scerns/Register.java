@@ -211,16 +211,8 @@ public class Register extends AppCompatActivity {
                                 Toast.makeText(Register.this, message, Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(Register.this, Login.class);
                                 startActivity(intent);
-                            } else if (status.equals("error")) {
-                                if (message.equals("Username already exists")) {
-                                    editTextUsername.setError(message);
-                                    editTextUsername.requestFocus();
-                                } else if (message.equals("Email already exists")) {
-                                    editTextEmail.setError(message);
-                                    editTextEmail.requestFocus();
-                                } else {
-                                    Toast.makeText(Register.this, message, Toast.LENGTH_SHORT).show();
-                                }
+                            } else {
+                                Toast.makeText(Register.this, message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
