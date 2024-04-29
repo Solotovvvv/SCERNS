@@ -33,7 +33,7 @@ import org.osmdroid.views.overlay.Marker;
 public class DetailsActivity extends AppCompatActivity {
 
     private int userId, reportId;
-    private TextView textViewStatus;
+    private TextView textViewStatus, textViewDateTime;
     private Pusher pusher;
     private MapView mapView;
 
@@ -106,6 +106,7 @@ public class DetailsActivity extends AppCompatActivity {
                 try {
                     JSONObject eventData = new JSONObject(event.getData());
                     String status = eventData.getString("status");
+                    String arrived_time = eventData.getString("arrived_time");
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -115,6 +116,7 @@ public class DetailsActivity extends AppCompatActivity {
                                 LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
                                 loadingLayout.setVisibility(View.GONE);
                             }
+                            textViewDateTime.setText("Completion Time: " + arrived_time);
                         }
                     });
                     Log.d("Pusher", "Received user-report event with status: " + status);
@@ -146,6 +148,7 @@ public class DetailsActivity extends AppCompatActivity {
         TextView textViewLandmark = findViewById(R.id.textViewLandmark);
         TextView textViewLevel = findViewById(R.id.textViewLevel);
         textViewStatus = findViewById(R.id.textViewStatus);
+        textViewDateTime = findViewById(R.id.textViewDateTime);
         LinearLayout loadingLayout = findViewById(R.id.loadingLayout);
         ProgressBar loadingProgressBar = findViewById(R.id.loadingProgressBar);
         TextView textViewWaiting = findViewById(R.id.textViewWaiting);
@@ -162,6 +165,7 @@ public class DetailsActivity extends AppCompatActivity {
         textViewLandmark.setText("Landmark: " + jsonObject.optString("Landmark", ""));
         textViewLevel.setText("Level: " + jsonObject.optString("Level", ""));
         textViewStatus.setText("Status: " + jsonObject.optString("Status", ""));
+        textViewDateTime.setText("Completion Time: " + jsonObject.optString("Arrived_Time", ""));
 
         String status = jsonObject.optString("Status", "");
         if (status.equalsIgnoreCase("Pending")) {

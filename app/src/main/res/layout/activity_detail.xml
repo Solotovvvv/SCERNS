@@ -61,6 +61,16 @@
                     android:text="Status: "
                     android:gravity="center"/>
 
+                <TextView
+                    android:id="@+id/textViewDateTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="13dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:text="Completion Time: "
+                    android:gravity="center"/>
+
                 <LinearLayout
                     android:id="@+id/loadingLayout"
                     android:layout_width="match_parent"

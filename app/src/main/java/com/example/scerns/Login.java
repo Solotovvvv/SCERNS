@@ -85,7 +85,6 @@ public class Login extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int userId = sharedPreferences.getInt("userId", -1);
         if (userId != -1) {
-            // User is already logged in, redirect to MainActivity
             Intent intent = new Intent(Login.this, MainActivity.class);
             intent.putExtra("userId", userId);
             startActivity(intent);
@@ -94,16 +93,12 @@ public class Login extends AppCompatActivity {
     }
 
     private void togglePasswordVisibility() {
-        // Toggle password visibility
         int cursorPosition = editTextPassword.getSelectionStart();
         if (editTextPassword.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
-            // Show password
             editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         } else {
-            // Hide password
             editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
-        // Restore cursor position
         editTextPassword.setSelection(cursorPosition);
     }
 

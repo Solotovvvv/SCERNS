@@ -66,7 +66,6 @@ public class HistoryFragment extends Fragment {
                     try {
                         JSONObject eventData = new JSONObject(event.getData());
 
-                        // Check if the fragment is attached to an activity
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
@@ -115,7 +114,6 @@ public class HistoryFragment extends Fragment {
                     JSONObject clickedItem = jsonArray.getJSONObject(position);
                     int clickedReportId = clickedItem.optInt("Id", -1); // Assuming "Id" is the key for reportId in your JSON
                     if (clickedReportId != -1) {
-                        // Only update the reportId if it's not -1
                         reportId = clickedReportId;
                     }
                     showDetailDialog(clickedItem);
