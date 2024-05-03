@@ -109,12 +109,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 showToast("Crime selected");
                 selectedDialogOptions.setText("Crime");
-                Intent intent = new Intent(requireContext(), EmergencyInfo.class);
-                intent.putExtra("userId", userId);
-                intent.putExtra("role", role);
-                intent.putExtra("emergencyType", "Crime");
-                startActivity(intent);
-
+                startEmergencyInfoActivity("Crime", role);
                 dialog.dismiss();
             }
         });
@@ -124,13 +119,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 showToast("Medic selected");
                 selectedDialogOptions.setText("Medic");
-
-                Intent intent = new Intent(requireContext(), EmergencyInfo.class);
-                intent.putExtra("userId", userId);
-                intent.putExtra("role", role);
-                intent.putExtra("emergencyType", "Medic");
-                startActivity(intent);
-
+                startEmergencyInfoActivity("Medic", role);
                 dialog.dismiss();
             }
         });
@@ -140,13 +129,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 showToast("Fire selected");
                 selectedDialogOptions.setText("Fire");
-
-                Intent intent = new Intent(requireContext(), EmergencyInfo.class);
-                intent.putExtra("userId", userId);
-                intent.putExtra("role", role);
-                intent.putExtra("emergencyType", "Fire");
-                startActivity(intent);
-
+                startEmergencyInfoActivity("Fire", role);
                 dialog.dismiss();
             }
         });
@@ -156,13 +139,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 showToast("Natural Disaster selected");
                 selectedDialogOptions.setText("Natural Disaster");
-
-                Intent intent = new Intent(requireContext(), EmergencyInfo.class);
-                intent.putExtra("userId", userId);
-                intent.putExtra("role", role);
-                intent.putExtra("emergencyType", "Natural Disaster");
-                startActivity(intent);
-
+                startEmergencyInfoActivity("Natural Disaster", role);
                 dialog.dismiss();
             }
         });
@@ -181,4 +158,13 @@ public class HomeFragment extends Fragment {
     private void showToast(String message) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
+
+    private void startEmergencyInfoActivity(String emergencyType, String role) {
+        Intent intent = new Intent(requireContext(), EmergencyInfo.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("role", role);
+        intent.putExtra("emergencyType", emergencyType);
+        startActivity(intent);
+    }
+
 }

@@ -1,13 +1,11 @@
 package com.example.scerns;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EmergencyInfo extends AppCompatActivity implements AddressSuggestionTask.AddressSuggestionListener{
+public class EmergencyInfo extends AppCompatActivity implements AddressSuggestionTask.AddressSuggestionListener {
 
     private int userId, reportId;
     private EditText editTextAddress, getEditTextLandmark, editTextRemarks;
@@ -61,34 +59,7 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
         editTextRemarks = findViewById(R.id.editTextRemarks);
         Button btnConfirmRequest = findViewById(R.id.btnConfirmRequest);
 
-        List<String> levelsList = new ArrayList<>();
-        levelsList.add("Select Level");
-        levelsList.add("Level 1");
-        levelsList.add("Level 2");
-        levelsList.add("Level 3");
-
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, levelsList) {
-            @Override
-            public boolean isEnabled(int position) {
-                return position != 0;
-            }
-
-            @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView textView = (TextView) view;
-                if (position == 0) {
-                    textView.setTextColor(Color.GRAY);
-                } else {
-                    textView.setTextColor(Color.BLACK);
-                }
-                return view;
-            }
-        };
-
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLevels.setAdapter(spinnerAdapter);
-        spinnerLevels.setSelection(0, false);
+        fetchLevelsFromServer(emergencyType);
 
         textWelcomeScerns.setText(emergencyType.toUpperCase());
 
@@ -124,9 +95,8 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
             public void onClick(View v) {
                 String address = editTextAddress.getText().toString().trim();
                 String landmark = getEditTextLandmark.getText().toString().trim();
-                String level = spinnerLevels.getSelectedItem().toString();
-
                 String selectedLevel = spinnerLevels.getSelectedItem().toString();
+                String level = extractNumericLevel(selectedLevel);
                 String remarks = editTextRemarks.getText().toString().trim();
 
                 if (!address.isEmpty() && !landmark.isEmpty()) {
@@ -135,20 +105,60 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                         return;
                     }
                 } else {
-                    if (address.isEmpty() || landmark.isEmpty()) {
-                        showToast("Please fill all fields");
-                        return;
-                    }
+                    showToast("Please fill all fields");
+                    return;
                 }
-                String numericLevel = extractNumericLevel(level);
-                saveDataToDatabase(userId, role, emergencyType, address, landmark, numericLevel, remarks);
+
+                saveDataToDatabase(userId, role, emergencyType, address, landmark, level, remarks);
             }
         });
+
+    }
+
+    private void fetchLevelsFromServer(final String emergencyType) {
+        String url = "http://scerns.ucc-bscs.com/User/getLevels.php?emergencyType=" + emergencyType;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            List<String> levelsList = new ArrayList<>();
+                            levelsList.add("Select Level");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                String level = jsonObject.getString("level");
+                                String description = jsonObject.getString("description");
+                                levelsList.add(level + " - " + description);
+                            }
+
+                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(EmergencyInfo.this, android.R.layout.simple_spinner_item, levelsList);
+                            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerLevels.setAdapter(spinnerAdapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            showToast("Error parsing JSON for levels");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                showToast("Error fetching levels from server");
+                Log.e("fetchLevelsFromServer", "Volley error: " + error.getMessage());
+            }
+        });
+        Volley.newRequestQueue(this).add(stringRequest);
     }
 
     private String extractNumericLevel(String level) {
-        String numericPart = level.replaceAll("\\D+", "");
-        return numericPart.isEmpty() ? "0" : numericPart;
+        String[] parts = level.split(" - ");
+        if (parts.length > 1) {
+            return parts[0];
+        } else {
+            return level;
+        }
     }
 
     private void showToast(String message) {
@@ -169,9 +179,7 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
                         } else if (response.equals("This address is already reported.")) {
                             showToast("This Address is already reported");
                             Intent intent = new Intent(EmergencyInfo.this, MainActivity.class);
-//                            intent.putExtra("userId", userId);
                             startActivity(intent);
-//                            fetchExistingReportDetails(userId, address, landmark, level, emergencyType);
                         } else {
                             try {
                                 reportId = Integer.parseInt(response.trim());
@@ -216,35 +224,6 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
         finish();
     }
 
-//    private void fetchExistingReportDetails(final int userId, final String address, final String landmark, final String level, final String emergencyType) {
-//        String url = "http://scerns.ucc-bscs.com/User/getReportByAddress.php?address=" + address;
-//
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        try {
-//                            JSONArray jsonArray = new JSONArray(response);
-//                            for (int i = 0; i < jsonArray.length(); i++) {
-//                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                                int existingReportId = jsonObject.getInt("Id");
-//                                startReportInfoActivity(userId, existingReportId, address, landmark, level, emergencyType);
-//                            }
-//                        } catch (JSONException e) {
-//                            showToast("Error parsing JSON for existing report details");
-//                            Log.e("fetchExistingReportDetails", "Error parsing JSON: " + e.getMessage());
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                showToast("Error fetching existing report details by address");
-//                Log.e("fetchExistingReportDetails", "Volley error: " + error.getMessage());
-//            }
-//        });
-//        Volley.newRequestQueue(this).add(stringRequest);
-//    }
-
     @Override
     public void onAddressSuggestionReceived(JSONArray suggestions) {
         if (suggestions != null && suggestions.length() > 0) {
@@ -267,7 +246,7 @@ public class EmergencyInfo extends AppCompatActivity implements AddressSuggestio
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, suggestionList);
             suggestionListView.setAdapter(adapter);
 
-            suggestionListView.getLayoutParams().height = 300; // Adjust as needed
+            suggestionListView.getLayoutParams().height = 300;
             suggestionListView.requestLayout();
 
             LinearLayout addressSuggestionLayout = findViewById(R.id.addressSuggestionLayout);

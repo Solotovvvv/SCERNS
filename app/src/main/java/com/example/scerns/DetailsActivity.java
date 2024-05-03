@@ -160,10 +160,12 @@ public class DetailsActivity extends AppCompatActivity {
             Log.e("DetailsActivity", "mapView is null");
         }
 
+        String level = jsonObject.optString("Level", "");
+        String description = jsonObject.optString("description", "");
         textViewType.setText("Emergency Type: " + jsonObject.optString("TypeOfEmergency", ""));
         textViewAddress.setText("Address: " + jsonObject.optString("Address", ""));
         textViewLandmark.setText("Landmark: " + jsonObject.optString("Landmark", ""));
-        textViewLevel.setText("Level: " + jsonObject.optString("Level", ""));
+        textViewLevel.setText("Level: " + level + " (" + description + ")");
         textViewStatus.setText("Status: " + jsonObject.optString("Status", ""));
         textViewDateTime.setText("Completion Time: " + jsonObject.optString("Arrived_Time", ""));
 

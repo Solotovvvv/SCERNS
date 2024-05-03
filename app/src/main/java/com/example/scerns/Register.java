@@ -212,7 +212,9 @@ public class Register extends AppCompatActivity {
                                 Intent intent = new Intent(Register.this, Login.class);
                                 startActivity(intent);
                             } else {
-                                Toast.makeText(Register.this, message, Toast.LENGTH_SHORT).show();
+//                              Toast.makeText(Register.this, message, Toast.LENGTH_SHORT).show();
+                                Intent intents = new Intent(Register.this, Login.class);
+                                startActivity(intents);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

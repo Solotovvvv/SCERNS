@@ -197,14 +197,17 @@ public class ReportInfo extends AppCompatActivity {
                             String level = jsonObject.getString("Level");
                             String type = jsonObject.getString("TypeOfEmergency");
                             String status = jsonObject.getString("Status");
+                            String description = jsonObject.getString("description"); // Assuming the key is "description"
+
+                            String levelWithDescription = level + " - " + description;
 
                             textViewStatus.setText("Status: " + status);
                             textViewAddress.setText("Address: " + address);
                             textViewLandmark.setText("Landmark: " + landmark);
-                            textViewLevel.setText("Level: " + level);
+                            textViewLevel.setText("Level: " + levelWithDescription); // Set level with description
                             textViewType.setText("Type: " + type);
 
-//                            Toast.makeText(ReportInfo.this, "Report details fetched successfully", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ReportInfo.this, "Report details fetched successfully", Toast.LENGTH_SHORT).show();
 
                             Log.d("ReportInfo", "Report details fetched successfully");
                         } catch (JSONException e) {
@@ -223,6 +226,7 @@ public class ReportInfo extends AppCompatActivity {
 
         Volley.newRequestQueue(this).add(stringRequest);
     }
+
 
     private void fetchReportDetailsByAddress(String address) {
         String url = "http://scerns.ucc-bscs.com/User/getReportByAddress.php?address=" + address;
